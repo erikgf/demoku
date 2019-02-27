@@ -1,0 +1,227 @@
+	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Diatraea</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div>Número de muestras recomendadas: </div>
+		  			<div>{{muestras_recomendadas}}</div>
+		  		</li>      
+	  	{{#if puedo_registrar}}
+		  		<li class="table-view-row">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div class="frm-pre-subtitulo">Entrenudos muestreados </div>
+		  			<div>
+		  				<input class="_entrenudos holo" type="number" value="" />
+		  			</div>
+		  		</li>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Entrenudos - % intensidad del daño	
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de Entrenudos infestados</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _entrenudos-infestados"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Porcentaje infestado: </div>
+		  				<div class="_entrenudos-porcentaje">n/a</div>
+		  			</li>
+		  		</div>
+		  		<li class="table-view-row">
+		  			<div class="frm-pre-subtitulo">Tallos muestreados </div>
+		  			<div>
+		  				<input type="number" value="{{tallos_muestreados}}" class="holo" disabled/>
+		  			</div>
+		  		</li>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Entrenudos - % de infestación
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de tallos infestados</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _tallos-infestados"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Porcentaje infestado: </div>
+		  				<div class="_tallos-porcentaje">0.00%</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Larvas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 1</div>
+		  				<div>
+		  					<input type="number" id="estadio-1" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 2</div>
+		  				<div>
+		  					<input type="number" id="estadio-2" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 3</div>
+		  				<div>
+		  					<input type="number" id="estadio-3" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 4</div>
+		  				<div>
+		  					<input type="number" id="estadio-4" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 5</div>
+		  				<div>
+		  					<input type="number" id="estadio-5" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 6</div>
+		  				<div>
+		  					<input type="number" id="estadio-6" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row frm-total">
+		  				<div>Total larvas</div>
+		  				<div class="_larvas-total">0</div>
+		  			</li>
+		  			<li class="table-view-row frm-detalle">
+		  				<div>Índice de población</div>
+		  				<div class="_larvas-indice">0.000</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Crisálidas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de individuos por {{tallos_muestreados}} tallos</div>
+		  				<div>
+		  					<input class="holo _crisalidas" type="number" value="0" />
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Individuos por tallo: </div>
+		  				<div class="holo _crisalidas-tallo">0.00</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Larvas parasitadas por Billaea
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de individuos por {{tallos_muestreados}} tallos</div>
+		  				<div>
+		  					<input class="holo _larvas-parasitadas" type="number" value="0"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Individuos por tallo: </div>
+		  				<div class="_larvas-parasitadas-tallo">0.00</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Billaea - Larvas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de individuos por {{tallos_muestreados}} tallos</div>
+		  				<div>
+		  					<input class="holo _billaea-larvas" type="number" value="0"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Individuos por tallo: </div>
+		  				<div class="_billaea-larvas-tallo">0.00</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Billaea - Pupas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de individuos por {{tallos_muestreados}} tallos</div>
+		  				<div>
+		  					<input class="holo _billaea-pupas" type="number" value="0"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Individuos por tallo: </div>
+		  				<div class="_billaea-pupas-tallo">0.00</div>
+		  			</li>
+		  		</div>
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Guardar Muestra</button>
+			  		<button id="btn-finalizar" class="btn btn-block btn-block-normal">Finalizar evaluación de cuartel o válvula (Última evaluación)</button>
+			  	</div>		  	
+	  	{{/if}}
+		</ul>
+	  	<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
+
+	 </div>
+

@@ -1,0 +1,353 @@
+* {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.btn-md{
+  padding: 12.5px 17.5px;
+  font-size: 18px;
+}
+
+ul {
+    clear: both;
+}
+
+.content {
+    position: absolute;
+    font-size: .875em;
+}
+
+.bar-nav~.content {
+    padding-top: 45px;
+}
+
+.bar-header-secondary~.content {
+    padding-top: 120px;
+}
+
+.bar.bar-header-secondary {
+    top: 45px;
+}
+
+.title {
+  padding-left: 0px;
+  font-size: .9em; 
+  overflow: hidden;
+  width: 75%;
+  text-overflow: ellipsis;
+  line-height: 44px;
+}
+
+.blockui{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: #000;
+    z-index: 999;
+    opacity: .4;
+    display: none;
+}
+
+.blockui.on{
+    display: block;
+}
+
+.bar {
+  height: 45px;
+}
+
+.table-view-cell {
+    padding: 15px 65px 15px 10px;
+}
+
+.table-view-cell>a:not(.btn) {
+    margin: -15px -65px -15px -10px;
+}
+
+/*popover-progressbar*/
+.popover-progressbar {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 1000;
+  display: none;
+  width: 16em;
+  height: 7em;
+  background-color: white;
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, .2);
+          box-shadow: 0 0 3px rgba(0, 0, 0, .2);
+  -webkit-transition: -webkit-transform .1s ease-in-out, opacity .2s ease-in-out;
+     -moz-transition:    -moz-transform .1s ease-in-out, opacity .2s ease-in-out;
+          transition:         transform .1s ease-in-out, opacity .2s ease-in-out;
+  -webkit-transform: scale(.75) translate(-65%,-50%);
+      -ms-transform: scale(.75) translate(-65%,-50%);
+          transform: scale(.75) translate(-65%,-50%);
+    border: 1px solid #9b9b9b;
+    border-radius: 0;
+    margin-left: 0;
+}
+
+.popover-progressbar.visible {
+  -webkit-transform: scale(1) translate(-50%,-50%);
+      -ms-transform: scale(1) translate(-50%,-50%);
+          transform: scale(1) translate(-50%,-50%);
+}
+
+.popover-progressbar .bar-nav {
+    border-bottom: 1px solid #ddd;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.popover-progressbar .bar {
+   border-radius: 0;
+}
+
+.bar-header-secondary>input {
+    margin-top: 6px;
+    height: 31px;
+}
+
+.table-view {
+    margin: 0;
+    border: none;
+    font-size: .9em;
+}
+
+.details h1 {
+    padding-top: 16px;
+    font-size: 18px;
+}
+
+.media-object {
+    width: 42px;
+    height: 42px;
+    border-radius: 25px;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.vertical-center{
+    vertical-align: middle;
+}
+
+.btn-bar {
+    color: #000;
+    background-color: transparent;
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.bar .btn-bar {
+    top: 0;
+    padding: 0 8px 0 0;
+    font-size: 18px;
+    color: #000;
+    line-height: 44px;
+}
+
+.bar .icon {
+    padding-top: 10.5px;
+    padding-bottom: 10.5px;
+}
+
+.bg-green {
+    background-color: #57a72c;
+}
+
+.img-btn{
+    width: 40px;
+    margin: .5em 0;
+}
+
+.block-progressbar{
+    background-color: white;
+    padding-top: 60px;
+    text-align: center;
+    font-size: .9em;
+}
+
+.btn-back-img:active, .btn-back-img.active {
+  color: inherit;
+  background-color: #ccc;
+}
+
+.card.no-border{
+  border: 0px;
+  border-radius: 0px;
+}
+
+.table-view-row{
+    display: grid;
+    grid-template-columns: 70% auto;
+    line-height: 1.25;
+    vertical-align: middle;
+    padding: 5px 10px 5px 0;
+}
+
+.table-view-row.row-full{
+    grid-template-columns: auto;
+    padding: 0px;
+}
+
+.table-view-row.row-full > div{
+    padding: 8.5px;
+}
+
+
+.table-view-row > div{
+    display: inline-grid;
+    align-content: center;
+    overflow: hidden;
+    padding-left: 10px;
+}
+
+.table-view-row.frm-subtitulo{
+    grid-template-columns: 85% auto;
+    background-color: #b0fbb0;
+}
+
+.table-view-row div > span, b {
+  display: contents;
+}
+
+.frm-icono{
+  color: gray;
+  text-align: center;
+}
+
+input.holo {
+    /* You can set width to whatever you like */
+    width: 100%;
+    height: inherit;
+    font-size: 16px;
+    margin: 0;
+    padding: 8px 8px 6px 8px;
+    position: relative;
+    display: block;
+    outline: none;
+    border: none;
+    background: bottom left linear-gradient(#a9a9a9, #a9a9a9) no-repeat, bottom center linear-gradient(#a9a9a9, #a9a9a9) repeat-x, bottom right linear-gradient(#a9a9a9, #a9a9a9) no-repeat;
+    background-size: 1px 6px, 1px 1px, 1px 6px;
+    box-shadow: none;
+}
+input.holo:enabled:hover, input.holo:enabled:focus {
+    background: bottom left linear-gradient(#0099cc, #0099cc) no-repeat, bottom center linear-gradient(#0099cc, #0099cc) repeat-x, bottom right linear-gradient(#0099cc, #0099cc) no-repeat;
+    background-size: 1px 6px, 1px 1px, 1px 6px; 
+} 
+
+.bloque-separador{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.frm-pre-subtitulo{
+  background-color: #250631;
+  color: white;
+}
+
+.frm-total{
+    padding-top: 6.5px;
+    padding-bottom: 6.5px;
+    background-color: #d9ecfd;
+}
+
+.frm-detalle{
+    padding-top: 6.5px;
+    padding-bottom: 6.5px;
+    background-color: #ceb9d4;
+}
+
+.frm-aviso{
+    background-color: #edf563;
+}
+
+.frm-detalle2{
+  background-color: #54514b;
+  color:white;
+}
+
+.frm-resumen{
+  background-color: #b7d6bc
+}
+
+.btn-block-normal{
+  font-size: 16px;
+  white-space: normal;
+  padding: 12px 8px;
+}
+
+input.holo.error, input.holo.error {
+    background: bottom left linear-gradient(#f44, #f44) no-repeat, bottom center linear-gradient(#f44, #f44) repeat-x, bottom right linear-gradient(#f44, #f44) no-repeat !important ;
+    color: red;
+    background-color: #fbeaea !important;
+    background-size: 1px 6px, 1px 1px, 1px 6px !important;
+}
+
+.row-duo{
+  grid-template-columns: 50% auto !important;
+}
+
+.row-trio{
+  grid-template-columns: 33% 33% 34% !important;
+}
+
+.titulo-separador{
+  padding: 5px;
+  margin: 5px 0px;
+  text-align: center;
+}
+
+._agregar-nuevo-tallo{
+  height: 45px;
+  line-height: 2.75;
+  color: gray;
+  padding: 2.5px 10px;
+}
+
+.icon {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.icon-plus {
+  color: green;
+}
+
+.icon-close {
+  color: red;
+}
+
+.title-modal-mensaje{
+  text-align: center;
+  width: 100%;
+  margin: 0;
+}
+
+.title-progressbar{
+  padding-left: 14px;
+}
+
+.errorLabel{
+  line-height: 0;
+  color: red;
+  font-style: italic;
+}

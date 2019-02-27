@@ -1,0 +1,127 @@
+	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Elasmopalpus</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li>    
+	  	{{#if puedo_registrar}}
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Infestación
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div class="frm-pre-subtitulo">Total de tallos por metro</div>
+		  				<div>
+		  					<input type="number" value="{{tallos_metro_base}}" class="holo _tallos-metro" />
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Tallos infectados: </div>
+		  				<div>
+			  				<input type="number" value="0" class="holo _tallos-infectados"/>
+			  			</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Tallos infectados: </div>
+		  				<div class="_tallos-porcentaje">0.00%</div>
+		  			</li>
+		  		</div>
+		  		<li class="table-view-row">
+		  			<div class="frm-pre-subtitulo">Área muestreada (metros)</div>
+		  			<div>
+		  				<input type="number" value="{{area_muestreada_base}}" class="holo _area-muestreada"/>
+		  			</div>
+		  		</li>
+
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Larvas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de larvas:</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _larvas"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Larvas por metro: </div>
+		  				<div class="_larvas-metro">0.0</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Pupas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de pupas:</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _pupas"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Pupas por metro: </div>
+		  				<div class="_pupas-metro">0.0</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Larvas muertas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de larvas muertas:</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _larvas-muertas"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Larvas muertas por metro: </div>
+		  				<div class="_larvas-muertas-metro">0.0</div>
+		  			</li>
+		  		</div>
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Guardar Muestra</button>
+			  	</div>
+		{{else}}	  	
+			<li class="table-view-row row-full frm-resumen text-center" style="margin-top: 32px;">
+		  		<div>Muestra registrada</div>
+		  	</li>
+	  	{{/if}}
+		</ul>
+	 </div>
+

@@ -1,0 +1,961 @@
+ <script id='FrmBiometriaView-hbs' type='text/template'>	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Biometría</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row row-duo">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row row-duo">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row row-duo">
+		  			<div>Días desde campaña: </div>
+		  			<div>{{dias_campana}}</div>
+		  		</li>
+
+		  		<li class="titulo-separador frm-pre-subtitulo">
+		  			<div>Biometría</div>
+		  		</li>      
+		  		<li class="table-view-row row-duo">
+		  			<div>Última etapa fenológica: </div>
+		  			<div>{{ultima_etapa}}</div>
+		  		</li>      
+		  		<li class="table-view-row row-duo">
+		  			<div>Escoger etapa fenológica: </div>
+		  			<div>
+		  				<select style="margin: 0;padding: 5px;" class="_etapa-fenologica">
+		  					<option value="1">Etapa de Brotación</option>
+		  					<option value="2">Etapa de Macollaje</option>
+		  					<option value="3">Período de Gran Crecimiento / Rápido crecimiento</option>
+		  					<option value="4">Etapa Maduración</option>
+		  				</select>
+		  			</div>
+		  		</li>      
+		  		<li class="table-view-row frm-detalle2">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
+		  		<div>
+		  			<li class="table-view-row frm-subtitulo row-trio">
+		  				<div>
+		  					Largo (cm):
+		  				</div>
+		  				<div>
+		  					Diámetro:
+		  				</div>
+		  				<div>
+		  					Número de Entrenudos:
+		  				</div>
+		  			</li>
+		  			<div class="_bloque-nudos">
+		  			</div>
+		  			<li class="_agregar-nuevo-tallo">
+		  				<div> <span class="icon icon-plus"></span> Agregar nuevo tallo</div>
+		  			</li>
+		  		</div>
+		  		<div>
+		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
+		  				<div>Volumen promedio</div>
+		  				<div class="_volumen-promedio text-right" style="display:block">n/a</div>
+		  			</li>
+		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
+		  				<div>Largo promedio</div>
+		  				<div class="_largo-promedio text-right">n/a</div>
+		  			</li>
+		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
+		  				<div>Tasa de crecimiento promedio</div>
+		  				<div class="_crecimiento-promedio text-right">n/a</div>
+		  			</li>
+		  		</div>
+
+		  		<li class="titulo-separador  frm-pre-subtitulo">
+		  			<div>Tallos por metro lineal</div>
+		  		</li> 
+		  		<div>
+		  			<li class="table-view-row">
+		  				<div>Número de metros</div>
+		  				<div><input type="number" class="holo _ml-metros"  value="{{numero_metros}}" readonly/></div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de tallos</div>
+		  				<div><input type="number" class="holo _ml-tallos"/></div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Tallos por metro lineal</div>
+		  				<div class="_ml-tallos-metro">0</div>
+		  			</li>
+		  		</div>
+
+		  		<li class="titulo-separador  frm-pre-subtitulo">
+		  			<div>Peso por tallo</div>
+		  		</li> 
+		  		<div>
+		  			<li class="table-view-row">
+		  				<div>Peso de tallos (Kg)</div>
+		  				<div><input type="number" class="holo _pt-pesos"/></div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de tallos</div>
+		  				<div><input type="number" class="holo _pt-tallos"/></div>
+		  			</li>
+		  			<li class="table-view-row" style="grid-template-columns: 70% 20% 10%;">
+		  				<div>Peso promedio por tallo</div>
+		  				<div class="_pt-promedio-peso">0</div>
+		  				<div>Kg</div>
+		  			</li>
+		  			<li class="table-view-row" style="grid-template-columns: 70% 20% 10%;">
+		  				<div>Toneladas métricas</div>
+		  				<div class="_pt-toneladas">0</div>
+		  				<div>TN</div>
+		  			</li>
+		  		</div>
+
+		  		<div style="padding:10px 24px 0px 24px">
+		  			<button id="btn-texto" class="btn btn-block btn-block-normal" disabled>Notas de Texto</button>
+		  			<button id="btn-foto" class="btn btn-block btn-block-normal" disabled>Capturar Foto</button>
+			  		<button id="btn-guardar" class="btn btn-block btn-block-normal">Guardar</button>
+			  	</div>		  	
+			</ul>
+	  	<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
+	 </div>
+
+</script> <script id='FrmCarbonView-hbs' type='text/template'>	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Carbón</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div>Número de muestras recomendadas: </div>
+		  			<div>{{muestras_recomendadas}}</div>
+		  		</li>      
+	  	{{#if puedo_registrar}}
+		  		<li class="table-view-row">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div class="frm-pre-subtitulo">N° Tallos cada {{n_metros}} metros </div>
+		  			<div>
+		  				<input type="number" class="holo _tallos"/>
+		  			</div>
+		  		</li>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Número de Látigos en Tallos
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de Látigos</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _tallos-latigo"/>
+		  				</div>
+		  			</li>
+		  		</div>
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Guardar Muestra</button>
+			  	</div>
+		{{else}}
+			<li class="table-view-row">
+		  		<div>Muestras realizadas</div>
+		  		<div>{{numero_muestra_actual}}</div>
+		  	</li>
+	  	{{/if}}
+
+		</ul>
+	  	<!-- <ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul> -->
+
+	 </div>
+
+</script> <script id='FrmDiatraeaResumenView-hbs' type='text/template'><li class="table-view-row row-full" >
+	<div class="frm-pre-subtitulo">Resumen de parcela (últimas {{cantidad}} muestras) </div>
+</li>
+{{#if cantidad_valida}}
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Entrenudos - Porcentaje de intensidad del daño	
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de % intesidad de daño</div>
+			<div>{{intensidad_daño}}%</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Entrenudos - Porcentaje de infestacion 
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de %  infestación</div>
+			<div>{{tallos_infestacion}}%</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Larvas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 1</div>
+			<div>{{estadio_1}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 2</div>
+			<div>{{estadio_2}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 3</div>
+			<div>{{estadio_3}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 4</div>
+			<div>{{estadio_4}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 5</div>
+			<div>{{estadio_5}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 6</div>
+			<div>{{estadio_6}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Índice de población promedio (Larvas por tallo)</div>
+			<div>{{larvas_indice}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Crisálidas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio individuos por tallo</div>
+			<div>{{crisalidas}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Larvas parasitadas por Billaea
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio individuos por tallo</div>
+			<div>{{larvas_parasitadas}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Billaea Larvas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de individuos por tallo</div>
+			<div>{{billaea_larvas}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Billaea Pupas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de individuos por tallo</div>
+			<div>{{billaea_pupas}}</div>
+		</li>
+	</div>
+{{else}}
+	<li class="table-view-row row-full" >
+		<div class="frm-aviso">Para ver por favor guardar por lo menos una muestra </div>
+	</li>
+{{/if}}</script> <script id='FrmDiatraeaView-hbs' type='text/template'>	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Diatraea</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div>Número de muestras recomendadas: </div>
+		  			<div>{{muestras_recomendadas}}</div>
+		  		</li>      
+	  	{{#if puedo_registrar}}
+		  		<li class="table-view-row">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div class="frm-pre-subtitulo">Entrenudos muestreados </div>
+		  			<div>
+		  				<input class="_entrenudos holo" type="number" value="" />
+		  			</div>
+		  		</li>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Entrenudos - % intensidad del daño	
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de Entrenudos infestados</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _entrenudos-infestados"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Porcentaje infestado: </div>
+		  				<div class="_entrenudos-porcentaje">n/a</div>
+		  			</li>
+		  		</div>
+		  		<li class="table-view-row">
+		  			<div class="frm-pre-subtitulo">Tallos muestreados </div>
+		  			<div>
+		  				<input type="number" value="{{tallos_muestreados}}" class="holo" disabled/>
+		  			</div>
+		  		</li>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Entrenudos - % de infestación
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de tallos infestados</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _tallos-infestados"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Porcentaje infestado: </div>
+		  				<div class="_tallos-porcentaje">0.00%</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Larvas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 1</div>
+		  				<div>
+		  					<input type="number" id="estadio-1" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 2</div>
+		  				<div>
+		  					<input type="number" id="estadio-2" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 3</div>
+		  				<div>
+		  					<input type="number" id="estadio-3" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 4</div>
+		  				<div>
+		  					<input type="number" id="estadio-4" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 5</div>
+		  				<div>
+		  					<input type="number" id="estadio-5" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Estadio 6</div>
+		  				<div>
+		  					<input type="number" id="estadio-6" value="0" class="holo _estadio"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row frm-total">
+		  				<div>Total larvas</div>
+		  				<div class="_larvas-total">0</div>
+		  			</li>
+		  			<li class="table-view-row frm-detalle">
+		  				<div>Índice de población</div>
+		  				<div class="_larvas-indice">0.000</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Crisálidas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de individuos por {{tallos_muestreados}} tallos</div>
+		  				<div>
+		  					<input class="holo _crisalidas" type="number" value="0" />
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Individuos por tallo: </div>
+		  				<div class="holo _crisalidas-tallo">0.00</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Larvas parasitadas por Billaea
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de individuos por {{tallos_muestreados}} tallos</div>
+		  				<div>
+		  					<input class="holo _larvas-parasitadas" type="number" value="0"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Individuos por tallo: </div>
+		  				<div class="_larvas-parasitadas-tallo">0.00</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Billaea - Larvas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de individuos por {{tallos_muestreados}} tallos</div>
+		  				<div>
+		  					<input class="holo _billaea-larvas" type="number" value="0"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Individuos por tallo: </div>
+		  				<div class="_billaea-larvas-tallo">0.00</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Billaea - Pupas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de individuos por {{tallos_muestreados}} tallos</div>
+		  				<div>
+		  					<input class="holo _billaea-pupas" type="number" value="0"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Individuos por tallo: </div>
+		  				<div class="_billaea-pupas-tallo">0.00</div>
+		  			</li>
+		  		</div>
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Guardar Muestra</button>
+			  		<button id="btn-finalizar" class="btn btn-block btn-block-normal">Finalizar evaluación de cuartel o válvula (Última evaluación)</button>
+			  	</div>		  	
+	  	{{/if}}
+		</ul>
+	  	<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
+
+	 </div>
+
+</script> <script id='FrmElasmopalpusView-hbs' type='text/template'>	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Elasmopalpus</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li>    
+	  	{{#if puedo_registrar}}
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Infestación
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div class="frm-pre-subtitulo">Total de tallos por metro</div>
+		  				<div>
+		  					<input type="number" value="{{tallos_metro_base}}" class="holo _tallos-metro" />
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Tallos infectados: </div>
+		  				<div>
+			  				<input type="number" value="0" class="holo _tallos-infectados"/>
+			  			</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Tallos infectados: </div>
+		  				<div class="_tallos-porcentaje">0.00%</div>
+		  			</li>
+		  		</div>
+		  		<li class="table-view-row">
+		  			<div class="frm-pre-subtitulo">Área muestreada (metros)</div>
+		  			<div>
+		  				<input type="number" value="{{area_muestreada_base}}" class="holo _area-muestreada"/>
+		  			</div>
+		  		</li>
+
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Larvas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de larvas:</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _larvas"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Larvas por metro: </div>
+		  				<div class="_larvas-metro">0.0</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Pupas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de pupas:</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _pupas"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Pupas por metro: </div>
+		  				<div class="_pupas-metro">0.0</div>
+		  			</li>
+		  		</div>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Larvas muertas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de larvas muertas:</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _larvas-muertas"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Larvas muertas por metro: </div>
+		  				<div class="_larvas-muertas-metro">0.0</div>
+		  			</li>
+		  		</div>
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Guardar Muestra</button>
+			  	</div>
+		{{else}}	  	
+			<li class="table-view-row row-full frm-resumen text-center" style="margin-top: 32px;">
+		  		<div>Muestra registrada</div>
+		  	</li>
+	  	{{/if}}
+		</ul>
+	 </div>
+
+</script> <script id='FrmMetamasiusView-hbs' type='text/template'>	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Metamasius</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Número de muestras recomendadas: </div>
+		  			<div>{{muestras_recomendadas}}</div>
+		  		</li>   
+		  		<li class="table-view-row frm-detalle2">
+		  			<div>Muestra </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>     
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Tallos
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div class="frm-pre-subtitulo">Tallos evaluados</div>
+		  				<div>
+		  					<input type="number" readonly value="{{tallos_evaluar}}" class="holo _tallos-evaluados" />
+		  				</div>
+		  			</li>
+
+		  			<li class="table-view-row">
+		  				<div>Tallos dañados: </div>
+		  				<div>
+			  				<input type="number" value="0" class="holo _tallos-dañados"/>
+			  			</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Tallos dañados porcentaje: </div>
+		  				<div class="_tallos-dañados-porcentaje">0.00%</div>
+		  			</li>
+		  		</div>
+
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Entrenudos
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div class="frm-pre-subtitulo">Entrenudos evaluados</div>
+		  				<div>
+		  					<input type="number" readonly value="{{entrenudos_evaluar}}" class="holo _entrenudos-evaluados" />
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Entrenudos dañados: </div>
+		  				<div>
+			  				<input type="number" value="0" class="holo _entrenudos-dañados"/>
+			  			</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Entrenudos dañados porcentaje: </div>
+		  				<div class="_entrenudos-dañados-porcentaje">0.00%</div>
+		  			</li>
+		  		</div>
+		  	
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-guardar" class="btn btn-block btn-block-normal">Guardar</button>
+			  	</div>
+		</ul>
+	 </div>
+
+</script> <script id='FrmRoyaResumenView-hbs' type='text/template'><li class="table-view-row row-full" >
+	<div class="frm-pre-subtitulo">Resumen de parcela (últimas {{cantidad}} muestras) </div>
+</li>
+{{#if cantidad_valida}}
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Roya - % de hoja afectadas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de % hojas afectadas por muestra</div>
+			<div>{{porcentaje_afectadas}}%</div>
+		</li>
+	</div>
+{{else}}
+	<li class="table-view-row row-full" >
+		<div class="frm-aviso">Para ver por favor guardar por lo menos una muestra.</div>
+	</li>
+{{/if}}</script> <script id='FrmRoyaView-hbs' type='text/template'>	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Roya</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div>Número de muestras recomendadas: </div>
+		  			<div>{{muestras_recomendadas}}</div>
+		  		</li>
+	  	{{#if puedo_registrar}}
+		  		<li class="table-view-row">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div class="frm-pre-subtitulo">Hojas muestreadas </div>
+		  			<div>
+		  				<input type="number" value="{{hojas_muestreadas}}" class="holo" disabled/>
+		  			</div>
+		  		</li>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Hojas afectadas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de Hojas afectadas</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _hojas-afectadas"/>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Porcentaje de afectadas: </div>
+		  				<div class="_porcentaje-afectadas">0.00%</div>
+		  			</li>
+		  		</div>
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Guardar Muestra</button>
+			  		<button id="btn-finalizar" class="btn btn-block btn-block-normal">Finalizar evaluación de cuartel o válvula (Última evaluación)</button>
+			  	</div>		  	
+	  	{{/if}}
+		</ul>
+	  	<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
+
+	 </div>
+
+</script> <script id='InicioView-hbs' type='text/template'>    	<header class="bar bar-nav">
+    		<div class="btn-bar btn-nav pull-left">
+    			<img class="vertical-center" src="assets/img/logo-mini.png"/>
+    		</div>
+            <a class="icon icon-pages pull-right" title="Cerrar Sesión" onclick="cerrarSesion();"></a>
+    		<h1 class="title">Inicio</h1>
+    	</header>
+
+    	<div class="content">
+    		<div class="content-padded text-center">
+    			<h3>Cayaltí Agri</h3>
+    			<h5>Bienvenido, {{nombre_usuario}}</h5>
+    			<button id="btn-actualizar" class="btn btn-primary">ACTUALIZAR</button>
+    			<p class="lbl-actualizar"></p>
+    			<button id="btn-enviar" class="btn btn-md btn-positive bg-green">SINCRONIZAR</button>
+                 <p class="lbl-enviar"></p>
+    			<hr>
+    			<button class="btn" id="btn-mapa" disabled>
+    				<img class="img-btn" src="assets/img/icon_mapa.png"/>
+    				<div>VER MAPA</div>
+    			</button>
+    			<button class="btn" id="btn-listas">
+    				<img class="img-btn" src="assets/img/icon_lista.png"/>
+    				<div>VER LISTAS</div>
+    			</button>
+    		</div>   
+
+	          <!--
+	          <a href="#myModalexample" class="btn">Open modal</a>
+				<div id="myModalexample" class="modal">
+				  <header class="bar bar-nav">
+				    <a class="icon icon-close pull-right" href="#myModalexample"></a>
+				    <h1 class="title">Modal</h1>
+				  </header>
+
+				  <div class="content">
+				    <p class="content-padded">The contents of my modal go here. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut.</p>
+				  </div>
+				</div>
+			-->
+		</div>
+</script> <script id='ListaCamposListView-hbs' type='text/template'><ul class="table-view">
+		  {{#each this}}
+		  <li class="table-view-cell"> 
+		  	<a data-id="{{cod_campana}}"> {{nombre_campo}}</a>
+		  </li>
+		  {{/each}}
+		</ul></script> <script id='ListaCamposView-hbs' type='text/template'>   		<header class="bar bar-nav">
+	          <a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+		        <span class="icon icon-left-nav pull-left"></span>
+	          	<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	          </a>
+	          <h1 class="title">Lista de Campos</h1>
+	    </header>
+	    <div class="content"></div></script> <script id='ListaFormulariosListView-hbs' type='text/template'>		<ul class="table-view">
+		  {{#each formularios}}
+		  <li class="table-view-cell"> 
+		  	<a href="#{{nombre_interfaz}}/{{../cod_parcela}}"> {{descripcion}}  <span class="badge">{{registros_hechos}}</span></a>
+		  </li>
+		  {{/each}}
+		</ul></script> <script id='ListaFormulariosView-hbs' type='text/template'>   		<header class="bar bar-nav">
+	          <a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+		        <span class="icon icon-left-nav pull-left"></span>
+	          	<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	          </a>
+	          <h1 class="title">Formularios</h1>
+	    </header>
+	    <div class="content"></div></script> <script id='ListaParcelasListView-hbs' type='text/template'>		<ul class="table-view">
+		  {{#each this}}
+		  <li data-id="{{cod_parcela}}" class="table-view-cell"> 
+		  	<a> {{rotulo}}</a>
+		  </li>
+		  {{/each}}
+		</ul></script> <script id='ListaParcelasView-hbs' type='text/template'><header class="bar bar-nav">
+	          <a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+		        <span class="icon icon-left-nav pull-left"></span>
+	          	<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	          </a>
+	          <h1 class="title">Lista de Parcelas</h1>
+	    </header>
+	    <div class="bar bar-standard bar-header-secondary" style="display:flex;height: 75px;">	    		
+	    </div>
+	    <div class="content"></div></script> <script id='LoginView-hbs' type='text/template'><div class="content">
+      <div class="content-padded text-center">
+        <h2>Cayaltí Agri</h2>
+        <img src="assets/img/LOGO.png">
+      </div>
+      <div class="card">
+        <form>
+              <!-- <input required type="text" id="txt-login" placeholder="Usuario" value="{{txt_usuario}}"> -->
+              <input required type="text" id="txt-login" placeholder="Usuario">
+              <input required type="password" id="txt-clave" placeholder="Clave">
+              <button class="btn btn-block">Acceder</button>
+        </form>
+      </div>
+    </div></script> <script id='ModalMensajeComponente-hbs' type='text/template'><header class="bar bar-nav">
+	<h1 class="title title-modal-mensaje">{{titulo}}</h1>
+</header>
+<div class="block-progressbar" style="padding-top: 50px;">
+    <small>{{texto_informacion}}</small>
+    <div class="cargando">
+    	<img src="assets/img/cargando.gif" style="height: 35px;">
+    </div>
+</div></script> <script id='NuevoTalloComponente-hbs' type='text/template'><div class="table-view-row row-trio">
+	<div>
+		<input type="number" class="holo _largo"/>
+	</div>
+	<div>
+		<input type="number" class="holo _diametro"/>
+	</div>
+	<div>
+		<input type="number" class="holo _entrenudos"/>
+	</div>
+</div>
+<li class="table-view-row frm-resumen">
+	<div>Largo de nudos: </div>
+	<div class="text-right" style="display:block"><span class="_largo-nudos"></span>cm  <a class="_quitar-entrenudo"><span class="icon icon-close"></span></a></div>	
+</li></script> <script id='ProgressBarComponente-hbs' type='text/template'><header class="bar bar-nav">
+			<h1 class="title title-progressbar">{{titulo}}</h1>
+		</header>
+		<div class="block-progressbar">
+    		<small>{{texto_informacion}}</small>
+    		<progress value="{{valor}}" max="100" style="width: 90%;"></progress>
+    	</div></script>

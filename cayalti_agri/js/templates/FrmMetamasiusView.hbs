@@ -1,0 +1,91 @@
+	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Metamasius</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Número de muestras recomendadas: </div>
+		  			<div>{{muestras_recomendadas}}</div>
+		  		</li>   
+		  		<li class="table-view-row frm-detalle2">
+		  			<div>Muestra </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>     
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Tallos
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div class="frm-pre-subtitulo">Tallos evaluados</div>
+		  				<div>
+		  					<input type="number" readonly value="{{tallos_evaluar}}" class="holo _tallos-evaluados" />
+		  				</div>
+		  			</li>
+
+		  			<li class="table-view-row">
+		  				<div>Tallos dañados: </div>
+		  				<div>
+			  				<input type="number" value="0" class="holo _tallos-dañados"/>
+			  			</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Tallos dañados porcentaje: </div>
+		  				<div class="_tallos-dañados-porcentaje">0.00%</div>
+		  			</li>
+		  		</div>
+
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Entrenudos
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div class="frm-pre-subtitulo">Entrenudos evaluados</div>
+		  				<div>
+		  					<input type="number" readonly value="{{entrenudos_evaluar}}" class="holo _entrenudos-evaluados" />
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Entrenudos dañados: </div>
+		  				<div>
+			  				<input type="number" value="0" class="holo _entrenudos-dañados"/>
+			  			</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Entrenudos dañados porcentaje: </div>
+		  				<div class="_entrenudos-dañados-porcentaje">0.00%</div>
+		  			</li>
+		  		</div>
+		  	
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-guardar" class="btn btn-block btn-block-normal">Guardar</button>
+			  	</div>
+		</ul>
+	 </div>
+

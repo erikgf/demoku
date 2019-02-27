@@ -1,0 +1,129 @@
+	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Biometría</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row row-duo">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row row-duo">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row row-duo">
+		  			<div>Días desde campaña: </div>
+		  			<div>{{dias_campana}}</div>
+		  		</li>
+
+		  		<li class="titulo-separador frm-pre-subtitulo">
+		  			<div>Biometría</div>
+		  		</li>      
+		  		<li class="table-view-row row-duo">
+		  			<div>Última etapa fenológica: </div>
+		  			<div>{{ultima_etapa}}</div>
+		  		</li>      
+		  		<li class="table-view-row row-duo">
+		  			<div>Escoger etapa fenológica: </div>
+		  			<div>
+		  				<select style="margin: 0;padding: 5px;" class="_etapa-fenologica">
+		  					<option value="1">Etapa de Brotación</option>
+		  					<option value="2">Etapa de Macollaje</option>
+		  					<option value="3">Período de Gran Crecimiento / Rápido crecimiento</option>
+		  					<option value="4">Etapa Maduración</option>
+		  				</select>
+		  			</div>
+		  		</li>      
+		  		<li class="table-view-row frm-detalle2">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
+		  		<div>
+		  			<li class="table-view-row frm-subtitulo row-trio">
+		  				<div>
+		  					Largo (cm):
+		  				</div>
+		  				<div>
+		  					Diámetro:
+		  				</div>
+		  				<div>
+		  					Número de Entrenudos:
+		  				</div>
+		  			</li>
+		  			<div class="_bloque-nudos">
+		  			</div>
+		  			<li class="_agregar-nuevo-tallo">
+		  				<div> <span class="icon icon-plus"></span> Agregar nuevo tallo</div>
+		  			</li>
+		  		</div>
+		  		<div>
+		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
+		  				<div>Volumen promedio</div>
+		  				<div class="_volumen-promedio text-right" style="display:block">n/a</div>
+		  			</li>
+		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
+		  				<div>Largo promedio</div>
+		  				<div class="_largo-promedio text-right">n/a</div>
+		  			</li>
+		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
+		  				<div>Tasa de crecimiento promedio</div>
+		  				<div class="_crecimiento-promedio text-right">n/a</div>
+		  			</li>
+		  		</div>
+
+		  		<li class="titulo-separador  frm-pre-subtitulo">
+		  			<div>Tallos por metro lineal</div>
+		  		</li> 
+		  		<div>
+		  			<li class="table-view-row">
+		  				<div>Número de metros</div>
+		  				<div><input type="number" class="holo _ml-metros"  value="{{numero_metros}}" readonly/></div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de tallos</div>
+		  				<div><input type="number" class="holo _ml-tallos"/></div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Tallos por metro lineal</div>
+		  				<div class="_ml-tallos-metro">0</div>
+		  			</li>
+		  		</div>
+
+		  		<li class="titulo-separador  frm-pre-subtitulo">
+		  			<div>Peso por tallo</div>
+		  		</li> 
+		  		<div>
+		  			<li class="table-view-row">
+		  				<div>Peso de tallos (Kg)</div>
+		  				<div><input type="number" class="holo _pt-pesos"/></div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de tallos</div>
+		  				<div><input type="number" class="holo _pt-tallos"/></div>
+		  			</li>
+		  			<li class="table-view-row" style="grid-template-columns: 70% 20% 10%;">
+		  				<div>Peso promedio por tallo</div>
+		  				<div class="_pt-promedio-peso">0</div>
+		  				<div>Kg</div>
+		  			</li>
+		  			<li class="table-view-row" style="grid-template-columns: 70% 20% 10%;">
+		  				<div>Toneladas métricas</div>
+		  				<div class="_pt-toneladas">0</div>
+		  				<div>TN</div>
+		  			</li>
+		  		</div>
+
+		  		<div style="padding:10px 24px 0px 24px">
+		  			<button id="btn-texto" class="btn btn-block btn-block-normal" disabled>Notas de Texto</button>
+		  			<button id="btn-foto" class="btn btn-block btn-block-normal" disabled>Capturar Foto</button>
+			  		<button id="btn-guardar" class="btn btn-block btn-block-normal">Guardar</button>
+			  	</div>		  	
+			</ul>
+	  	<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
+	 </div>
+

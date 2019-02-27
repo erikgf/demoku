@@ -1,0 +1,20 @@
+<li class="table-view-row row-full" >
+	<div class="frm-pre-subtitulo">Resumen de parcela (últimas {{cantidad}} muestras) </div>
+</li>
+{{#if cantidad_valida}}
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Roya - % de hoja afectadas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de % hojas afectadas por muestra</div>
+			<div>{{porcentaje_afectadas}}%</div>
+		</li>
+	</div>
+{{else}}
+	<li class="table-view-row row-full" >
+		<div class="frm-aviso">Para ver por favor guardar por lo menos una muestra.</div>
+	</li>
+{{/if}}

@@ -1,0 +1,68 @@
+	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Carbón</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div>Número de muestras recomendadas: </div>
+		  			<div>{{muestras_recomendadas}}</div>
+		  		</li>      
+	  	{{#if puedo_registrar}}
+		  		<li class="table-view-row">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
+		  		<li class="table-view-row">
+		  			<div class="frm-pre-subtitulo">N° Tallos cada {{n_metros}} metros </div>
+		  			<div>
+		  				<input type="number" class="holo _tallos"/>
+		  			</div>
+		  		</li>
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Número de Látigos en Tallos
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Número de Látigos</div>
+		  				<div>
+		  					<input type="number" value="0" class="holo _tallos-latigo"/>
+		  				</div>
+		  			</li>
+		  		</div>
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Guardar Muestra</button>
+			  	</div>
+		{{else}}
+			<li class="table-view-row">
+		  		<div>Muestras realizadas</div>
+		  		<div>{{numero_muestra_actual}}</div>
+		  	</li>
+	  	{{/if}}
+
+		</ul>
+	  	<!-- <ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul> -->
+
+	 </div>
+

@@ -1,0 +1,110 @@
+<li class="table-view-row row-full" >
+	<div class="frm-pre-subtitulo">Resumen de parcela (últimas {{cantidad}} muestras) </div>
+</li>
+{{#if cantidad_valida}}
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Entrenudos - Porcentaje de intensidad del daño	
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de % intesidad de daño</div>
+			<div>{{intensidad_daño}}%</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Entrenudos - Porcentaje de infestacion 
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de %  infestación</div>
+			<div>{{tallos_infestacion}}%</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Larvas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 1</div>
+			<div>{{estadio_1}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 2</div>
+			<div>{{estadio_2}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 3</div>
+			<div>{{estadio_3}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 4</div>
+			<div>{{estadio_4}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 5</div>
+			<div>{{estadio_5}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio estadio 6</div>
+			<div>{{estadio_6}}</div>
+		</li>
+		<li class="table-view-row">
+			<div>Índice de población promedio (Larvas por tallo)</div>
+			<div>{{larvas_indice}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Crisálidas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio individuos por tallo</div>
+			<div>{{crisalidas}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Larvas parasitadas por Billaea
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio individuos por tallo</div>
+			<div>{{larvas_parasitadas}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Billaea Larvas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de individuos por tallo</div>
+			<div>{{billaea_larvas}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Billaea Pupas
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de individuos por tallo</div>
+			<div>{{billaea_pupas}}</div>
+		</li>
+	</div>
+{{else}}
+	<li class="table-view-row row-full" >
+		<div class="frm-aviso">Para ver por favor guardar por lo menos una muestra </div>
+	</li>
+{{/if}}
