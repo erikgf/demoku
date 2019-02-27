@@ -1,10 +1,10 @@
 var AgriServicioWeb = function() {
     var url,
-        IP = "192.168.8.7";
+        IP = "cayalti-demo.herokuapp.com";
 
     this.initialize = function(serviceURL) {
         //url = serviceURL ? serviceURL : "http://localhost/cayalti_agri_web/controlador/";
-        url = serviceURL ? serviceURL : "http://"+IP+"/cayalti_agri_web/controlador/";
+        url = serviceURL ? serviceURL : "http://"+IP+"/controlador/";
         var deferred = $.Deferred();
         deferred.resolve();
         return deferred.promise();
