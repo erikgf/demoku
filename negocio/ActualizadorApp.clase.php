@@ -217,7 +217,7 @@ class ActualizadorApp extends Conexion {
 
             $this->commit();
 
-            return array("rpt"=>true,"msj"=>"Registros sincronizados correctamente.");
+            return array("rpt"=>true,"msj"=>"Data resincronizada correctamente.");
         } catch (Exception $exc) {
             return array("rpt"=>false,"msj"=>$exc);
         }
