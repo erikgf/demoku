@@ -140,6 +140,7 @@ class ActualizadorApp extends Conexion {
             case 5:
                 $objRetorno = [
                     "met_entrenudos_evaluados" => $objDetalle->met_entrenudos_evaluados,
+                    "met_entrenudos_danados" => $objDetalle->met_entrenudos_danados,
                     "met_tallos_danados" => $objDetalle->met_tallos_danados,
                     "met_tallos_evaluados" => $objDetalle->met_tallos_evaluados,
                     "met_larvas"=> $objDetalle->met_larvas
@@ -172,7 +173,7 @@ class ActualizadorApp extends Conexion {
             //obj decoded contiene todas las plagas (6) mas la cabecera
             $objCabecera = $objDecoded->cabecera;
             $cabecera = [];
-            //BIOMETRIA
+            
             foreach ($objDecoded as $rotulo => $grupo_formulario) {
                 if ($rotulo != "cabecera"){
                    foreach ($grupo_formulario as $key => $value) {
