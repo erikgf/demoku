@@ -258,6 +258,11 @@ var FrmDiatraeaView = function (servicio_frm, params) {
     var UIDone = function (res) {
             var uiRow = res.UI.rows.item(0);
             TALLOS_MUESTREADOS = uiRow.tallos_muestreados; 
+
+            if (uiRow.muestras_recomendadas <= 0){
+                uiRow.muestras_recomendadas = 1;
+            }
+            
             MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
             if ((uiRow.muestras_recomendadas >=  MUESTRA_ACTUAL) && (uiRow.muestras_finalizadas == 0)) {
                 uiRow.puedo_registrar = true;

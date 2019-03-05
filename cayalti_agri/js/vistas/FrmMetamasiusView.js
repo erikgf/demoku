@@ -131,9 +131,10 @@ var FrmMetamasiusView = function (servicio_frm, params) {
                     uiRow.muestras_recomendadas = 1;
                 }
 
-                if ((uiRow.muestras_recomendadas >= parseInt(uiRow.numero_muestra_actual)) && (uiRow.muestras_finalizadas == 0)) {
+                MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
+
+                if ((uiRow.muestras_recomendadas >= MUESTRA_ACTUAL) && (uiRow.muestras_finalizadas == 0)) {
                     uiRow.puedo_registrar = true;
-                    MUESTRA_ACTUAL = uiRow.numero_muestra_actual;
                     self.$el.html(self.template(uiRow)); 
                     $content = self.$el.find(".content");
                     self.setDOM();
@@ -208,8 +209,6 @@ var FrmMetamasiusView = function (servicio_frm, params) {
                 return;
             }
 
-            console.log(MUESTRA_ACTUAL);
-            
             var DOM = $DOM, 
                 objMuestra = {
                     item : MUESTRA_ACTUAL,

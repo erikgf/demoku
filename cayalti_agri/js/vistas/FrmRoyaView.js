@@ -108,8 +108,7 @@ var FrmRoyaView = function (servicio_frm, params) {
                 self.$el.html(self.template(uiRow));     
                 $content = self.$el.find(".content");
             }
-
-            console.log(res.resumen.rows);
+        
             $resumen = self.$el.find("#frm-resumen");
             frmRoyaResumenView = new FrmRoyaResumenView(procesarResumen(rs2Array(res.resumen.rows)));
             $resumen.html(frmRoyaResumenView.$el);    

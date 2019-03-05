@@ -177,6 +177,10 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
             var uiRow = res.UI.rows.item(0);
             MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
 
+            if (uiRow.muestras_recomendadas <= 0){
+                uiRow.muestras_recomendadas = 1;
+            }
+
             if ((uiRow.muestras_recomendadas >=  MUESTRA_ACTUAL) && (uiRow.muestras_finalizadas == 0)) {
                 uiRow.puedo_registrar = true;
                 self.$el.html(self.template(uiRow)); 
