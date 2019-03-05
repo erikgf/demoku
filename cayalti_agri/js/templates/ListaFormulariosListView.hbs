@@ -1,7 +1,7 @@
 		<ul class="table-view">
 		  {{#each formularios}}
 		  <li class="table-view-cell"> 
-		  	<a href="#{{nombre_interfaz}}/{{../cod_parcela}}"> {{descripcion}}  <span class="badge">{{registros_hechos}}</span></a>
+		  	<a href="#{{nombre_interfaz}}/{{../cod_parcela}}"> {{descripcion}}  <span class="badge badge-lg {{#if finalizado}}finalizado{{/if}}">{{registros_hechos}}</span></a>
 		  </li>
 		  {{/each}}
 		</ul>

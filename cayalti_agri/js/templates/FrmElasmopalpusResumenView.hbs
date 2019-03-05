@@ -1,0 +1,54 @@
+<li class="table-view-row row-full" >
+	<div class="frm-pre-subtitulo">Resumen de parcela (últimas {{cantidad}} muestras) </div>
+</li>
+
+{{#if cantidad_valida}}
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Elasmopalpus - % de tallos dañados
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de % tallos infestados por muestra</div>
+			<div>{{porcentaje_tallos_dañados}}%</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Elasmopalpus - Larvas por metro
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de larvas por metro</div>
+			<div>{{larvas_metro}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Elasmopalpus - Pupas por metro
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de pupas por metro</div>
+			<div>{{pupas_metro}}</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Elasmopalpus - Larvas Muertas por tallo
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de larvas murtas por metro</div>
+			<div>{{larvas_muertas_metro}}</div>
+		</li>
+	</div>
+{{else}}
+	<li class="table-view-row row-full" >
+		<div class="frm-aviso">Para ver por favor guardar por lo menos una muestra.</div>
+	</li>
+{{/if}}

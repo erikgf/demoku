@@ -1,8 +1,11 @@
 var FrmElasmopalpusView = function (servicio_frm, params) {
-	var $content,
+	var self = this,
+        $content,
+        MUESTRA_ACTUAL,
         TALLOS_MUESTREADOS,
         $resumen,
 		rs2Array = resultSetToArray,
+        frmElasmopalpusResumenView,
         $DOM;
 
 
@@ -35,10 +38,7 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
         //$entrenudos = $(", $entrenudos_infestados, $entrenudos_porcentaje_infestado
     }
 
-    this.setEventos = function(){
-        var self = this;
-
-        $content.on("change","input", function(e){
+    var __changeInput = function(e){
             var classList = this.classList;
             if (classList.contains("_tallos-metro") ||  classList.contains("_tallos-infectados")){
                 calcularTallosInfestacion();
@@ -64,12 +64,19 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
                 calcularPorMetro("larvas_muertas");
                 return;
             }
+        },
+        __guardarMuestra = function(e){
+            e.preventDefault();
+            self.guardarMuestra();
+        },
+        __finalizarEvaluacion = function(e){
+            self.finalizarEvaluacion();
+        };
 
-        });
-
-        $content.on("click", "#btn-guardar-muestra", function(e){
-            self.guardaMuestra();
-        });
+    this.setEventos = function(){
+        $content.on("change","input", __changeInput);
+        $content.on("click", "#btn-guardar-muestra", __guardarMuestra);
+        $content.on("click", "#btn-finalizar", __finalizarEvaluacion);
 
     };
 
@@ -166,17 +173,11 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
         }
     };
 
-    this.consultarDatosInterfaz = function(){
-        /*parcela, cultivo (variedad), hectareas, parcela,  muestras por hectareas, muestra actual*/
-        var reqObj = {
-              UI: servicio_frm.obtenerUIElasmopalpus(params.cod_parcela)
-            },
-            self = this;
-
-        $.whenAll(reqObj)
-          .done(function (res) {
+    var UIDone = function (res) {
             var uiRow = res.UI.rows.item(0);
-            if ((uiRow.muestras_recomendadas >= parseInt(uiRow.numero_muestra_actual)) && (uiRow.muestras_finalizadas == 0)) {
+            MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
+
+            if ((uiRow.muestras_recomendadas >=  MUESTRA_ACTUAL) && (uiRow.muestras_finalizadas == 0)) {
                 uiRow.puedo_registrar = true;
                 self.$el.html(self.template(uiRow)); 
                 $content = self.$el.find(".content");
@@ -187,14 +188,31 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
                 self.$el.html(self.template(uiRow));     
                 $content = self.$el.find(".content");
             }
-          })
-          .fail(function (firstFail, name) {
+
+            $resumen = self.$el.find("#frm-resumen");
+            frmElasmopalpusResumenView = new FrmElasmopalpusResumenView(procesarResumen(rs2Array(res.resumen.rows)));
+            $resumen.html(frmElasmopalpusResumenView.$el);       
+        },
+        UIFail = function (firstFail, name) {
             console.log('Fail for: ' + name);
             console.error(firstFail);
-          });
+        };
+
+
+    this.consultarDatosInterfaz = function(){
+        /*parcela, cultivo (variedad), hectareas, parcela,  muestras por hectareas, muestra actual*/
+        var reqObj = {
+              UI: servicio_frm.obtenerUIElasmopalpus(params.cod_parcela),
+              resumen: servicio_frm.obtenerResumenElasmopalpus(params.cod_parcela)
+            },
+            self = this;
+
+        $.whenAll(reqObj)
+          .done(UIDone)
+          .fail(UIFail);
     };
 
-   var validarMuestra = function(){
+    var validarMuestra = function(){
         var DOM = $DOM,
             $tallos_metro = DOM.tallos_metro,
             tallos_metro = $tallos_metro.val(),
@@ -219,15 +237,23 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
         return true;
     };
 
+    this.guardarMuestra = function(){
+        agregarMuestra(false);
+    };  
 
-    this.guardaMuestra = function(){
+    this.finalizarEvaluacion = function(){
+        agregarMuestra(true);
+    };
+
+    var agregarMuestra = function(esFinalizar){
         if (validarMuestra()){
-            if (!confirm("¿Desea guardar esta muestra?")){
+            if (!confirm("¿Desea "+(esFinalizar ? "finalizar esta parcela" : "guardar esta muestra")+"?")){
                 return;
             }
 
             var DOM = $DOM, 
                 objMuestra = {
+                    item: MUESTRA_ACTUAL,
                     cod_parcela : params.cod_parcela,
                     ela_tallos_metro: parseInt(DOM.tallos_metro.val()),
                     ela_tallos_infectados: parseInt(DOM.tallos_infectados.val()),
@@ -235,14 +261,19 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
                     ela_larvas : parseInt(DOM.larvas.val()),
                     ela_pupas : parseInt(DOM.pupas.val()),
                     ela_larvas_muertas : parseInt(DOM.larvas_muertas.val()),
-                    finalizacion : false,
+                    finalizacion : esFinalizar,
                     usuario_registro: DATA_NAV.usuario.cod_usuario
                 };
             
             $.when( servicio_frm.agregarMuestraElasmopalpus(objMuestra)
                     .done(function(r){
-                        history.back();
-                        console.log("Muestra guardada.");
+                       if (esFinalizar){
+                            history.back();
+                            alert("Muestra FINALIZADA.");
+                        } else {
+                            reiniciarFormulario();
+                            alert("Muestra GUARDADA.");
+                        }
                     })
                     .fail(function(e){
                         console.error(e);
@@ -250,6 +281,70 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
                 );
         }
     };  
+
+    var procesarResumen = function(arregloMuestras){
+
+        var porcentaje_tallos_dañados = 0.00,
+            larvas_metro = 0.0,
+            pupas_metro = 0.0,
+            larvas_muertas_metro = 0.0,
+            totalMuestras = arregloMuestras.length;
+
+        for (var i = totalMuestras - 1; i >= 0; i--) {
+            var objMuestra = arregloMuestras[i];
+            porcentaje_tallos_dañados +=  (objMuestra.ela_tallos_infectados / objMuestra.ela_tallos_metro);
+            larvas_metro += ( objMuestra.ela_larvas / objMuestra.ela_area_muestreada);
+            pupas_metro += objMuestra.ela_larvas / objMuestra.ela_area_muestreada;
+            larvas_muertas_metro += objMuestra.ela_larvas_muertas / objMuestra.ela_area_muestreada;
+        };
+
+        return {
+                cantidad: totalMuestras,
+                cantidad_valida:totalMuestras > 0,
+                porcentaje_tallos_dañados : parseFloat(porcentaje_tallos_dañados / totalMuestras * 100).toFixed(2),
+                larvas_metro : parseFloat(larvas_metro / totalMuestras).toFixed(1),
+                pupas_metro : parseFloat(pupas_metro / totalMuestras).toFixed(1),
+                larvas_muertas_metro : parseFloat(larvas_metro / totalMuestras).toFixed(1)
+            };
+   };
+
+    var reiniciarFormulario = function(){
+        var reqObj = {
+              UI: servicio_frm.obtenerUIElasmopalpus(params.cod_parcela),
+              resumen: servicio_frm.obtenerResumenElasmopalpus(params.cod_parcela)
+            };
+
+        $.whenAll(reqObj)
+          .done(function (res) {
+            destroyBase();
+            UIDone(res);
+            $content[0].scrollTop = 0;
+          })
+          .fail(UIFail);
+    };
+
+    var destroyBase = function(){
+       TALLOS_MUESTREADOS = null;
+
+       if ($content){
+        $content.off("change","input", __changeInput);
+        $content.off("click", "#btn-guardar-muestra", __guardarMuestra);
+        $content.off("click", "#btn-finalizar", __finalizarEvaluacion);
+       }
+       frmElasmopalpusResumenView.destroy();
+       frmElasmopalpusResumenView = null;
+       $resumen = null;
+       $DOM = null; 
+    };
+
+    this.destroy = function(){
+        destroyBase();
+        $content = null;
+        $resumen = null;
+        rs2Array = null ;
+        this.$el = null; 
+        self = null;
+    };
 
 
     this.initialize();  

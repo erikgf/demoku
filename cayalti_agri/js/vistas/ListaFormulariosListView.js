@@ -18,7 +18,7 @@ var ListaFormulariosListView = function () {
     };
 
     this.destroy = function(){
-        
+        this.$el = null;
     };
 
     this.initialize();

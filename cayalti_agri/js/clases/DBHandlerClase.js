@@ -109,6 +109,7 @@ var DBHandlerClase = function(version) {
                             { nombre: "met_tallos_danados", tipo: "INTEGER"},
                             { nombre: "met_entrenudos_evaluados", tipo: "INTEGER"},
                             { nombre: "met_entrenudos_danados", tipo: "INTEGER"},
+                            { nombre: "met_larvas", tipo: "INTEGER"},
                             { nombre: "observaciones", tipo: "TEXT"},
                             { nombre: "foto_registro_1", tipo: "TEXT"},
                             { nombre: "foto_registro_2", tipo: "TEXT"},
@@ -406,6 +407,58 @@ var DBHandlerClase = function(version) {
       }
     };
 
+    this.actualizarDatos = function(nombre_tabla, campos_actualizacion, valores_actualizacion, campos_where, valores_where){
+      try{
+           var _mydb = this.mydb;
+           return $.Deferred(function (d) {
+              _mydb.transaction(function (tx) {
+                var len_actualizar = campos_actualizacion.length,
+                    len_campos = campos_where.length,
+                    sql = "UPDATE  "+nombre_tabla+ " SET ",
+                    sqlParams = "",
+                    sqlWhere = "",
+                    sqlArrayParams = [];
+
+                if (len_actualizar > 0){
+                  //Existe where.
+                   for (var i = len_actualizar - 1; i >= 0; i--) {
+                      sqlParams += campos_actualizacion[i]+" = ?";
+                      sqlArrayParams.push(valores_actualizacion[i]);
+                      if (i > 0 ){
+                        sqlParams += ', ';
+                      }
+                    };
+                }
+
+                sql += sqlParams;
+
+                if (len_campos > 0){
+                  //Existe where.
+                  sqlWhere += " WHERE ";
+                   for (var i = len_campos - 1; i >= 0; i--) {
+                      sqlWhere += campos_where[i]+" = ?";
+                      sqlArrayParams.push(valores_where[i]);
+                      if (i > 0 ){
+                        sqlWhere += ' AND ';
+                      }
+                    };
+                }
+
+                sql += sqlWhere;
+
+                tx.executeSql(sql,
+                      sqlArrayParams,
+                      function(tx, data){ d.resolve(data);},                        
+                      function(tx, error){ d.reject(error);}
+                ); 
+              });
+            });
+      } catch(e){
+        console.error(e.message);
+      }
+    };
+
+
     this.eliminarDatos = function(nombre_tabla, campos_where, valores_where){
       try{
            var _mydb = this.mydb;
@@ -431,6 +484,28 @@ var DBHandlerClase = function(version) {
                 
                 tx.executeSql(sql,
                       valores_where,
+                      function(tx, data){ d.resolve(data);},                        
+                      function(tx, error){ d.reject(error);}
+                ); 
+
+              });
+            });
+      } catch(e){
+        console.error(e.message);
+      }
+    };
+
+    this.eliminarFrmEnviados = function(cod_usuario){
+      try{
+           var _mydb = this.mydb;
+           return $.Deferred(function (d) {
+              _mydb.transaction(function (tx) {
+
+                var sql = "DELETE FROM frm  "+
+                        " WHERE cod_parcela||cod_formulario IN (SELECT cod_parcela||cod_formulario FROM frm WHERE finalizacion = 'true' AND usuario_registro = ?)";
+                ;
+                tx.executeSql(sql,
+                      [cod_usuario],
                       function(tx, data){ d.resolve(data);},                        
                       function(tx, error){ d.reject(error);}
                 ); 

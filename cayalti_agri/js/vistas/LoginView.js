@@ -1,5 +1,8 @@
  
 var LoginView = function(servicio, cache) {
+
+    var _CLICKS = 0;
+
      this.initialize = function() {
          this.$el = $('<div/>');
          this.setEventos();
@@ -7,6 +10,7 @@ var LoginView = function(servicio, cache) {
 
      this.setEventos = function(){
      	this.$el.on("submit","form", this.iniciarSesion);
+        this.$el.on("click","img", this.resetearBD);
      	//Form
      	//txtUsuario
      	//txtClave
@@ -44,6 +48,24 @@ var LoginView = function(servicio, cache) {
      			}
       	}); //EndWhen
      };
+
+     this.resetearBD = function(e){
+        e.preventDefault();
+        _CLICKS++;
+        if (_CLICKS > 5){
+            alert("Se eliminiará BD, resetee app en 5 segundos.");
+            servicio.resetearBD();
+            _CLICKS = 0;
+        }
+        
+     };
+
+     this.destroy = function(){
+        this.$el.off("submit","form", this.iniciarSesion);
+        this.$el.off("click","img", this.resetearBD);
+
+        this.$el = null;
+    };
 
      this.initialize();
 };

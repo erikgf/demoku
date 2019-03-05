@@ -1,4 +1,4 @@
-var FrmDiatraeaResumenView = function(datos) {
+var FrmElasmopalpusResumenView = function(datos) {
       this.initialize = function() {
           this.$el = $('<div/>');
           this.render();
@@ -13,7 +13,5 @@ var FrmDiatraeaResumenView = function(datos) {
         this.$el = null;
       };
 
-      this.initialize();
+      this.initialize(); 
   };
-
-  

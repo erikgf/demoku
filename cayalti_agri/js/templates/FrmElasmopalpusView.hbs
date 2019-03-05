@@ -19,8 +19,16 @@
 		  		<li class="table-view-row">
 		  			<div>Área: </div>
 		  			<div>{{area}} ha</div>
+		  		</li> 
+		  		<li class="table-view-row">
+		  			<div>Número de muestras recomendadas: </div>
+		  			<div>{{muestras_recomendadas}}</div>
 		  		</li>    
 	  	{{#if puedo_registrar}}
+	  			<li class="table-view-row">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
 		  		<div class="bloque-separador">
 		  			<li class="table-view-row frm-subtitulo">
 		  				<div>
@@ -31,30 +39,30 @@
 		  				</div>
 		  			</li>
 		  			<li class="table-view-row">
-		  				<div class="frm-pre-subtitulo">Total de tallos por metro</div>
+		  				<div class="frm-pre-subtitulo">Total de tallos</div>
 		  				<div>
 		  					<input type="number" value="{{tallos_metro_base}}" class="holo _tallos-metro" />
 		  				</div>
 		  			</li>
 		  			<li class="table-view-row">
-		  				<div>Tallos infectados: </div>
+		  				<div>Tallos infestados: </div>
 		  				<div>
 			  				<input type="number" value="0" class="holo _tallos-infectados"/>
 			  			</div>
 		  			</li>
 		  			<li class="table-view-row">
-		  				<div>Tallos infectados: </div>
+		  				<div>Porcentaje daño: </div>
 		  				<div class="_tallos-porcentaje">0.00%</div>
 		  			</li>
 		  		</div>
-		  		<li class="table-view-row">
-		  			<div class="frm-pre-subtitulo">Área muestreada (metros)</div>
-		  			<div>
-		  				<input type="number" value="{{area_muestreada_base}}" class="holo _area-muestreada"/>
-		  			</div>
-		  		</li>
-
+		  	
 		  		<div class="bloque-separador">
+		  			<li class="table-view-row">
+		  				<div class="frm-pre-subtitulo">Área muestreada</div>
+		  				<div>
+		  					<input type="number" value="{{area_muestreada_base}}" class="holo _area-muestreada" />
+		  				</div>
+		  			</li>
 		  			<li class="table-view-row frm-subtitulo">
 		  				<div>
 		  					Larvas
@@ -116,6 +124,7 @@
 		  		</div>
 		  		<div style="padding:10px 24px 0px 24px">
 			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Guardar Muestra</button>
+			  		<button id="btn-finalizar" class="btn btn-block btn-block-normal">Finalizar evaluación de cuartel o válvula (Última evaluación)</button>
 			  	</div>
 		{{else}}	  	
 			<li class="table-view-row row-full frm-resumen text-center" style="margin-top: 32px;">
@@ -123,5 +132,6 @@
 		  	</li>
 	  	{{/if}}
 		</ul>
+		<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
 	 </div>
 

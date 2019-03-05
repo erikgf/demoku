@@ -92,7 +92,6 @@ var ListaParcelasView = function (servicio, cache, params) {
         __click = function(e){
             var cod_parcela = this.dataset.id;
             self.setScrollTop();
-            console.log(this);
             router.load("formularios/"+cod_parcela);
         };
 

@@ -23,6 +23,12 @@ var FrmCarbonView = function (servicio_frm, params) {
                     [{"tallos":"._tallos"},
                      {"tallos_latigo":"._tallos-latigo"}
                     ]);
+
+        $DOM = preDOM2DOM($content, 
+                    [{"bloque_carbon":"._bloque-carbon"},
+                     {"agregar_nuevo_carbon": "._agregar-nuevo-carbon"},
+                     {"infestacion_promedio": "._infestacion-promedio"}
+                    ]);
     };
 
     this.setEventos = function(){

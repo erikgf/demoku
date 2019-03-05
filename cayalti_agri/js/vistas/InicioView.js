@@ -148,7 +148,7 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 			  biometria: servicio.obtenerFrmRegistros("frm-biometria",cod_usuario),
               diatraea: servicio.obtenerFrmRegistros("frm-diatraea",cod_usuario),
               roya: servicio.obtenerFrmRegistros("frm-roya",cod_usuario),
-              carbon: servicio.obtenerFrmRegistros("cfrm-arbon",cod_usuario),
+              carbon: servicio.obtenerFrmRegistros("frm-carbon",cod_usuario),
               elasmopalpus: servicio.obtenerFrmRegistros("frm-elasmopalpus",cod_usuario),
               metamasius: servicio.obtenerFrmRegistros("frm-metamasius",cod_usuario)
             },
@@ -176,6 +176,7 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
             		TOTAL_REGISTOS_ENVIO = 0;
             		return;
             	}
+
             	enviarData(JSON.stringify(objEnvioFrm));
             } catch(e){
             	console.error("JSON", e);
@@ -208,7 +209,7 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 	var renderLblEnviar = function (numero_registros_totales, numero_registros_propios) {
 		if ($label_enviar){
 			if (numero_registros_propios > 0){
-	     		$label_enviar.html("Hay <b>"+numero_registros_propios+"</b> registros para enviar.");	
+	     		$label_enviar.html("Hay <b>"+numero_registros_propios+"</b> registros realizados.<br> Recuerde finalizar sus evaluaciones para enviar.");	
 	     	} else {
 	     	 	$label_enviar.empty();	
 	     	}
@@ -300,7 +301,8 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 				objRetorno = {
 					met_entrenudos_evaluados: objDetalle.met_entrenudos_evaluados,
 					met_tallos_danados: objDetalle.met_tallos_danados,
-					met_tallos_evaluados: objDetalle.met_tallos_evaluados
+					met_tallos_evaluados: objDetalle.met_tallos_evaluados,
+					met_larvas: objDetalle.met_larvas
 				};
 			break;
 
@@ -324,12 +326,14 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 	};
 
 	var procesarData = function(res){
+		/*Agregar condicion para que SOLO y SOLO sí se tomen en cuenta los que ya están finalizacion = true*/
 	 	var nuevoArreglo = [],
 	 		aArreglo = rs2Array(res),
 	 		cabecera = {},
 	 		registros = {},
 	 		nuevoCodParcela = null,
 	 		lastCodParcela = null,
+	 		lastCodParcelaFormularioValido = null,
 	 		objParcela = null,
 	 		arDetalles = [];
 
@@ -341,46 +345,67 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 
 		 	if (lastCodParcela == null){
 		 		lastCodParcela = nuevoCodParcela;
-		 		objParcela = {
-		 			cod_parcela : lastCodParcela,
-		 			fecha_registro : objArreglo.fecha_hora_registro,
-		 			cod_formulario : objArreglo.cod_formulario,
-		 			detalles: []
-		 		};
+		 		if (objArreglo.finalizacion == "true"){
+		 			/*Válido parcelaValid*/
+		 			lastCodParcelaFormularioValido = nuevoCodParcela;
+		 			objParcela = {
+			 			cod_parcela : lastCodParcela,
+			 			fecha_registro : objArreglo.fecha_hora_registro,
+			 			cod_formulario : objArreglo.cod_formulario,
+			 			detalles: []
+			 		};
 
-		 		arDetalles.push(setDetalle(objArreglo, objArreglo.cod_formulario));
-		 		continue;
+			 		arDetalles.push(setDetalle(objArreglo, objArreglo.cod_formulario));
+			 		continue;
+		 		}
 		 	}
 
 		 	if (nuevoCodParcela != lastCodParcela){
 		 		//Es una nueva parcela
-		 		objParcela.detalles = arDetalles;
-		 		nuevoArreglo.push(objParcela);
-
+		 		//Inserta la anterior.
+		 		if (objParcela){
+		 			objParcela.detalles = arDetalles;
+		 			nuevoArreglo.push(objParcela);	
+		 		}
+		 		//vacía y crea un nuevov obj, pero verifica primero si es válida.
 		 		arDetalles = [];
-		 		objParcela = {
-		 			cod_parcela : nuevoCodParcela,
-		 			fecha_registro : objArreglo.fecha_hora_registro,
-		 			cod_formulario : objArreglo.cod_formulario,
-		 			detalles: []
-		 		}; 
+
+		 		if (objArreglo.finalizacion == "true"){
+		 			/*Válido*/
+		 			lastCodParcelaFormularioValido = nuevoCodParcela;
+			 		objParcela = {
+			 			cod_parcela : nuevoCodParcela,
+			 			fecha_registro : objArreglo.fecha_hora_registro,
+			 			cod_formulario : objArreglo.cod_formulario,
+			 			detalles: []
+			 		}; 
+			 	}else {
+			 		objParcela = null;
+			 	}
 		 	}
 
-		 	arDetalles.push(setDetalle(objArreglo, objArreglo.cod_formulario));
+		 	// Si no es el primero o si siguen siendo igual los cod_parcela es decir detalles
+		 	//, solo se registrarán si es un cod_parcela_valido.
+
+		 	if (objParcela){
+		 		arDetalles.push(setDetalle(objArreglo, objArreglo.cod_formulario));
+		 	}
 		 	lastCodParcela = nuevoCodParcela;
 		 };
 
 		 if (objParcela){
 		 	objParcela.detalles = arDetalles;
-			 nuevoArreglo.push(objParcela);
-			 arDetalles = [];
+			nuevoArreglo.push(objParcela);
+			arDetalles = [];
 		 }
 
 		 nuevoCodParcela = null;
 	 	 lastCodParcela = null;
+	 	 lastCodParcelaValido = null;
 	 	 objParcela = null;
 
 	 	 TOTAL_REGISTOS_ENVIO += nuevoArreglo.length;
+
        	 return nuevoArreglo;
 	};
 
@@ -402,10 +427,12 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 	     				alert("Registros enviados");
 	     				renderLblEnviar(TOTAL_REGISTROS_PENDIENTES - TOTAL_REGISTROS_PENDIENTES_PROPIOS, 0);
      			 		servicio.eliminarRegistrosEnviados(data_usuario.cod_usuario);
+	     			} else {
+	     				modalMensaje.mostrarError(r.msj.errorInfo[2]);
 	     			}
 	      		})
 	      		.fail(function(error){
-	      			console.error(error);
+	      			modalMensaje.mostrarError(error.message);
 	      		})
 	      		);
 	}

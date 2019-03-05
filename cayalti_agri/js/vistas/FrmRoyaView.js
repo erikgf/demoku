@@ -1,6 +1,7 @@
 var FrmRoyaView = function (servicio_frm, params) {
 	var self = this,
         $content,
+        MUESTRA_ACTUAL,
         HOJAS_MUESTREADAS,
         $resumen,
 		rs2Array = resultSetToArray,
@@ -87,19 +88,16 @@ var FrmRoyaView = function (servicio_frm, params) {
         }
     };
 
-    this.consultarDatosInterfaz = function(){
-        /*parcela, cultivo (variedad), hectareas, parcela,  muestras por hectareas, muestra actual*/
-        var reqObj = {
-              UI: servicio_frm.obtenerUIRoya(params.cod_parcela),
-              resumen: servicio_frm.obtenerResumenRoya(params.cod_parcela)
-            },
-            self = this;
-
-        $.whenAll(reqObj)
-          .done(function (res) {
+    var UIDone = function (res) {
             var uiRow = res.UI.rows.item(0);
-            HOJAS_MUESTREADAS = uiRow.hojas_muestreadas; 
+            if (uiRow.muestras_recomendadas <= 0){
+                uiRow.muestras_recomendadas = 1;
+            }
+
+
             if ((uiRow.muestras_recomendadas >= parseInt(uiRow.numero_muestra_actual)) && (uiRow.muestras_finalizadas == 0)) {
+                MUESTRA_ACTUAL = uiRow.numero_muestra_actual;
+                HOJAS_MUESTREADAS = uiRow.hojas_muestreadas;
                 uiRow.puedo_registrar = true;
                 self.$el.html(self.template(uiRow)); 
                 $content = self.$el.find(".content");
@@ -111,14 +109,27 @@ var FrmRoyaView = function (servicio_frm, params) {
                 $content = self.$el.find(".content");
             }
 
+            console.log(res.resumen.rows);
             $resumen = self.$el.find("#frm-resumen");
             frmRoyaResumenView = new FrmRoyaResumenView(procesarResumen(rs2Array(res.resumen.rows)));
-            $resumen.html(frmRoyaResumenView.$el);       
-          })
-          .fail(function (firstFail, name) {
+            $resumen.html(frmRoyaResumenView.$el);    
+        },
+        UIFail = function (firstFail, name) {
             console.log('Fail for: ' + name);
             console.error(firstFail);
-          });
+        };
+
+    this.consultarDatosInterfaz = function(){
+        /*parcela, cultivo (variedad), hectareas, parcela,  muestras por hectareas, muestra actual*/
+        var reqObj = {
+              UI: servicio_frm.obtenerUIRoya(params.cod_parcela),
+              resumen: servicio_frm.obtenerResumenRoya(params.cod_parcela)
+            },
+            self = this;
+
+        $.whenAll(reqObj)
+          .done(UIDone)
+          .fail(UIFail);
     };
 
    var procesarResumen = function(arregloMuestras){
@@ -127,7 +138,7 @@ var FrmRoyaView = function (servicio_frm, params) {
 
         for (var i = totalMuestras - 1; i >= 0; i--) {
             var objMuestra = arregloMuestras[i];
-            porcentaje_afectadas += objMuestra.roy_porcentaje_afectadas / objMuestra.roy_hojas;
+            porcentaje_afectadas += objMuestra.roy_porcentaje_afectadas;
         };
 
         return {
@@ -145,6 +156,7 @@ var FrmRoyaView = function (servicio_frm, params) {
 
             var DOM = $DOM, 
                 objMuestra = {
+                    item : MUESTRA_ACTUAL,
                     cod_parcela : params.cod_parcela,
                     roy_hojas: HOJAS_MUESTREADAS,
                     roy_hojas_afectadas: parseInt(DOM.hojas_afectadas.val()),
@@ -155,8 +167,13 @@ var FrmRoyaView = function (servicio_frm, params) {
 
             $.when( servicio_frm.agregarMuestraRoya(objMuestra)
                     .done(function(r){
-                        history.back();
-                        console.log("Muestra guardada.");
+                        if (esFinalizar){
+                            history.back();
+                            alert("Muestra FINALIZADA.");
+                        } else {
+                            reiniciarFormulario();
+                            alert("Muestra GUARDADA.");
+                        }
                     })
                     .fail(function(e){
                         console.error(e);
@@ -172,17 +189,37 @@ var FrmRoyaView = function (servicio_frm, params) {
         agregarMuestra(true);
     };
 
-    this.destroy = function(){
-        $content.off("change","input", __changeInput);
-        $content.off("click", "#btn-guardar-muestra", __guardarMuestra);
-        $content.off("click", "#btn-finalizar", __finalizarEvaluacion);
-        $content = null;
-        HOJAS_MUESTREADAS = null;
+    var reiniciarFormulario = function(){
+        var reqObj = {
+              UI: servicio_frm.obtenerUIRoya(params.cod_parcela),
+              resumen: servicio_frm.obtenerResumenRoya(params.cod_parcela)
+            };
 
+        $.whenAll(reqObj)
+          .done(function (res) {
+            destroyBase();
+            UIDone(res);
+            $content[0].scrollTop = 0;
+          })
+          .fail(UIFail);
+    };
+
+    var destroyBase = function(){
+        if ($content){
+            $content.off("change","input", __changeInput);
+            $content.off("click", "#btn-guardar-muestra", __guardarMuestra);
+            $content.off("click", "#btn-finalizar", __finalizarEvaluacion);
+        }
         frmRoyaResumenView.destroy();
         frmRoyaResumenView = null;
         $resumen = null;
         $DOM = null;
+    };
+
+    this.destroy = function(){
+        destroyBase();
+        $content = null;
+        HOJAS_MUESTREADAS = null;
         self = null;
     };
 

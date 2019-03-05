@@ -1,0 +1,42 @@
+<li class="table-view-row row-full" >
+	<div class="frm-pre-subtitulo">Resumen de parcela (últimas {{cantidad}} muestras) </div>
+</li>
+{{#if cantidad_valida}}
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Metamasius - % de tallos dañados
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de % tallos dañados por muestra</div>
+			<div>{{porcentaje_tallos_dañados}}%</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Metamasius - % de entrenudos dañados
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de % entrenudos dañados por muestra</div>
+			<div>{{porcentaje_entrenudos_dañados}}%</div>
+		</li>
+	</div>
+	<div class="bloque-separador">
+		<li class="table-view-row row-full">
+			<div class="frm-resumen">
+				Metamasius - Larvas por tallo
+			</div>
+		</li>
+		<li class="table-view-row">
+			<div>Promedio de larvas en tallo por muestra</div>
+			<div>{{promedio_larvas_tallo}}</div>
+		</li>
+	</div>
+{{else}}
+	<li class="table-view-row row-full" >
+		<div class="frm-aviso">Para ver por favor guardar por lo menos una muestra.</div>
+	</li>
+{{/if}}

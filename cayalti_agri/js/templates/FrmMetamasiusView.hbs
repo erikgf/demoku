@@ -24,6 +24,8 @@
 		  			<div>Número de muestras recomendadas: </div>
 		  			<div>{{muestras_recomendadas}}</div>
 		  		</li>   
+
+		  		{{#if puedo_registrar}}
 		  		<li class="table-view-row frm-detalle2">
 		  			<div>Muestra </div>
 		  			<div>{{numero_muestra_actual}}</div>
@@ -82,10 +84,35 @@
 		  				<div class="_entrenudos-dañados-porcentaje">0.00%</div>
 		  			</li>
 		  		</div>
+
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row frm-subtitulo">
+		  				<div>
+		  					Larvas
+		  				</div>
+		  				<div>
+		  					<a class="frm-icono"><span class="icon icon-compose"></span></a>
+		  				</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div class="frm-pre-subtitulo">Número de Larvas: </div>
+		  				<div>
+			  				<input type="number" value="0" class="holo _larvas"/>
+			  			</div>
+		  			</li>
+		  			<li class="table-view-row">
+		  				<div>Larvas por tallo: </div>
+		  				<div class="_larvas-tallo">0.0</div>
+		  			</li>
+		  		</div>
 		  	
 		  		<div style="padding:10px 24px 0px 24px">
 			  		<button id="btn-guardar" class="btn btn-block btn-block-normal">Guardar</button>
+			  		<button id="btn-finalizar" class="btn btn-block btn-block-normal">Finalizar evaluación de cuartel o válvula (Última evaluación)</button>
 			  	</div>
+		{{/if}}
 		</ul>
+	  	<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
+
 	 </div>
 

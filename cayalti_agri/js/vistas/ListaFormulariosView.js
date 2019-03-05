@@ -56,5 +56,12 @@ var ListaFormulariosView = function (servicio, cache, params) {
       	//EndWhen
 	};
 
-    this.initialize();  
-}
+  this.destroy = function(){
+    listaFormulariosListView.destroy();
+    listaFormulariosListView = null;
+    $content = null;
+    this.$el = null;
+  };
+
+  this.initialize();  
+};

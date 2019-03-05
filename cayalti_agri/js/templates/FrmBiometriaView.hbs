@@ -16,15 +16,14 @@
 		  			<div>Cultivo: </div>
 		  			<div>{{cultivo}}</div>
 		  		</li>  
-		  		<li class="table-view-row row-duo">
+		  		<li class="table-view-row row-duo" style="display:none">
 		  			<div>Días desde campaña: </div>
 		  			<div>{{dias_campana}}</div>
 		  		</li>
-
 		  		<li class="titulo-separador frm-pre-subtitulo">
 		  			<div>Biometría</div>
 		  		</li>      
-		  		<li class="table-view-row row-duo">
+		  		<li class="table-view-row row-duo" style="display:none">
 		  			<div>Última etapa fenológica: </div>
 		  			<div>{{ultima_etapa}}</div>
 		  		</li>      
@@ -37,6 +36,12 @@
 		  					<option value="3">Período de Gran Crecimiento / Rápido crecimiento</option>
 		  					<option value="4">Etapa Maduración</option>
 		  				</select>
+		  			</div>
+		  		</li>  
+		  		<li class="table-view-row row-duo">
+		  			<div>Destructivo: </div>
+		  			<div>
+		  				<input type="checkbox" class="_destructivo" style="margin:auto;transform: scale(1.85);"/>
 		  			</div>
 		  		</li>      
 		  		<li class="table-view-row frm-detalle2">
@@ -57,7 +62,7 @@
 		  			</li>
 		  			<div class="_bloque-nudos">
 		  			</div>
-		  			<li class="_agregar-nuevo-tallo">
+		  			<li class="_agregar-nuevo-tallo zona-registro-multiple">
 		  				<div> <span class="icon icon-plus"></span> Agregar nuevo tallo</div>
 		  			</li>
 		  		</div>
@@ -122,6 +127,7 @@
 		  			<button id="btn-texto" class="btn btn-block btn-block-normal" disabled>Notas de Texto</button>
 		  			<button id="btn-foto" class="btn btn-block btn-block-normal" disabled>Capturar Foto</button>
 			  		<button id="btn-guardar" class="btn btn-block btn-block-normal">Guardar</button>
+			  		<button id="btn-cierre" class="btn btn-block btn-block-normal">Cerrar Evaluación</button>
 			  	</div>		  	
 			</ul>
 	  	<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>

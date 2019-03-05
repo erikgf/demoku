@@ -122,7 +122,7 @@ ul {
 .table-view {
     margin: 0;
     border: none;
-    font-size: .9em;
+    font-size: 1.2em;
 }
 
 .details h1 {
@@ -290,7 +290,7 @@ input.holo:enabled:hover, input.holo:enabled:focus {
 }
 
 .btn-block-normal{
-  font-size: 16px;
+  font-size: 1.1em;
   white-space: normal;
   padding: 12px 8px;
 }
@@ -316,7 +316,7 @@ input.holo.error, input.holo.error {
   text-align: center;
 }
 
-._agregar-nuevo-tallo{
+.zona-registro-multiple{
   height: 45px;
   line-height: 2.75;
   color: gray;
@@ -350,4 +350,25 @@ input.holo.error, input.holo.error {
   line-height: 0;
   color: red;
   font-style: italic;
+}
+
+.color-rojo{
+  color: #FF0000 !important;
+}
+
+.badge-lg{
+  font-size: 1.5em;
+}
+
+.badge.finalizado{
+  background: green;
+  color: white;
+}
+
+#btn-actualizar, #btn-enviar,.lbl-enviar{
+  font-size: 20px;
+}
+
+#btn-enviar{
+  margin-bottom: 5px;
 }

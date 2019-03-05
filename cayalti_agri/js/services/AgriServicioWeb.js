@@ -1,7 +1,7 @@
 var AgriServicioWeb = function() {
     var url,
+        //IP = "localhost/cayalti_agri_web";
         IP = "cayalti-demo.herokuapp.com";
-
     this.initialize = function(serviceURL) {
         //url = serviceURL ? serviceURL : "http://localhost/cayalti_agri_web/controlador/";
         url = serviceURL ? serviceURL : "http://"+IP+"/controlador/";

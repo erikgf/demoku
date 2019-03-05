@@ -1,5 +1,7 @@
 var FrmBiometriaView = function (servicio_frm, params) {
 	var self,
+        MUESTRA_ACTUAL,
+        DESTRUCTIVO = false,
         NUMERO_METROS,
         FACTOR,
         TASA_CRECIMIENTO,
@@ -33,6 +35,7 @@ var FrmBiometriaView = function (servicio_frm, params) {
         $content = self.$el.find(".content");
         $DOM = preDOM2DOM($content, 
                     [{"etapa_fenologica":"._etapa-fenologica"},
+                     {"destructivo":"._destructivo"},
                      {"bloque_nudos":"._bloque-nudos"},
                      {"agregar_nuevo_tallo": "._agregar-nuevo-tallo"},
                      {"volumen_promedio": "._volumen-promedio"},
@@ -46,10 +49,9 @@ var FrmBiometriaView = function (servicio_frm, params) {
                      {"pt_promedio_peso": "._pt-promedio-peso"},
                      {"pt_toneladas": "._pt-toneladas"}
                     ]);
-
-        //$entrenudos = $(", $entrenudos_infestados, $entrenudos_porcentaje_infestado
     };
 
+    //CallBacks Eventos
     var __agregarEntrenudo = function(e){
             var classList = this.classList;
 
@@ -81,17 +83,23 @@ var FrmBiometriaView = function (servicio_frm, params) {
                 calcularPromedioTallo();
                 return;
             }
+        },
+        __setDestructivo = function(e){
+            e.preventDefault();
+            setDestructivo(this);
+        },
+        __cierre = function(e){
+            if (confirm("¿Desea CERRAR evaluación en este CUARTEL/VÁLVULA?")){
+                forzarCierre();
+            }
         };
 
     this.setEventos = function(){
         $content.on("click", "li", __agregarEntrenudo);
         $content.on("change","input", __cambiarInput);
         $content.on("click", "#btn-guardar", agregarMuestra);
-/*
-        $content.on("click", "#btn-finalizar", function(e){
-            self.finalizarEvaluacion();
-        });
-        */
+        $content.on("change", "._destructivo", __setDestructivo);
+        $content.on("click", "#btn-cierre",__cierre);
     };
 
     var calcularTalloMetroLineal = function(){
@@ -235,6 +243,7 @@ var FrmBiometriaView = function (servicio_frm, params) {
 
     var UIDone = function (res) {
             var uiRow = res.UI.rows.item(0);
+            MUESTRA_ACTUAL = uiRow.numero_muestra_actual;
             NUMERO_METROS = uiRow.numero_metros;
             FACTOR = uiRow.factor;
             TASA_CRECIMIENTO = uiRow.tasa_crecimiento;
@@ -280,6 +289,7 @@ var FrmBiometriaView = function (servicio_frm, params) {
                     return cadenaEntrenudos;
                 },
                 objMuestra = {
+                    item: MUESTRA_ACTUAL,
                     cod_parcela : params.cod_parcela,
                     bio_etapa_fenologica: DOM.etapa_fenologica.val(),
                     bio_data_entrenudos: fnObtenerCadenaEntrenudos(),
@@ -293,14 +303,15 @@ var FrmBiometriaView = function (servicio_frm, params) {
                     bio_pt_tallos: DOM.pt_tallos.val() == "" ? null : DOM.pt_tallos.val(),
                     bio_pt_peso_tallos: DOM.pt_promedio_peso.html(),
                     bio_pt_toneladas: DOM.pt_toneladas.html(),
+                    finalizacion : false,
                     usuario_registro: DATA_NAV.usuario.cod_usuario
                 };
 
             $.when( servicio_frm.agregarMuestraBiometria(objMuestra)
                     .done(function(r){
-                        //history.back();
-                        reiniciarFormulario();
+                        history.back();
                         alert("Muestra guardada");
+                        //reiniciarFormulario();
                     })
                     .fail(function(e){
                         console.error(e);
@@ -334,7 +345,33 @@ var FrmBiometriaView = function (servicio_frm, params) {
           .fail(UIFail);
     };
 
+    var setDestructivo = function($this){
+        var valorDestructivo = $this.checked;
+        DESTRUCTIVO = valorDestructivo;
+
+        if (valorDestructivo == true){
+            $DOM.ml_metros.val("1");
+            $this.parentElement.parentElement.children[0].classList.add("color-rojo");
+        } else {
+            $DOM.ml_metros.val(NUMERO_METROS);
+            $this.parentElement.parentElement.children[0].classList.remove("color-rojo");
+        }
+    };
+
+    var forzarCierre = function(){
+         $.when( servicio_frm.forzarCierreBiometria(MUESTRA_ACTUAL, params.cod_parcela)
+                    .done(function(r){
+                        history.back();
+                        alert("Evaluación cerrada.");
+                    })
+                    .fail(function(e){
+                        console.error(e);
+                    })
+                );    
+    };
+
     var destroyBase = function(){
+       MUESTRA_ACTUAL = null;
        NUMERO_METROS = null;
        FACTOR = null;
        TASA_CRECIMIENTO = null;
@@ -343,6 +380,8 @@ var FrmBiometriaView = function (servicio_frm, params) {
         $content.off("click","li",__cambiarInput);
         $content.off("change","input",__agregarEntrenudo); 
         $content.off("click", "#btn-guardar", agregarMuestra);
+        $content.off("change", "._destructivo", __setDestructivo);
+        $content.off("click", "#btn-cierre", __cierre);
         $content = null;
        }
     

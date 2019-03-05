@@ -11,7 +11,7 @@ var FrmRoyaResumenView = function(datos) {
 
       this.destroy = function(){
         this.$el = null;
-      }
+      };
 
       this.initialize(); 
   };

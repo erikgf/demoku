@@ -1,6 +1,6 @@
 var ModalMensajeComponente = function() {    
 
-      var $label, $progress,
+      var $label, $cargando,
           $blockui,
           total_registros;
 
@@ -34,6 +34,16 @@ var ModalMensajeComponente = function() {
 
       this.actualizarLabel = function(label){
         $label.html(label);
+      };
+
+      this.mostrarError = function(error){
+        var self = this;
+        $label.html(error);
+        $label.addClass("errorLabel"); 
+        $cargando.hide();
+        setTimeout(function(){
+          self.esconder();
+        },4000)
       };
 
       this.destroy = function(){

@@ -2,6 +2,7 @@ var FrmDiatraeaView = function (servicio_frm, params) {
     var self,
 	    $content,
         TALLOS_MUESTREADOS,
+        MUESTRA_ACTUAL,
         $resumen,
 		rs2Array = resultSetToArray,
         frmDiatraeaResumenView,
@@ -125,7 +126,7 @@ var FrmDiatraeaView = function (servicio_frm, params) {
             entrenudos_muestreados = parseInt(entrenudos_muestreados);
 
             if ( entrenudos_muestreados <= 0){
-                $entrenudos_muestreados.val("0");
+                $entrenudos.val("0");
                 fnResetearEstado(true);
             } else {
                 if ($entrenudos_infestados.prop("disabled")){
@@ -254,19 +255,11 @@ var FrmDiatraeaView = function (servicio_frm, params) {
         calcularIndividuosTallo($billaea_pupas, $billaea_pupas_tallo);
     };
 
-
-    this.consultarDatosInterfaz = function(){
-        /*parcela, cultivo (variedad), hectareas, parcela,  muestras por hectareas, muestra actual*/
-        var reqObj = {
-              UI: servicio_frm.obtenerUIDiatraea(params.cod_parcela),
-              resumen: servicio_frm.obtenerResumenDiatraea(params.cod_parcela)
-            };
-
-        $.whenAll(reqObj)
-          .done(function (res) {
+    var UIDone = function (res) {
             var uiRow = res.UI.rows.item(0);
             TALLOS_MUESTREADOS = uiRow.tallos_muestreados; 
-            if ((uiRow.muestras_recomendadas >= parseInt(uiRow.numero_muestra_actual)) && (uiRow.muestras_finalizadas == 0)) {
+            MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
+            if ((uiRow.muestras_recomendadas >=  MUESTRA_ACTUAL) && (uiRow.muestras_finalizadas == 0)) {
                 uiRow.puedo_registrar = true;
                 self.$el.html(self.template(uiRow)); 
                 $content = self.$el.find(".content");
@@ -281,11 +274,22 @@ var FrmDiatraeaView = function (servicio_frm, params) {
             $resumen = self.$el.find("#frm-resumen");
             frmDiatraeaResumenView = new FrmDiatraeaResumenView(procesarResumen(rs2Array(res.resumen.rows)));
             $resumen.html(frmDiatraeaResumenView.$el);       
-          })
-          .fail(function (firstFail, name) {
+        },
+        UIFail = function (firstFail, name) {
             console.log('Fail for: ' + name);
             console.error(firstFail);
-          });
+        };
+
+    this.consultarDatosInterfaz = function(){
+        /*parcela, cultivo (variedad), hectareas, parcela,  muestras por hectareas, muestra actual*/
+        var reqObj = {
+              UI: servicio_frm.obtenerUIDiatraea(params.cod_parcela),
+              resumen: servicio_frm.obtenerResumenDiatraea(params.cod_parcela)
+            };
+
+        $.whenAll(reqObj)
+          .done(UIDone)
+          .fail(UIFail);
     };
 
    var procesarResumen = function(arregloMuestras){
@@ -353,9 +357,16 @@ var FrmDiatraeaView = function (servicio_frm, params) {
         var $entrenudos = $DOM.entrenudos,
             entrenudos = $entrenudos.val();
 
-        if (entrenudos.length < 1 || entrenudos < 1){
+        if (entrenudos.length < 1 ){
             $entrenudos.focus().addClass("error");
             alert("Necesita registrar entrenudos muestreados");
+            return false;
+        }
+
+        if (entrenudos == 0){
+            if (confirm("¿Desea FORZAR CIERRE de este CUARTEL/VÁLVULA?")){
+                forzarCierre();
+            }
             return false;
         }
 
@@ -371,6 +382,7 @@ var FrmDiatraeaView = function (servicio_frm, params) {
 
             var DOM = $DOM, 
                 objMuestra = {
+                    item: MUESTRA_ACTUAL,
                     cod_parcela : params.cod_parcela,
                     dia_entrenudos: parseInt(DOM.entrenudos.val()),
                     dia_entrenudos_infestados: parseInt(DOM.entrenudos_infestados.val()),
@@ -393,9 +405,13 @@ var FrmDiatraeaView = function (servicio_frm, params) {
 
             $.when( servicio_frm.agregarMuestraDiatraea(objMuestra)
                     .done(function(r){
-                        //ir atrás
-                        history.back();
-                        console.log("Muestra guardada.");
+                        if (esFinalizar){
+                            history.back();
+                            alert("Muestra FINALIZADA.");
+                        } else {
+                            reiniciarFormulario();
+                            alert("Muestra GUARDADA.");
+                        }
                     })
                     .fail(function(e){
                         console.error(e);
@@ -404,8 +420,35 @@ var FrmDiatraeaView = function (servicio_frm, params) {
         }
     };
 
+    var reiniciarFormulario = function(){
+        var reqObj = {
+              UI: servicio_frm.obtenerUIDiatraea(params.cod_parcela),
+              resumen: servicio_frm.obtenerResumenDiatraea(params.cod_parcela)
+            };
+
+        $.whenAll(reqObj)
+          .done(function (res) {
+            destroyBase();
+            UIDone(res);
+            $content[0].scrollTop = 0;
+          })
+          .fail(UIFail);
+    };
+
+    var forzarCierre = function(){
+         $.when( servicio_frm.forzarCierreDiatraea(MUESTRA_ACTUAL, params.cod_parcela)
+                    .done(function(r){
+                        history.back();
+                        alert("Evaluación finalizada.");
+                    })
+                    .fail(function(e){
+                        console.error(e);
+                    })
+                );    
+
+    };
+
     this.guardaMuestra = function(){
-        console.log("guarda");
         agregarMuestra(false);
     };  
 
@@ -413,19 +456,26 @@ var FrmDiatraeaView = function (servicio_frm, params) {
         agregarMuestra(true);
     };
 
-    this.destroy = function(){
+    var destroyBase = function(){
+       TALLOS_MUESTREADOS = null;
+       MUESTRA_ACTUAL = null;
+       _estadios = [0,0,0,0,0,0]; 
+
+       if ($content){
         $content.off("change", "input", __inputs);
         $content.off("change", "#btn-guardar-muestra", __guardarMuestra);
         $content.off("change", "#btn-finalizar", __finalizarMuestra);
+       }
+       $DOM = null; 
+       $resumen = null;
+       frmDiatraeaResumenView.destroy();
+       frmDiatraeaResumenView = null;
+    };
 
+    this.destroy = function(){
+        destroyBase();
         $content = null;
-        TALLOS_MUESTREADOS = null;
-        $resumen = null;
         rs2Array = null ;
-        frmDiatraeaResumenView = null;
-        _estadios = [0,0,0,0,0,0];
-        $DOM = null;
-
         this.$el = null; 
         self = null;
     };

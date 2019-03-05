@@ -9,13 +9,13 @@ var AgriServicio = function() {
     };
 
     this.compilar = function(){
-        return $.get("template.compiler.php");
-        //return $.get("template.master.hbs");
+       //return $.get("template.compiler.php");
+       return $.get("template.master.hbs");
     };
 
     this.iniciarSesion = function(_login, _clave){
     	return _db.selectData(
-    				"SELECT cod_usuario, nombres_apellidos as nombre_usuario, cod_rol as rol FROM usuario WHERE usuario = ? AND clave = ?",
+    				"SELECT cod_usuario, nombres_apellidos as nombre_usuario, cod_rol as rol FROM usuario WHERE lower(usuario) = lower(?) AND clave = ?",
     				[_login,_clave]);
     };
 
@@ -157,29 +157,39 @@ var AgriServicio = function() {
 
     this.consultarRegistrosPendientes = function(cod_usuario) {
         return _db.selectData(
-                    "SELECT SUM(CASE usuario_registro WHEN ? THEN 1 ELSE 0 END) as propios, COUNT(id) as totales FROM frm",
+                    "SELECT SUM(CASE usuario_registro WHEN ? THEN 1 ELSE 0 END) as propios, COUNT(id) as totales FROM frm f WHERE cod_parcela||cod_formulario IN (SELECT cod_parcela||cod_formulario FROM frm WHERE finalizacion = 'true' AND usuario_registro = f.usuario_registro)",
                     [cod_usuario]);
 
     };
 
-
+    /*
     this.eliminarRegistrosEnviados = function (cod_usuario) {
         return _db.eliminarDatos("frm", ["usuario_registro"], [cod_usuario]);
+    };
+    */
+
+    this.eliminarRegistrosEnviados = function (cod_usuario) {
+        return _db.eliminarFrmEnviados(cod_usuario);
     };
 
     this.consultarFormularios = function(cod_parcela) {
         return _db.selectData(
                     "SELECT f.cod_formulario, f.descripcion, f.nombre_interfaz,"+
-                    "(SELECT COUNT(id) FROM frm WHERE cod_formulario = f.cod_formulario AND cod_parcela = ?) as registros_hechos"+
+                    "(SELECT COUNT(id) FROM frm WHERE cod_formulario = f.cod_formulario AND cod_parcela = ?) as registros_hechos,"+
+                    "(SELECT COUNT(id) FROM frm WHERE cod_formulario = f.cod_formulario AND cod_parcela = ? AND finalizacion = 'true') as finalizado"+
                     " FROM formulario f ORDER BY f.descripcion",
-                    [cod_parcela]);
+                    [cod_parcela, cod_parcela]);
     };
 
     this.obtenerFrmRegistros = function(nombre_formulario, cod_usuario){
         /*consultar todos los datos de los formularios*/
         return _db.selectData(
-                    "SELECT * FROM frm WHERE usuario_registro = ? AND cod_formulario = (SELECT cod_formulario FROM formulario WHERE nombre_interfaz = ?) ORDER BY cod_parcela",
+                    "SELECT * FROM frm WHERE usuario_registro = ? AND cod_formulario = (SELECT cod_formulario FROM formulario WHERE nombre_interfaz = ?) ORDER BY cod_parcela, finalizacion DESC",
                     [cod_usuario, nombre_formulario]);
     };
+
+    this.resetearBD = function(){
+        return _db.dropEstructura();
+    };  
 
 };

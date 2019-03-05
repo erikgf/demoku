@@ -54,7 +54,7 @@ function preDOM2DOM($contenedor, listaDOM){
         tmpEntries = [], tmpObjectName = [];
 
     for (var i = numeroDOMs - 1; i >= 0; i--) {
-        tmpEntries = Object.entries(listaDOM[i]);
+        tmpEntries = Object.entries(listaDOM[i])
         cadenaFind += (tmpEntries[0][1]+",");
         tmpObjectName[i] = tmpEntries[0][0];
     };
@@ -69,6 +69,7 @@ function preDOM2DOM($contenedor, listaDOM){
 
     return DOM;
 };
+
 
 $.whenAll = function (deferreds) {
     function isPromise(fn) {
