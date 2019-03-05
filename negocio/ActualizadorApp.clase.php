@@ -81,10 +81,12 @@ class ActualizadorApp extends Conexion {
         switch ($codFormulario){    
             case 1: 
 
-
                 $objRetorno = [
                     "bio_data_entrenudos" =>  $objDetalle->bio_data_entrenudos,
                     "bio_etapa_fenologica" =>  $objDetalle->bio_etapa_fenologica,
+                    "bio_volumen_promedio" =>  $objDetalle->bio_volumen_promedio,
+                    "bio_largo_promedio" =>  $objDetalle->bio_largo_promedio,
+                    "bio_crecimiento_promedio" =>  $objDetalle->bio_crecimiento_promedio,
                     "bio_ml_metros" =>  $objDetalle->bio_ml_metros,
                     "bio_ml_tallos" => $objDetalle->bio_ml_tallos == "" ?  0 : $objDetalle->bio_ml_tallos,
                     "bio_ml_tallos_metros" =>  $objDetalle->bio_ml_tallos_metros,
