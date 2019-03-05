@@ -139,7 +139,8 @@ class ActualizadorApp extends Conexion {
                 $objRetorno = [
                     "met_entrenudos_evaluados" => $objDetalle->met_entrenudos_evaluados,
                     "met_tallos_danados" => $objDetalle->met_tallos_danados,
-                    "met_tallos_evaluados" => $objDetalle->met_tallos_evaluados
+                    "met_tallos_evaluados" => $objDetalle->met_tallos_evaluados,
+                    "met_larvas"=> $objDetalle->met_larvas
                 ];
             break;
 
