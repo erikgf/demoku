@@ -11,7 +11,12 @@
        <div id="navbar" class="navbar-collapse collapse navbar-1">
               <ul class="nav navbar-nav">
                 <li>
-                  <a href="#principal.vista.php">Inicio</a></li>
+                  <a href="principal.vista.php">Inicio</a>
+                </li>
+                <li>
+                  <a href="reporteador.demo.vista.php">Reporteador Demo</a>
+                </li>
+                <!--
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Gestión <span class="caret"></span></a>
                   <ul class="dropdown-menu dropdown-menu-cayalti">
@@ -20,6 +25,7 @@
                     <li><a href="#">Parcela</a></li>
                   </ul>
                 </li>
+                -->
               </ul>
         </div>
 </header>
