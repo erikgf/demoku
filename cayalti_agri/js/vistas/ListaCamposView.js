@@ -32,6 +32,9 @@ var ListaCamposView = function (servicio, cache) {
      			var rows = resultado.rows,
             scrollTop = CACHE_VIEW.lista_campos.scroll;
 
+            CACHE_VIEW.lista_parcelas.nivel_1 = null;
+            CACHE_VIEW.lista_parcelas.nivel_2 = null;
+
        			if (rows.length > 0){
               listaCamposListView.setCampos(rs2Array(rows));
               $content = $el.find(".content");

@@ -9,8 +9,8 @@ var AgriServicio = function() {
     };
 
     this.compilar = function(){
-       //return $.get("template.compiler.php");
-       return $.get("template.master.hbs");
+       return $.get("template.compiler.php");
+       //return $.get("template.master.hbs");
     };
 
     this.iniciarSesion = function(_login, _clave){
@@ -127,10 +127,10 @@ var AgriServicio = function() {
 
         if (data_consulta.tipoRiego == "0"){
             sqlRotulo = "'J'||p.numero_nivel_1||'-C'||p.numero_nivel_3||' - '||p.variedad";
-            sqlOrder = "CAST(numero_nivel_1 AS INTEGER), CAST(numero_nivel_3 AS INTEGER) ";
+            sqlOrder = "CAST(numero_nivel_1 AS INTEGER) , CAST(numero_nivel_3 AS INTEGER) ";
         } else {
             sqlRotulo = "'M'||p.numero_nivel_1||'-T'||p.numero_nivel_2||'-V'||p.numero_nivel_3||' - '||p.variedad";
-            sqlOrder = "CAST(numero_nivel_3 AS INTEGER)";
+            sqlOrder = "CAST(numero_nivel_1 AS INTEGER) , CAST(numero_nivel_2 AS INTEGER),  CAST(numero_nivel_3 AS INTEGER)";
         }
 
         if (data_consulta.nivelUno != "0"){

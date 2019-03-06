@@ -248,6 +248,9 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 				objRetorno = {
 					bio_data_entrenudos : objDetalle.bio_data_entrenudos,
 					bio_etapa_fenologica : objDetalle.bio_etapa_fenologica,
+					bio_volumen_promedio:  objDetalle.bio_volumen_promedio,
+					bio_largo_promedio:  objDetalle.bio_largo_promedio,
+					bio_crecimiento_promedio:  objDetalle.bio_crecimiento_promedio,
 					bio_ml_metros:  objDetalle.bio_ml_metros,
 					bio_ml_tallos: objDetalle.bio_ml_tallos,
 					bio_ml_tallos_metros:  objDetalle.bio_ml_tallos_metros,
@@ -300,6 +303,7 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 			case 5: 
 				objRetorno = {
 					met_entrenudos_evaluados: objDetalle.met_entrenudos_evaluados,
+					met_entrenudos_danados: objDetalle.met_entrenudos_danados,
 					met_tallos_danados: objDetalle.met_tallos_danados,
 					met_tallos_evaluados: objDetalle.met_tallos_evaluados,
 					met_larvas: objDetalle.met_larvas

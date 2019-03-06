@@ -120,28 +120,62 @@ var ListaParcelasView = function (servicio, cache, params) {
 
         $.when( servicio.consultarNivelUno(params.cod_campana)
                 .done(function(resultado){
+                    var nivel1Cached = CACHE_VIEW.lista_parcelas.nivel_1;
+
                     $filtro.html(htmlDistribuciones(tipoRiego, rs2Array(resultado.rows)));
                     $nivelUno = $filtro.find("#select-uno");
+
+                    if (nivel1Cached != null){
+                        $nivelUno.val(nivel1Cached);
+                    } else {
+                        $nivelUno.val("0");
+                    }
+
                     if (tipoRiego == 1){
                         $nivelDos = $filtro.find("#select-dos");
+                        self.consultarNivelDos($nivelUno.val());
+                    } else {
+                        self.consultarParcelas();
                     }
-                    self.consultarParcelas();
                 })
                 .fail(function(e){console.error(e);})
         );
     };
 
     this.consultarNivelDos = function(numero_modulo){
-        var self = this;
+        var self = this,
+            nivel2Cached = CACHE_VIEW.lista_parcelas.nivel_2,
+            fnAccion = function(rows){
+               $nivelDos.html(htmlNivelDos(rows));
+                if (nivel2Cached != null){
+                    $nivelDos.val(nivel2Cached);
+                } else {
+                    $nivelDos.val("0");
+                }
+
+                self.consultarParcelas();     
+            };
 
         if (numero_modulo == "0"){
-            $nivelDos.html(htmlNivelDos([]));
+            fnAccion([]);
             return;
         }
 
         $.when( servicio.consultarNivelDos(params.cod_campana, numero_modulo)
                 .done(function(resultado){
-                     $nivelDos.html(htmlNivelDos(rs2Array(resultado.rows)));
+                    console.log("changing level 2");
+                    fnAccion(rs2Array(resultado.rows));
+                    /*
+                    $nivelDos.html(htmlNivelDos(rs2Array(resultado.rows)));
+
+                    if (nivel2Cached != null){
+                        $nivelDos.val(nivel2Cached);
+                    } else {
+                        $nivelDos.val("0");
+                    }
+
+                    self.consultarParcelas();
+                    */
                 })
                 .fail(function(e){console.error(e);})
         );
@@ -149,13 +183,18 @@ var ListaParcelasView = function (servicio, cache, params) {
     
 	this.consultarParcelas = function(){		
 		var self = this,
-            scrollTop = CACHE_VIEW.lista_parcelas.scroll;
-        
+            scrollTop = CACHE_VIEW.lista_parcelas.scroll,
+            nivelUno  = $nivelUno.val();
+            nivelDos = $nivelDos ? $nivelDos.val() : null;
+
+        CACHE_VIEW.lista_parcelas.nivel_1 = nivelUno;
+        CACHE_VIEW.lista_parcelas.nivel_2 = nivelDos;
+
 		$.when( servicio.consultarParcelas({
                     codCampana: params.cod_campana,
                     tipoRiego : tipoRiego,
-                    nivelUno: $nivelUno.val(),
-                    nivelDos : $nivelDos ? $nivelDos.val() : null
+                    nivelUno: nivelUno,
+                    nivelDos : nivelDos
                 })
      		.done( function( resultado ){ 
      			var rows = resultado.rows;

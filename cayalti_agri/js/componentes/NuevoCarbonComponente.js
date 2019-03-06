@@ -1,6 +1,7 @@
 var NuevoCarbonComponente = function(index, FrmPadre) {    
       var self,
           $DOM,
+          vecesRegistro = 0,
           _valores;
 
       this.initialize = function() {
@@ -8,7 +9,7 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
         self = this;
         _valores = {
             tallos: "",
-            tallos_latigo: ""              
+            tallos_latigos: ""              
           };
       };
 
@@ -34,7 +35,7 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
       this.setDOM  = function(){
         $DOM = preDOM2DOM(this.$el, 
                     [{"tallos":"._tallos"},
-                     {"tallos_latigo":"._tallos-latigo"},
+                     {"tallos_latigos":"._tallos-latigos"},
                      {"porcentaje_dañados": "._porcentaje-dañados"}
                     ]);
       };
@@ -55,7 +56,8 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
 
       var __quitarCarbon = function(e){
         //FrmPadre.recalcular(index);
-        FrmPadre.quitarCarbon(index, self);
+        FrmPadre.quitarRegistro(index);
+        self.destroy();
       };
 
       var __cambiarInput = function(e){
@@ -66,14 +68,16 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
                 return;
             }
 
-            if (classList.contains("_tallos-latigo")){
-                validarEntrada(this, "tallos_latigo");
+            if (classList.contains("_tallos-latigos")){
+                validarEntrada(this, "tallos_latigos");
                 return;
             }
       };
 
       var validarEntrada = function($this, nombre_elemento){
         var valor = $this.value;
+
+        console.log(nombre_elemento);
 
         if (valor.length <= 0){
           $this.value = "";
@@ -87,7 +91,7 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
           return;
         }
 
-        if (nombre_elemento == "tallos_latigo"){
+        if (nombre_elemento == "tallos_latigos"){
           if (_valores["tallos"]  == ""){
             $this.value = "";
             _valores[nombre_elemento] = valor;
@@ -97,6 +101,12 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
           if (valor > _valores["tallos"]){
             valor = _valores["tallos"];
           }
+        } else {
+          if (_valores["tallos_latigos"] > valor){
+            _valores["tallos_latigos"] = valor;
+            $DOM.tallos_latigos.val(valor);
+          }
+
         }
 
         valor = parseInt(valor);
@@ -104,23 +114,24 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
 
         _valores[nombre_elemento] = valor;       
 
-
         calcularPorcentajeDaño();
       };
 
       var calcularPorcentajeDaño = function(){
         var DOM = $DOM,
             tallos = _valores["tallos"],
-            tallos_latigo = valores["tallos_latigo"],
+            tallos_latigo = _valores["tallos_latigos"],
             $porcentaje_dañados = DOM.porcentaje_dañados;
 
             if (tallos.length <= 0 || tallos_latigo.length <= 0 ){
-              $porcentaje_dañados.html("0.00");
+              $porcentaje_dañados.html("0.0");
               return;
             }
 
-            $porcentaje_dañados.html(parseFloat(tallos / tallos_latigo * 100).toFixed(2));
-            FrmPadre.grabarRegistro(index,_valores);
+            $porcentaje_dañados.html(parseFloat(tallos_latigo / tallos * 100).toFixed(1));
+            vecesRegistro++;
+            FrmPadre.grabarRegistro(index,_valores, vecesRegistro == 1 ? "+" : "*");
+
       };
 
       this.destroy = function(){
@@ -132,5 +143,5 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
         self = null;
       };
 
-      this.initialize(i);
+      this.initialize(index);
   }

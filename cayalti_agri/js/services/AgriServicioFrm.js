@@ -120,13 +120,30 @@ var AgriServicioFrm = function() {
                     [codParcela]);
     };
 
-    this.agregarMuestraCarbon = function(objMuestra){
+    this.agregarMuestraCarbon = function(objMuestra, insertUpdate){
         objMuestra.cod_formulario = 4;
-        return _db.insertarDatos("frm",  
-                                    ["cod_parcela", "car_n_metros","car_tallos","car_tallos_latigo","finalizacion","usuario_registro","cod_formulario"],
-                                        [objMuestra]);
+
+        if (insertUpdate == "+"){
+            return _db.insertarDatos("frm",
+                                    ["item","cod_parcela", "car_tallos","car_tallos_latigo","finalizacion","usuario_registro","cod_formulario"],
+                                        [objMuestra]);    
+        } else {
+            return _db.actualizarDatos("frm",
+                                    ["car_tallos","car_tallos_latigo"],
+                                    [objMuestra.car_tallos, objMuestra.car_tallos_latigo],
+                                    ["cod_parcela","index","cod_formulario"],
+                                    [objMuestra.cod_parcela, objMuestra.index, objMuestra.cod_formulario]);    
+        }
+        
     };
     
+    this.quitarMuestraCarbon = function(index, codParcela){
+        var cod_formulario = 4;
+
+        return _db.eliminarDatos("frm",  
+                                    ["cod_parcela","item","cod_formulario"],
+                                    [codParcela, index, cod_formulario]);
+    };
 
     this.obtenerUIMetamasius = function(codParcela) {
         return _db.selectData("SELECT (CASE c.tipo_riego WHEN '1' THEN 'M'||p.numero_nivel_1||'-T'||p.numero_nivel_2||'-V'||p.numero_nivel_3||' - '||c.nombre_campo  ELSE 'J'||p.numero_nivel_1||'-C'||p.numero_nivel_3||' - '||c.nombre_campo END) as rotulo_parcela, "+
@@ -152,7 +169,7 @@ var AgriServicioFrm = function() {
                                         [objMuestra]);
     };
 
-        this.obtenerUIRoya = function(codParcela) {
+    this.obtenerUIRoya = function(codParcela) {
         return _db.selectData("SELECT (CASE c.tipo_riego WHEN '1' THEN 'M'||p.numero_nivel_1||'-T'||p.numero_nivel_2||'-V'||p.numero_nivel_3||' - '||c.nombre_campo  ELSE 'J'||p.numero_nivel_1||'-C'||p.numero_nivel_3||' - '||c.nombre_campo END) as rotulo_parcela, "+
                     " p.area, p.variedad as cultivo, "+
                     " (SELECT round((CAST(valor AS NUMERIC) * p.area), 0) FROM _variables_ WHERE nombre_variable = 'muestrasxarea_roya') as muestras_recomendadas, "+

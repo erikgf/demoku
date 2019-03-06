@@ -472,16 +472,16 @@ var DBHandlerClase = function(version) {
                 if (len_campos > 0){
                   //Existe where.
                   sqlWhere += " WHERE ";
-                   for (var i = len_campos - 1; i >= 0; i--) {
+                   for (var i = 0; i < len_campos; i++) {
                       sqlWhere += campos_where[i]+" = ?";
-                      if (i > 0 ){
+                      if (i < len_campos - 1 ){
                         sqlWhere += ' AND ';
                       }
                     };
                 }
 
                 sql += sqlWhere;
-                
+
                 tx.executeSql(sql,
                       valores_where,
                       function(tx, data){ d.resolve(data);},                        
