@@ -5,8 +5,6 @@ require_once '../datos/local_config_web.php';
 require_once MODELO. '/util/Funciones.php';           
 require_once MODELO . '/ReporteadorFormulario.clase.php';
 
-exit;
-
 function indiceALetra ($indice){
    	$colText = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
    	$colTextLimite = strlen($colText);
