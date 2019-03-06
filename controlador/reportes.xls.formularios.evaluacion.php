@@ -40,6 +40,8 @@ function indiceALetra ($indice){
 
 			$dataReporte = $objReporte["data"];
 	       	$dataSheetDiatraea = $dataReporte["diatraea"];
+		 
+		 var_dump($dataSheetDiatraea); exit;
 	       	/*
 	       	$dataSheetDiatraea = $dataReporte["data_diatraea"];
 	       	$dataSheetElasmopalpus = $dataReporte["data_elasmopalpus"];
@@ -248,6 +250,8 @@ function indiceALetra ($indice){
 			}
 			//$actualSheet->getStyle('D'.$filaInit.':F'.$filaI)->applyFromArray($celdaNegativaEstilo);
 			$actualSheet->setTitle('REPORTE DIATRAEA');
+		 
+		 exit;
 		 	
 			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 			$objPHPExcel->setActiveSheetIndex(0);
