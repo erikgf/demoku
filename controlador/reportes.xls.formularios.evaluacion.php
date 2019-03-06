@@ -2,10 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-require_once '../datos/local_config_web.php';
-require_once MODELO. '/util/Funciones.php';           
-require_once MODELO . '/ReporteadorFormulario.clase.php';
+require_once '../plugins/Classes/PHPExcel.php';
 
 exit;
 require_once '../plugins/Classes/PHPExcel.php';
