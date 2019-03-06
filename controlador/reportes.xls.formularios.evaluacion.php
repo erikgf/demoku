@@ -1,10 +1,14 @@
-<?php 
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-/** Incluye PHPExcel */
 require_once '../plugins/Classes/PHPExcel.php';
 require_once '../datos/local_config_web.php';
 require_once MODELO. '/util/Funciones.php';           
 require_once MODELO . '/ReporteadorFormulario.clase.php';
+
+exit;
 
 function indiceALetra ($indice){
    	$colText = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
