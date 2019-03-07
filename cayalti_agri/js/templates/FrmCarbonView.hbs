@@ -20,7 +20,10 @@
 		  			<div>Área: </div>
 		  			<div>{{area}} ha</div>
 		  		</li>   
-	  	{{#if puedo_registrar}}
+		  		<li class="table-view-row">
+		  			<div>Muestras registradas: </div>
+		  			<div class="_muestras-registradas">{{numero_muestras}}</div>
+		  		</li>   
 	  			<li class="titulo-separador frm-pre-subtitulo">
 		  			<div>Muestras de Carbón</div>
 		  		</li>
@@ -35,7 +38,8 @@
 		  			</li>
 		  			<div class="_bloque-carbon">
 		  			</div>
-		  			<li class="_agregar-nuevo-carbon zona-registro-multiple">
+	  				
+		  			<li class="_agregar-nuevo-carbon zona-registro-multiple" {{^if puedo_registrar}}style="display:none"{{/if}}>
 		  				<div> <span class="icon icon-plus"></span> Agregar nueva muestra</div>
 		  			</li>
 		  		</div>
@@ -45,15 +49,11 @@
 		  				<div class="_infestacion-promedio text-right" style="display:block">0.00%</div>
 		  			</li>
 		  		</div>
+		  		{{#if puedo_registrar}}
 		  		<div style="padding:10px 24px 0px 24px">
 			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Finalizar evaluación</button>
 			  	</div>
-		{{else}}
-			<li class="table-view-row">
-		  		<div>Muestras realizadas</div>
-		  		<div>{{numero_muestra_actual}}</div>
-		  	</li>
-	  	{{/if}}
+			  	{{/if}}
 
 		</ul>
 	  	<!-- <ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul> -->

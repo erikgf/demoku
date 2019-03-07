@@ -111,13 +111,15 @@ var AgriServicioFrm = function() {
     this.obtenerUICarbon = function(codParcela) {
         return _db.selectData("SELECT (CASE c.tipo_riego WHEN '1' THEN 'M'||p.numero_nivel_1||'-T'||p.numero_nivel_2||'-V'||p.numero_nivel_3||' - '||c.nombre_campo  ELSE 'J'||p.numero_nivel_1||'-C'||p.numero_nivel_3||' - '||c.nombre_campo END) as rotulo_parcela, "+
                     " p.area, p.variedad as cultivo, "+
-                    " (SELECT round((CAST(valor AS NUMERIC) * p.area), 0) FROM _variables_ WHERE nombre_variable = 'muestrasxarea_carbon') as muestras_recomendadas, "+
-                    " (SELECT valor FROM _variables_ WHERE nombre_variable = 'n_metros_carbon') as n_metros,"+
-                    " (SELECT COUNT(id) + 1 FROM frm WHERE cod_parcela = p.cod_parcela AND cod_formulario = 4) as numero_muestra_actual,"+
+                    " (SELECT COUNT(id)  FROM frm WHERE cod_parcela = p.cod_parcela AND cod_formulario = 4) as numero_muestras,"+
                     " (SELECT COUNT(id) FROM frm WHERE cod_parcela = p.cod_parcela AND finalizacion = 'true' AND cod_formulario = 4) as muestras_finalizadas"+
                     " FROM campo c, parcela p WHERE c.cod_campana = p.cod_campana"+
                     " AND p.cod_parcela = ?",
                     [codParcela]);
+    };
+
+    this.obtenerRegistrosCarbon = function(codParcela){
+        return _db.selectData("SELECT item, car_tallos, car_tallos_latigo FROM frm WHERE cod_formulario = 4 AND cod_parcela = ?",[codParcela]);
     };
 
     this.agregarMuestraCarbon = function(objMuestra, insertUpdate){
@@ -128,18 +130,35 @@ var AgriServicioFrm = function() {
                                     ["item","cod_parcela", "car_tallos","car_tallos_latigo","finalizacion","usuario_registro","cod_formulario"],
                                         [objMuestra]);    
         } else {
+
+          
             return _db.actualizarDatos("frm",
                                     ["car_tallos","car_tallos_latigo"],
                                     [objMuestra.car_tallos, objMuestra.car_tallos_latigo],
-                                    ["cod_parcela","index","cod_formulario"],
-                                    [objMuestra.cod_parcela, objMuestra.index, objMuestra.cod_formulario]);    
+                                    ["cod_parcela","item","cod_formulario"],
+                                    [parseInt(objMuestra.cod_parcela), objMuestra.item, objMuestra.cod_formulario]);    
         }
+        
+    };
+
+    this.obtenerLastIndexCarbon = function(codParcela){
+       var cod_formulario = 4;
+       return _db.selectData("SELECT MAX(item) as last_index FROM frm WHERE cod_parcela = ? AND cod_formulario = ?",
+                    [codParcela, cod_formulario]);
+    };
+
+    this.finalizarCarbon = function(objMuestra){
+        objMuestra.cod_formulario = 4;
+        return _db.actualizarDatos("frm",
+                                    ["finalizacion"],
+                                    [true],
+                                    ["cod_parcela","item","cod_formulario"],
+                                    [parseInt(objMuestra.cod_parcela), objMuestra.item, objMuestra.cod_formulario]);
         
     };
     
     this.quitarMuestraCarbon = function(index, codParcela){
         var cod_formulario = 4;
-
         return _db.eliminarDatos("frm",  
                                     ["cod_parcela","item","cod_formulario"],
                                     [codParcela, index, cod_formulario]);

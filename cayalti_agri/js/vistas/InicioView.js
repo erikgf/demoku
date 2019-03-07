@@ -294,7 +294,6 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 
 			case 4: 
 				objRetorno = {
-					car_n_metros: objDetalle.car_n_metros,
 					car_tallos: objDetalle.car_tallos,
 					car_tallos_latigo: objDetalle.car_tallos_latigo
 				};

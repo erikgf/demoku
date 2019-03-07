@@ -16,7 +16,8 @@
   router;
 
 var DATA_NAV, DATA_NAV_JSON;
-(function () {   
+
+var onDeviceReady = function () {   
     /* ---------------------------------- Local Variables ---------------------------------- */
     DATA_NAV_JSON = localStorage.getItem("DATA_NAV__APPCAYALTI");
 
@@ -39,13 +40,13 @@ var DATA_NAV, DATA_NAV_JSON;
     servicio_web.initialize();
     servicio_frm.initialize(db);
     servicio.initialize(db).then(function (htmlScriptTemplates) {
-    	try{
+      try{
 
         procesarTemplates(htmlScriptTemplates);
 
-    	  router.addRoute('', function() {
-        		slider.slidePage(new LoginView(servicio, CACHE_VIEW.login).render().$el);
-    	  });
+        router.addRoute('', function() {
+            slider.slidePage(new LoginView(servicio, CACHE_VIEW.login).render().$el);
+        });
 
           router.addRoute('inicio', function() {
             if (DATA_NAV.acceso){
@@ -114,11 +115,11 @@ var DATA_NAV, DATA_NAV_JSON;
           router.load("");
         }
 
-	      router.start();
+        router.start();
 
-    	}catch(e){
-    		console.error(e)
-    	};
+      }catch(e){
+        console.error(e)
+      };
         console.log("Service initialized");
     });
 
@@ -134,15 +135,29 @@ var DATA_NAV, DATA_NAV_JSON;
             }
         }
     };
+    
+    FastClick.attach(document.body);
+};
 
-    function ondeviceready(){
-    	FastClick.attach(document.body);
-    };
-
-    ondeviceready();
-
+(function(){
+    var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+    if ( app ) {
+      console.log("APP");
+      document.addEventListener("deviceready", onDeviceReady, false);
+    } else {
+      console.log("WEB");
+      onDeviceReady();  // Web page
+    } 
 }());
 
+    /*
+    var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+    if ( app ) {
+      document.addEventListener("deviceready", onDeviceReady, false);
+    } else {
+      onDeviceReady();  // Web page
+    } 
+    */
 
 function cerrarSesion(){
   localStorage.removeItem("DATA_NAV__APPCAYALTI");

@@ -28,6 +28,15 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
         return index;
       };
 
+      this.setValores = function(valores, porcentajeDaño){
+        var  DOM = $DOM;        
+        DOM.tallos.val(valores.tallos);
+        DOM.tallos_latigos.val(valores.tallos_latigos);
+        DOM.porcentaje_dañados.html(porcentajeDaño);
+        vecesRegistro = 1;
+        _valores = valores;
+      };
+
       this.getValores = function(){
         return _valores;
       };
@@ -56,29 +65,24 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
 
       var __quitarCarbon = function(e){
         //FrmPadre.recalcular(index);
-        FrmPadre.quitarRegistro(index);
-        self.destroy();
-      };
+          FrmPadre.quitarRegistro(index);
+          self.destroy();
+        },__cambiarInput = function(e){
+          var classList = this.classList;
 
-      var __cambiarInput = function(e){
-        var classList = this.classList;
+          if (classList.contains("_tallos")){
+              validarEntrada(this, "tallos");
+              return;
+          }
 
-            if (classList.contains("_tallos")){
-                validarEntrada(this, "tallos");
-                return;
-            }
-
-            if (classList.contains("_tallos-latigos")){
-                validarEntrada(this, "tallos_latigos");
-                return;
-            }
-      };
+          if (classList.contains("_tallos-latigos")){
+              validarEntrada(this, "tallos_latigos");
+              return;
+          }
+        };
 
       var validarEntrada = function($this, nombre_elemento){
         var valor = $this.value;
-
-        console.log(nombre_elemento);
-
         if (valor.length <= 0){
           $this.value = "";
           _valores[nombre_elemento] = valor;
@@ -92,6 +96,9 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
         }
 
         if (nombre_elemento == "tallos_latigos"){
+
+          $DOM.tallos_latigos.removeClass("error");
+
           if (_valores["tallos"]  == ""){
             $this.value = "";
             _valores[nombre_elemento] = valor;
@@ -102,6 +109,9 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
             valor = _valores["tallos"];
           }
         } else {
+
+          $DOM.tallos.removeClass("error");
+
           if (_valores["tallos_latigos"] > valor){
             _valores["tallos_latigos"] = valor;
             $DOM.tallos_latigos.val(valor);
@@ -131,7 +141,29 @@ var NuevoCarbonComponente = function(index, FrmPadre) {
             $porcentaje_dañados.html(parseFloat(tallos_latigo / tallos * 100).toFixed(1));
             vecesRegistro++;
             FrmPadre.grabarRegistro(index,_valores, vecesRegistro == 1 ? "+" : "*");
+      };
 
+      this.validar = function(){
+        var DOM = $DOM,
+            $tallos = $DOM.tallos,
+            $tallos_latigos = $DOM.tallos_latigos,
+            tallos = _valores["tallos"],
+            tallos_latigos = _valores["tallos_latigos"];
+
+
+        if (tallos.length == ""){
+            $DOM.tallos_latigos.focus().addClass("error");
+            alert("Necesita registrar número TALLOS.");
+            return false;
+         } 
+
+         if (tallos_latigos.length == ""){
+            $DOM.tallos_latigos.focus().addClass("error");
+            alert("Necesita registrar número LÁTIGOS.");
+            return false;
+         }
+
+         return true;
       };
 
       this.destroy = function(){

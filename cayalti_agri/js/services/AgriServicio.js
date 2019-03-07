@@ -9,8 +9,8 @@ var AgriServicio = function() {
     };
 
     this.compilar = function(){
-       return $.get("template.compiler.php");
-       //return $.get("template.master.hbs");
+       //return $.get("template.compiler.php");
+       return $.get("template.master.hbs");
     };
 
     this.iniciarSesion = function(_login, _clave){
