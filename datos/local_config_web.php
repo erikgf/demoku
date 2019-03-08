@@ -6,6 +6,9 @@
  * and open the template in the editor.
  */
 //SERVIDOR
+
+ date_default_timezone_set('America/Lima');
+
  define("MODELO", "../negocio");
  define("MODELO_UTIL", MODELO."/util");
  define("MODELO_FUNCIONES",MODELO_UTIL."/Funciones.php");
