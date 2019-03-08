@@ -73,11 +73,9 @@ function indiceALetra ($indice){
 			$celdaFilaFinal = "AB";
 
 			if ($fi == $ff){
-				//$rango_fecha_desc = Funciones::fechear($fi);
-				$rango_fecha_desc = $fi;
+				$rango_fecha_desc = Funciones::fechear($fi);
 			} else {
-				//$rango_fecha_desc = "Del ".Funciones::fechear($fi)." al ".Funciones::fechear($ff);
-				$rango_fecha_desc = "Del ".$fi." al ".$ff;
+				$rango_fecha_desc = "Del ".Funciones::fechear($fi)." al ".Funciones::fechear($ff);
 			}
 
 			$objPHPExcel->setActiveSheetIndex(0);
