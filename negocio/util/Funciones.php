@@ -86,7 +86,10 @@ class Funciones {
     }
 
    public static function fechear($fecha){
-       $ar = split("[/-]",$fecha);    
+       if (!isset($fecha) || $fecha == ""){
+           return "";
+       }
+       $ar = preg_split("/\/|-/",$fecha);  
        return $ar[2]."-".$ar[1]."-".$ar[0];
    }
     
