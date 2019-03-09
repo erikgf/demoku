@@ -86,7 +86,7 @@ class Funciones {
     }
 
    public static function fechear($fecha){
-       $ar = split("[/-]",$fecha);    
+       $ar = explode("-",$fecha);    
        return $ar[2]."-".$ar[1]."-".$ar[0];
    }
     
