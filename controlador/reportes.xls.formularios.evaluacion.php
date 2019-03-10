@@ -126,7 +126,6 @@ function indiceALetra ($indice){
 		 		'BILLAEA LARVAS'=>13,
 		 		'BILLAEA PUPAS'=>13,
 		 		'% PARASITISMO'=>13,
-		 		'OBSERVACIONES'=>20,
 		 		'EVALUADOR'=>33
 			];
 
@@ -238,7 +237,6 @@ function indiceALetra ($indice){
 
 					$actualSheet				
 								->setCellValue($porcentajeParasitismo.$filaI, $formulaParasitismo)
-								->setCellValue(indiceALetra($indice++).$filaI, $value["observaciones"])
 								->setCellValue(indiceALetra($indice++).$filaI, $value["colaborador"]);
 				}
 
