@@ -97,7 +97,7 @@ class Conexion{
         $consulta = $this->dblink->prepare("INSERT INTO $p_nombre_tabla ($sql_campos) VALUES ($sql_valores)");
         
         for ($i = 0; $i < count($p_campos); $i++) {
-            $consulta->bindParam(':'.$this->reformatEne($p_campos[$i]), strtoupper($p_valores[$i]));
+            $consulta->bindParam(':'.$this->reformatEne($p_campos[$i]), $p_valores[$i]);
         }
         
         return $consulta->execute();
@@ -123,7 +123,7 @@ class Conexion{
         $consulta = $this->dblink->prepare($sql);
         
         for ($i = 0; $i < count($p_campos); $i++) {
-            $consulta->bindParam(':'.$this->reformatEne($p_campos[$i]), strtoupper($p_valores[$i]));
+            $consulta->bindParam(':'.$this->reformatEne($p_campos[$i]), $p_valores[$i]);
         }
 
         
