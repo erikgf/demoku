@@ -196,7 +196,10 @@ function indiceALetra ($indice){
 					$actualSheet	
 								->setCellValue($indiceIndiceInfestacion.$filaI, '=SUM('.$inicioLarvas.$filaI.':'.$finLarvas.$filaI.')/'.$indiceTallos.$filaI);
 					
-					$indiceLarvas = $value["dia_larvas_indice"];
+					$indiceLarvas = $value["dia_larvas_estadio_1"] + $value["dia_larvas_estadio_2"] + $value["dia_larvas_estadio_3"] 
+									+  $value["dia_larvas_estadio_4"] +  $value["dia_larvas_estadio_5"] + $value["dia_larvas_estadio_6"];
+
+					$indiceLarvas = $indiceLarvas / $value["dia_tallos"];
 					$riesgo = "ALTO";
 
 					if ($indiceLarvas <= 0.06){
