@@ -41,6 +41,19 @@ app.generarExcel = function(){
     window.open(strUrl,'_blank'); 
 };
 
+app.consulta = function (sql) {
+  var fn  =function(xhr){
+    var datos = xhr.datos;
+    console.log(datos);
+  };
+
+  new Ajxur.Api({
+    metodo: "consultaSQL",
+    modelo: "Executor",
+    data_out : [sql]
+  }, fn);
+};
+
 $(document).ready(function(){
   app.init();
 });
