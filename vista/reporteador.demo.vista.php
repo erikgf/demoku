@@ -53,6 +53,7 @@ $fechaHoy = date('Y-m-d');
   include '_js/jquery.js.php'; 
   include '_js/bootstrap.js.php'; 
 ?>
+  <script src="../util/Ajxur.js" type="text/javascript"></script>
   <script src="js/reporteador.vista.js" type="text/javascript"></script>
 </body>
 
