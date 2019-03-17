@@ -16,6 +16,9 @@
                 <li>
                   <a href="reporteador.demo.vista.php">Reporteador Demo</a>
                 </li>
+                <li>
+                  <a href="sql.ejecutor.vista.php">Consultas SQL</a>
+                </li>
                 <!--
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Gestión <span class="caret"></span></a>
