@@ -62,12 +62,21 @@ class ActualizadorApp extends Conexion {
             $etapas_fenologicas = $this->consultarFilas($sql);
             $contador_registros += count($variables);  
 
+            /*Liberaciones pendeintes*/
+            /*
+            $sql = "SELECT cod_campana, cod_parcela, cantidad_moscas, cod_usuario_liberador as cod_usuario 
+                    FROM liberacion_programacion_detalle WHERE estado_mrcb = 1"; // campaña activar, por ahora solo hay una campaña
+            $liberaciones = $this->consultarFilas($sql);*/
+            $liberaciones = [];
+            $contador_registros += count($liberaciones);  
+
             return array("rpt"=>true,"data"=>["usuarios"=>$usuarios,
                                                 "campos"=>$campos,
                                                     "parcelas"=>$parcelas,
                                                         "formularios"=>$formularios,
                                                             "etapas"=>$etapas_fenologicas,
                                                                 "_variables_"=>$variables,
+                                                                    "liberaciones"=>$liberaciones,
                                                                     "contador_registros"=>$contador_registros]);
 
         } catch (Exception $exc) {
@@ -86,6 +95,8 @@ class ActualizadorApp extends Conexion {
                     "bio_etapa_fenologica" =>  $objDetalle->bio_etapa_fenologica,
                     "bio_volumen_promedio" =>  $objDetalle->bio_volumen_promedio,
                     "bio_largo_promedio" =>  $objDetalle->bio_largo_promedio,
+                    "bio_diametro_promedio" =>  $objDetalle->bio_diametro_promedio,
+                    "bio_entrenudos_promedio" =>  $objDetalle->bio_entrenudos_promedio,
                     "bio_crecimiento_promedio" =>  $objDetalle->bio_crecimiento_promedio,
                     "bio_ml_metros" =>  $objDetalle->bio_ml_metros,
                     "bio_ml_tallos" => $objDetalle->bio_ml_tallos == "" ?  0 : $objDetalle->bio_ml_tallos,
@@ -131,7 +142,6 @@ class ActualizadorApp extends Conexion {
 
             case 4:
                 $objRetorno = [
-                    "car_n_metros" => $objDetalle->car_n_metros,
                     "car_tallos" => $objDetalle->car_tallos,
                     "car_tallos_latigo" => $objDetalle->car_tallos_latigo
                 ];
