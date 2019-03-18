@@ -120,7 +120,7 @@ function indiceALetra ($indice){
 		 		'LARVAS ESTADO 4'=>13,
 		 		'LARVAS ESTADO 5'=>13,
 		 		'LARVAS ESTADO 6'=>13,
-		 		'ÍNDICE INFESTACIÓN'=>16,
+		 		'ÍNDICE POBLACIÓN'=>16,
 		 		'CRISÁLIDAS'=>12,
 		 		'LARVAS PARASITADAS'=>16,
 		 		'BILLAEA LARVAS'=>13,
