@@ -33,8 +33,14 @@ $fechaHoy = date('Y-m-d');
             <textarea id="txtsql" class="form-control" rows="6"></textarea>
           </div>
       </div>
+    </div>
+    <br>
+    <div class="row">
       <div class="col-xs-12 col-sm-3 col-md-2">
           <button class="btn btn-block btn-primary btn-lg" id="btn-ejecutar">EJECUTAR SQL</button>
+      </div>
+      <div class="col-xs-12 col-sm-3 col-md-2">
+          <a href="docs/documentacion_apoyo_sql.docx">Ver documento de apoyo</button>
       </div>
     </div>
     <br>
