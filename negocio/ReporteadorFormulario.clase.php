@@ -14,7 +14,7 @@ class ReporteadorFormulario extends Conexion {
             ORDER BY nombre_campo,
                 numero_nivel_1, 
 	            numero_nivel_2,
-	            numero_nivel_3::integer" ;
+	              NULLIF(regexp_replace(numero_nivel_3, '\D', '', 'g'), '')::integer" ;
             $data["diatraea"] = $this->consultarFilas($sql, [$fi, $ff]);
 
             return ["rpt"=>true,"data"=>$data];
