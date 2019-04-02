@@ -16,8 +16,10 @@ class ReporteadorFormulario extends Conexion {
 		
             $data["diatraea"] = $this->consultarFilas($sql, [$fi, $ff]);
 	
-            $sql = "SELECT * FROM v_full_resumen_diatraea 
-                    WHERE raw_fecha_evaluacion::date BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
+           $sql = "SELECT *, 
+                     to_char(raw_fecha_evaluacion, 'DD-MM-YYYY'::text) as fecha_evaluacion
+                     FROM v_full_resumen_diatraea
+                     WHERE raw_fecha_evaluacion::date BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
             $data["diatraea_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
 
