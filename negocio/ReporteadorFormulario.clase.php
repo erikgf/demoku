@@ -20,8 +20,8 @@ class ReporteadorFormulario extends Conexion {
                      to_char(raw_fecha_evaluacion, 'DD-MM-YYYY'::text) as fecha_evaluacion
                      FROM 
                      (SELECT v_registros_resumen_diatraea.nombre_campo,
-                        NULL::text AS "fecha_inicio_campaña",
-                        NULL::text AS "numero_campaña",
+                        NULL::text AS fecha_inicio_campaña,
+                        NULL::text AS numero_campaña,
                         v_registros_resumen_diatraea.numero_evaluacion,
                         v_registros_resumen_diatraea.raw_fecha_evaluacion::date,
                         sum(v_registros_resumen_diatraea.dia_tallos) AS dia_tallos,
@@ -34,7 +34,7 @@ class ReporteadorFormulario extends Conexion {
                         sum(v_registros_resumen_diatraea.dia_billaea_larvas) AS dia_billaea_larvas,
                         sum(v_registros_resumen_diatraea.dia_billaea_pupas) AS dia_billaea_pupas
                        FROM v_registros_resumen_diatraea
-                         JOIN "campaña" c ON c."cod_campaña" = v_registros_resumen_diatraea."cod_campaña"
+                       JOIN campaña c ON c.cod_campaña = v_registros_resumen_diatraea.cod_campaña
                       GROUP BY v_registros_resumen_diatraea.nombre_campo, 
                                 v_registros_resumen_diatraea.raw_fecha_evaluacion::date,
                                 v_registros_resumen_diatraea.numero_evaluacion) tx
