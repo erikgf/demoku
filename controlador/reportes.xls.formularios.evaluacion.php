@@ -1,5 +1,6 @@
-<?php
+<?php 
 
+/** Incluye PHPExcel */
 require_once '../plugin/Classes/PHPExcel.php';
 require_once '../datos/local_config_web.php';
 require_once MODELO. '/util/Funciones.php';           
@@ -39,9 +40,10 @@ function indiceALetra ($indice){
 
 			$dataReporte = $objReporte["data"];
 	       	$dataSheetDiatraea = $dataReporte["diatraea"];
-		 
+	       	$dataSheetDiatraeaResumen = $dataReporte["diatraea_resumen"];
+			$dataSheetCarbon = $dataReporte["carbon"];
+	       	$dataSheetCarbonResumen = $dataReporte["carbon_resumen"];
 	       	/*
-	       	$dataSheetDiatraea = $dataReporte["data_diatraea"];
 	       	$dataSheetElasmopalpus = $dataReporte["data_elasmopalpus"];
 	       	$dataSheetCarbon = $dataReporte["data_carbon"];
 	       	$dataSheetMetamasius = $dataReporte["data_metamasius"];
@@ -50,7 +52,6 @@ function indiceALetra ($indice){
 
 	        //$rango_fecha = $dataReporte["rango_fecha_desc"];
 	        //$cuerpo = $dataReporte["data_egresos"];
-
 			$objPHPExcel->getProperties()->setCreator($CREADOR)
 										 ->setTitle($TITULO)
 										 ->setSubject($TITULO)
@@ -67,18 +68,15 @@ function indiceALetra ($indice){
 
 			$empresaEstilo = array('font' => array('bold' => true, 'name' => 'Arial','size' => 8),'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_LEFT));
 			
-			/*	INICIO SHEET 0 - DIATRAEA
-				
-			*/
 			$celdaFilaFinal = "AB";
 
 			if ($fi == $ff){
 				$rango_fecha_desc = Funciones::fechear($fi);
-				//$rango_fecha_desc = $fi;
 			} else {
 				$rango_fecha_desc = "Del ".Funciones::fechear($fi)." al ".Funciones::fechear($ff);
-				//$rango_fecha_desc = "Del ".$fi." al ".$ff;
 			}
+
+			/*	INICIO SHEET 0 - DIATRAEA */
 
 			$objPHPExcel->setActiveSheetIndex(0);
 			$actualSheet = $objPHPExcel->getActiveSheet();
@@ -249,7 +247,325 @@ function indiceALetra ($indice){
 			}
 			//$actualSheet->getStyle('D'.$filaInit.':F'.$filaI)->applyFromArray($celdaNegativaEstilo);
 			$actualSheet->setTitle('REPORTE DIATRAEA');
-	
+
+			/**FIN SHEET 0. */
+
+
+			/*INICIO SHEET 1 DATRAEA RESUMEN*/
+			$celdaFilaFinal = "N";
+			$actualSheet = $objPHPExcel->createSheet();
+
+			$actualSheet->setCellValue('A1',$EMPRESA)
+						->mergeCells('A1:B1')
+						->mergeCells('A2:'.$celdaFilaFinal.'2')
+						->setCellValue($celdaFilaFinal.'1', 'Fecha: '.$DIA.' Hora: '.$HORA)
+						->setCellValue('A2', "REPORTE DE EVALUACIÓN DIATRAEA RESUMEN")
+						->setCellValue('A3', "RANGO FECHAS REPORTE: ".$rango_fecha_desc)
+						->mergeCells('A3:H3');
+
+			$actualSheet->getStyle('A1')->applyFromArray($empresaEstilo);
+			$actualSheet->getStyle('A2:'.$celdaFilaFinal.'2')->applyFromArray($tituloEstilo);
+			$actualSheet->getStyle('A3')->applyFromArray($fechaEstilo);
+			$actualSheet->getStyle($celdaFilaFinal.'1')->applyFromArray($fechaHoraEstilo);
+							 
+			//Inicio tabla CABECERA: A3-D3
+			$filaI = 5;
+
+			$columnas = [
+				//nombre coklumna => ancho
+				'CAMPO'=>25,
+		 		'INICIO CAMPAÑA'=>13,
+		 		'FECHA EVALUACIÓN'=>14,
+		 		'N° CAMPAÑA'=>11,
+		 		'N° EVALUACIÓN'=>11,
+		 		'TALLOS EVALUADOS'=>14,
+		 		'TALLOS INFESTADOS'=>14,
+		 		'% INFESTACIÓN'=>14,
+		 		'ENTRENUDOS EVALUADOS'=>18,
+		 		'ENTRENUDOS INFESTADOS'=>18,
+		 		'% INTENSIDAD DAÑO'=>18,
+		 		'TOTAL LARVAS'=>13,
+		 		'ÍNDICE POBLACIÓN'=>16,
+		 		'% PARASITISMO'=>13
+			];
+
+			$i = 0;
+			foreach ($columnas as $nombreColumna => $anchoColumna) {
+				$letra = indiceALetra($i);
+				$actualSheet->setCellValue($letra.$filaI, $nombreColumna);
+				$actualSheet->getColumnDimension($letra)->setWidth($anchoColumna);
+				$i++;
+			}
+
+			$rangoColumnas = 'A'.$filaI.':'.$letra.$filaI;
+
+			$actualSheet->getStyle($rangoColumnas)->applyFromArray($cabeceraEstilo);
+			$actualSheet->getStyle($rangoColumnas)->applyFromArray($cabeceraEstilo);
+
+			$colorRiesgo= ["ALTO"=>["B22222","FFFFFF"], "MEDIO"=>["FFD700","000000"], "BAJO"=>["008000","FFFFFF"]];
+
+			$filaInit = $filaI + 1;
+
+			if (count($dataSheetDiatraeaResumen) > 0){
+				foreach ($dataSheetDiatraeaResumen as $_ => $value) {
+					/*INIT */
+					$filaI++;
+					$indice = 0;
+					$actualSheet
+								->setCellValue(indiceALetra($indice++).$filaI, $value["nombre_campo"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["fecha_inicio_campaña"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["fecha_evaluacion"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["numero_campaña"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["numero_evaluacion"]);
+
+					$indiceTallos = indiceALetra($indice++);
+					$indiceTallosInfestados = indiceALetra($indice++);	
+					$porcentajeInfestacion = indiceALetra($indice++);	
+
+					$actualSheet			
+								->setCellValue($indiceTallos.$filaI, $value["dia_tallos"])
+								->setCellValue($indiceTallosInfestados.$filaI, $value["dia_tallos_infestados"])
+								->setCellValue($porcentajeInfestacion.$filaI,'='.$indiceTallosInfestados.$filaI.'/'.$indiceTallos.$filaI.'*100');
+
+					$indiceEntrenudos = indiceALetra($indice++);			
+					$indiceEntrenudosInfestados = indiceALetra($indice++);
+					$intensidadDaño = indiceALetra($indice++);
+
+					$actualSheet
+								->setCellValue($indiceEntrenudos.$filaI, $value["dia_entrenudos"])
+								->setCellValue($indiceEntrenudosInfestados.$filaI, $value["dia_entrenudos_infestados"])
+								->setCellValue($intensidadDaño.$filaI,'='.$indiceEntrenudosInfestados.$filaI.'/'.$indiceEntrenudos.$filaI.'*100');
+
+					$totalLarvasSuma = 	$value["larvas_totales"];
+
+					$totalLarvas = indiceALetra($indice++);
+					$actualSheet	
+								->setCellValue($totalLarvas.$filaI, $totalLarvasSuma);
+
+					$indiceIndiceInfestacion = indiceALetra($indice++);
+					$actualSheet	
+								->setCellValue($indiceIndiceInfestacion.$filaI, '='.$totalLarvas.$filaI.'/'.$indiceTallos.$filaI);
+					
+					$indiceLarvas = $totalLarvasSuma / $value["dia_tallos"];
+					$riesgo = "ALTO";
+
+					if ($indiceLarvas <= 0.06){
+						$riesgo = "BAJO";
+					} else if($indiceLarvas >= 0.07 && $indiceLarvas <= 0.19){
+						$riesgo = "MEDIO";
+					}
+
+					$objThisColor = $colorRiesgo[$riesgo];
+					
+					$objPHPExcel->getActiveSheet()->getStyle($indiceIndiceInfestacion.$filaI)->applyFromArray(
+							    array(
+							        'fill' => array(
+							            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+							            'color' => array('rgb' => $objThisColor[0])
+							        ),
+							        'font' => array(
+							        	"bold"=>true,
+							        	'color' => array('rgb' => $objThisColor[1])),
+							        'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+							    )
+							);
+
+					$porcentajeParasitismo = indiceALetra($indice++);
+					$parasitosSuma =  $value["dia_crisalidas"] +  $value["dia_larvas_parasitadas"] + $value["dia_billaea_larvas"] + $value["dia_billaea_pupas"];
+					$formulaSumParasitos = 'SUM('.$parasitosSuma.','.$indiceIndiceInfestacion.$filaI.')';
+					$formulaParasitismo = "=IF(".$formulaSumParasitos."=0,0,".$parasitosSuma."/".$formulaSumParasitos." * 100)";
+
+					$actualSheet				
+								->setCellValue($porcentajeParasitismo.$filaI, $formulaParasitismo);
+				}
+
+				$actualSheet->getStyle($porcentajeParasitismo.$filaInit.':'.$porcentajeParasitismo.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
+				$actualSheet->getStyle($intensidadDaño.$filaInit.':'.$intensidadDaño.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
+				$actualSheet->getStyle($indiceIndiceInfestacion.$filaInit.':'.$indiceIndiceInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.0000');	
+				$actualSheet->getStyle($porcentajeInfestacion.$filaInit.':'.$porcentajeInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
+			}
+			//$actualSheet->getStyle('D'.$filaInit.':F'.$filaI)->applyFromArray($celdaNegativaEstilo);
+			$actualSheet->setTitle('REPORTE DIATRAEA RESUMEN');
+
+			/*FIN SHEET 1 : DIATRAEA RESUMEN*/
+
+
+			/*INICIO SHEET 2 CARBON*/
+			$celdaFilaFinal = "N";
+			$actualSheet = $objPHPExcel->createSheet();
+
+			$actualSheet->setCellValue('A1',$EMPRESA)
+						->mergeCells('A1:B1')
+						->mergeCells('A2:'.$celdaFilaFinal.'2')
+						->setCellValue($celdaFilaFinal.'1', 'Fecha: '.$DIA.' Hora: '.$HORA)
+						->setCellValue('A2', "REPORTE DE EVALUACIÓN CARBÓN")
+						->setCellValue('A3', "RANGO FECHAS REPORTE: ".$rango_fecha_desc)
+						->mergeCells('A3:H3');
+
+			$actualSheet->getStyle('A1')->applyFromArray($empresaEstilo);
+			$actualSheet->getStyle('A2:'.$celdaFilaFinal.'2')->applyFromArray($tituloEstilo);
+			$actualSheet->getStyle('A3')->applyFromArray($fechaEstilo);
+			$actualSheet->getStyle($celdaFilaFinal.'1')->applyFromArray($fechaHoraEstilo);
+							 
+			//Inicio tabla CABECERA: A3-D3
+			$filaI = 5;
+
+			$columnas = [
+				//nombre coklumna => ancho
+				'CAMPO'=>25,
+		 		'INICIO CAMPAÑA'=>13,
+		 		'FECHA EVALUACIÓN'=>14,
+		 		'N° CAMPAÑA'=>11,
+		 		'N° EVALUACIÓN'=>11,
+		 		'MÓDULO/JIRÓN'=>11,
+		 		'TURNO'=>11,
+		 		'VÁLVULA/CUARTEL'=>14,
+		 		'ÁREA (ha)'=>14,
+		 		'N° CEPAS'=>14,
+		 		'N° LATIGOS'=>14,
+		 		'LATIGOS POR CEPA'=>14,
+		 		'LATIGOS POR HA'=>18,
+				'EVALUADOR'=>33
+			];
+
+			$i = 0;
+			foreach ($columnas as $nombreColumna => $anchoColumna) {
+				$letra = indiceALetra($i);
+				$actualSheet->setCellValue($letra.$filaI, $nombreColumna);
+				$actualSheet->getColumnDimension($letra)->setWidth($anchoColumna);
+				$i++;
+			}
+
+			$rangoColumnas = 'A'.$filaI.':'.$letra.$filaI;
+
+			$actualSheet->getStyle($rangoColumnas)->applyFromArray($cabeceraEstilo);
+			$actualSheet->getStyle($rangoColumnas)->applyFromArray($cabeceraEstilo);
+
+			$filaInit = $filaI + 1;
+
+			if (count($dataSheetCarbon) > 0){
+				foreach ($dataSheetCarbon as $_ => $value) {
+					/*INIT */
+					$filaI++;
+					$indice = 0;
+					$actualSheet
+								->setCellValue(indiceALetra($indice++).$filaI, $value["nombre_campo"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["fecha_inicio_campaña"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["fecha_evaluacion"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["numero_campaña"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["numero_evaluacion"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["numero_nivel_1"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["numero_nivel_2"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["numero_nivel_3"]);
+
+					$area = indiceALetra($indice++);
+					$indiceCepas = indiceALetra($indice++);
+					$indiceLatigos = indiceALetra($indice++);	
+					$indicelatigosCepa = indiceALetra($indice++);	
+					$indicelatigosHa = indiceALetra($indice++);	
+
+					$actualSheet			
+								->setCellValue($area.$filaI, $value["area"])
+								->setCellValue($indiceCepas.$filaI, $value["car_tallos"])
+								->setCellValue($indiceLatigos.$filaI, $value["car_tallos_latigo"])
+								->setCellValue($indicelatigosCepa.$filaI,'='.$indiceLatigos.$filaI.'/'.$indiceCepas.$filaI)
+								->setCellValue($indicelatigosHa.$filaI,'='.$indiceLatigos.$filaI.'/'.$area.$filaI)
+								->setCellValue(indiceALetra($indice++).$filaI, $value["colaborador"]);
+					
+				}
+
+				$actualSheet->getStyle($indiceLatigos.$filaInit.':'.$indiceLatigos.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
+				$actualSheet->getStyle($indicelatigosHa.$filaInit.':'.$indicelatigosHa.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
+			}
+			//$actualSheet->getStyle('D'.$filaInit.':F'.$filaI)->applyFromArray($celdaNegativaEstilo);
+			$actualSheet->setTitle('REPORTE CARBON');
+
+			/*DATA SHEET 2 : REPORTE CARBON*/
+
+			/*INICIO SHEET 2 CARBON*/
+			$celdaFilaFinal = "J";
+			$actualSheet = $objPHPExcel->createSheet();
+
+			$actualSheet->setCellValue('A1',$EMPRESA)
+						->mergeCells('A1:B1')
+						->mergeCells('A2:'.$celdaFilaFinal.'2')
+						->setCellValue($celdaFilaFinal.'1', 'Fecha: '.$DIA.' Hora: '.$HORA)
+						->setCellValue('A2', "REPORTE DE EVALUACIÓN CARBÓN RESUMEN")
+						->setCellValue('A3', "RANGO FECHAS REPORTE: ".$rango_fecha_desc)
+						->mergeCells('A3:H3');
+
+			$actualSheet->getStyle('A1')->applyFromArray($empresaEstilo);
+			$actualSheet->getStyle('A2:'.$celdaFilaFinal.'2')->applyFromArray($tituloEstilo);
+			$actualSheet->getStyle('A3')->applyFromArray($fechaEstilo);
+			$actualSheet->getStyle($celdaFilaFinal.'1')->applyFromArray($fechaHoraEstilo);
+							 
+			//Inicio tabla CABECERA: A3-D3
+			$filaI = 5;
+
+			$columnas = [
+				//nombre coklumna => ancho
+				'CAMPO'=>25,
+		 		'INICIO CAMPAÑA'=>13,
+		 		'FECHA EVALUACIÓN'=>14,
+		 		'N° CAMPAÑA'=>11,
+		 		'N° EVALUACIÓN'=>11,
+		 		'ÁREA (ha)'=>14,
+		 		'N° CEPAS'=>14,
+		 		'N° LATIGOS'=>14,
+		 		'LATIGOS POR CEPA'=>14,
+		 		'LATIGOS POR HA'=>18
+			];
+
+			$i = 0;
+			foreach ($columnas as $nombreColumna => $anchoColumna) {
+				$letra = indiceALetra($i);
+				$actualSheet->setCellValue($letra.$filaI, $nombreColumna);
+				$actualSheet->getColumnDimension($letra)->setWidth($anchoColumna);
+				$i++;
+			}
+
+			$rangoColumnas = 'A'.$filaI.':'.$letra.$filaI;
+
+			$actualSheet->getStyle($rangoColumnas)->applyFromArray($cabeceraEstilo);
+			$actualSheet->getStyle($rangoColumnas)->applyFromArray($cabeceraEstilo);
+
+			$filaInit = $filaI + 1;
+
+			if (count($dataSheetCarbon) > 0){
+				foreach ($dataSheetCarbon as $_ => $value) {
+					/*INIT */
+					$filaI++;
+					$indice = 0;
+					$actualSheet
+								->setCellValue(indiceALetra($indice++).$filaI, $value["nombre_campo"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["fecha_inicio_campaña"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["fecha_evaluacion"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["numero_campaña"])
+								->setCellValue(indiceALetra($indice++).$filaI, $value["numero_evaluacion"]);
+
+					$area = indiceALetra($indice++);
+					$indiceCepas = indiceALetra($indice++);
+					$indiceLatigos = indiceALetra($indice++);	
+					$indicelatigosCepa = indiceALetra($indice++);	
+					$indicelatigosHa = indiceALetra($indice++);	
+
+					$actualSheet			
+								->setCellValue($area.$filaI, $value["area"])
+								->setCellValue($indiceCepas.$filaI, $value["car_tallos"])
+								->setCellValue($indiceLatigos.$filaI, $value["car_tallos_latigo"])
+								->setCellValue($indicelatigosCepa.$filaI,'='.$indiceLatigos.$filaI.'/'.$indiceCepas.$filaI)
+								->setCellValue($indicelatigosHa.$filaI,'='.$indiceLatigos.$filaI.'/'.$area.$filaI);
+					
+				}
+
+				$actualSheet->getStyle($indiceLatigos.$filaInit.':'.$indiceLatigos.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
+				$actualSheet->getStyle($indicelatigosHa.$filaInit.':'.$indicelatigosHa.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
+			}
+			//$actualSheet->getStyle('D'.$filaInit.':F'.$filaI)->applyFromArray($celdaNegativaEstilo);
+			$actualSheet->setTitle('REPORTE CARBÓN RESUMEN');
+
+			/*DATA SHEET 3 : CARBON RESUMEN*/
+		 	
 			// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 			$objPHPExcel->setActiveSheetIndex(0);
 			// Redirect output to a client’s web browser (Excel2007)
