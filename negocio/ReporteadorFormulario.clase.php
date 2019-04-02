@@ -14,7 +14,8 @@ class ReporteadorFormulario extends Conexion {
 	            numero_nivel_2,
 	              NULLIF(regexp_replace(numero_nivel_3, '\D', '', 'g'), '')::integer" ;
             $data["diatraea"] = $this->consultarFilas($sql, [$fi, $ff]);
-
+	
+	/*
             $sql = "SELECT * FROM v_full_resumen_diatraea 
                     WHERE fecha_evaluacion::date BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
@@ -34,9 +35,9 @@ class ReporteadorFormulario extends Conexion {
 
             $sql = " SELECT * FROM v_full_resumen_carbon
                      WHERE date(fecha_evaluacion) BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
-
+	
             $data["carbon_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
-
+	*/
             return ["rpt"=>true,"data"=>$data];
 
         } catch (Exception $exc) {            
