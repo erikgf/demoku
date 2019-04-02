@@ -8,7 +8,7 @@ class ReporteadorFormulario extends Conexion {
         try {
             //la evaluacion debe TENER un fecha_inicio_Evalaucion_temporal y Estado Confirmado.
             $data = [];
-            $sql = "SELECT * FROM v_registros_resumen_diatraea WHERE date(raw_fecha_evaluacion) BETWEEN date(:0) AND date(:1) 
+            $sql = "SELECT * FROM v_registros_resumen_diatraea WHERE raw_fecha_evaluacion::date BETWEEN date(:0) AND date(:1) 
             ORDER BY nombre_campo,
                 numero_nivel_1, 
 	            numero_nivel_2,
