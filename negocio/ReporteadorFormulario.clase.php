@@ -14,15 +14,14 @@ class ReporteadorFormulario extends Conexion {
 	            numero_nivel_2,
 	              NULLIF(regexp_replace(numero_nivel_3, '\D', '', 'g'), '')::integer";
 		
-	    var_dump($sql);
             $data["diatraea"] = $this->consultarFilas($sql, [$fi, $ff]);
 	
-	/*
             $sql = "SELECT * FROM v_full_resumen_diatraea 
                     WHERE fecha_evaluacion::date BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
             $data["diatraea_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
 
+	/*
             $sql = "SELECT 
                     r.* , p.area
                     FROM v_registros_carbon r
