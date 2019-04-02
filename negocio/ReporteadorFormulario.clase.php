@@ -17,11 +17,10 @@ class ReporteadorFormulario extends Conexion {
             $data["diatraea"] = $this->consultarFilas($sql, [$fi, $ff]);
 	
             $sql = "SELECT * FROM v_full_resumen_diatraea 
-                    WHERE fecha_evaluacion::date BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
+                    WHERE raw_fecha_evaluacion::date BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
             $data["diatraea_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
 
-	/*
             $sql = "SELECT 
                     r.* , p.area
                     FROM v_registros_carbon r
@@ -35,10 +34,10 @@ class ReporteadorFormulario extends Conexion {
 
 
             $sql = " SELECT * FROM v_full_resumen_carbon
-                     WHERE date(fecha_evaluacion) BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
+                     WHERE date(raw_fecha_evaluacion) BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 	
             $data["carbon_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
-	*/
+		
             return ["rpt"=>true,"data"=>$data];
 
         } catch (Exception $exc) {            
