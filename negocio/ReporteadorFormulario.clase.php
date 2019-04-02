@@ -16,10 +16,29 @@ class ReporteadorFormulario extends Conexion {
 		
             $data["diatraea"] = $this->consultarFilas($sql, [$fi, $ff]);
 	
-           $sql = "SELECT *, 
+            $sql = "SELECT *, 
                      to_char(raw_fecha_evaluacion, 'DD-MM-YYYY'::text) as fecha_evaluacion
-                     FROM v_full_resumen_diatraea
-                     WHERE raw_fecha_evaluacion::date BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
+                     FROM 
+                     (SELECT v_registros_resumen_diatraea.nombre_campo,
+                        NULL::text AS "fecha_inicio_campaña",
+                        NULL::text AS "numero_campaña",
+                        v_registros_resumen_diatraea.numero_evaluacion,
+                        v_registros_resumen_diatraea.raw_fecha_evaluacion::date,
+                        sum(v_registros_resumen_diatraea.dia_tallos) AS dia_tallos,
+                        sum(v_registros_resumen_diatraea.dia_tallos_infestados) AS dia_tallos_infestados,
+                        sum(v_registros_resumen_diatraea.dia_entrenudos) AS dia_entrenudos,
+                        sum(v_registros_resumen_diatraea.dia_entrenudos_infestados) AS dia_entrenudos_infestados,
+                        sum(v_registros_resumen_diatraea.dia_larvas_estadio_1) + sum(v_registros_resumen_diatraea.dia_larvas_estadio_2) + sum(v_registros_resumen_diatraea.dia_larvas_estadio_3) + sum(v_registros_resumen_diatraea.dia_larvas_estadio_4) + sum(v_registros_resumen_diatraea.dia_larvas_estadio_5) + sum(v_registros_resumen_diatraea.dia_larvas_estadio_6) AS larvas_totales,
+                        sum(v_registros_resumen_diatraea.dia_crisalidas) AS dia_crisalidas,
+                        sum(v_registros_resumen_diatraea.dia_larvas_parasitadas) AS dia_larvas_parasitadas,
+                        sum(v_registros_resumen_diatraea.dia_billaea_larvas) AS dia_billaea_larvas,
+                        sum(v_registros_resumen_diatraea.dia_billaea_pupas) AS dia_billaea_pupas
+                       FROM v_registros_resumen_diatraea
+                         JOIN "campaña" c ON c."cod_campaña" = v_registros_resumen_diatraea."cod_campaña"
+                      GROUP BY v_registros_resumen_diatraea.nombre_campo, 
+                                v_registros_resumen_diatraea.raw_fecha_evaluacion::date,
+                                v_registros_resumen_diatraea.numero_evaluacion) tx
+                     WHERE  raw_fecha_evaluacion BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
             $data["diatraea_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
 
