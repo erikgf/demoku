@@ -200,9 +200,9 @@ function indiceALetra ($indice){
 					$indiceLarvas = $indiceLarvas / $value["dia_tallos"];
 					$riesgo = "ALTO";
 
-					if ($indiceLarvas <= 0.06){
+					if ($indiceLarvas <= 0.05){
 						$riesgo = "BAJO";
-					} else if($indiceLarvas >= 0.07 && $indiceLarvas <= 0.19){
+					} else if($indiceLarvas >= 0.06 && $indiceLarvas <= 0.15){
 						$riesgo = "MEDIO";
 					}
 
@@ -232,9 +232,9 @@ function indiceALetra ($indice){
 								->setCellValue($indiceBillaeaPupas.$filaI, $value["dia_billaea_pupas"]);
 
 					$porcentajeParasitismo = indiceALetra($indice++);
-					$formulaSumLarvas = 'SUM('.$indiceLarvasParasitadas.$filaI.':'.$indiceBillaeaPupas.$filaI.')';
-					$formulaSumParasitos = 'SUM('.$indiceIndiceInfestacion.$filaI.':'.$indiceBillaeaPupas.$filaI.')';
-					$formulaParasitismo = "=IF(".$formulaSumParasitos."=0,0,".$formulaSumLarvas."/".$formulaSumParasitos." * 100)";
+					$formulaNumerador = 'SUM('.$indiceLarvasParasitadas.$filaI.':'.$indiceBillaeaPupas.$filaI.')';
+					$formulaDenominador = 'SUM('.$inicioLarvas.$filaI.':'.$finLarvas.$filaI.','.$indiceCrisalidas.$filaI.':'.$indiceBillaeaPupas.$filaI.')';
+					$formulaParasitismo = "=IF(".$formulaDenominador."=0,0,".$formulaNumerador."/".$formulaDenominador." * 100)";
 
 					$actualSheet				
 								->setCellValue($porcentajeParasitismo.$filaI, $formulaParasitismo)
@@ -243,6 +243,7 @@ function indiceALetra ($indice){
 
 				$actualSheet->getStyle($porcentajeParasitismo.$filaInit.':'.$porcentajeParasitismo.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
 				$actualSheet->getStyle($intensidadDaño.$filaInit.':'.$intensidadDaño.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
+				$actualSheet->getStyle($indiceIndiceInfestacion.$filaInit.':'.$indiceIndiceInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.0000');	
 				$actualSheet->getStyle($porcentajeInfestacion.$filaInit.':'.$porcentajeInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
 			}
 			//$actualSheet->getStyle('D'.$filaInit.':F'.$filaI)->applyFromArray($celdaNegativaEstilo);
@@ -349,9 +350,9 @@ function indiceALetra ($indice){
 					$indiceLarvas = $totalLarvasSuma / $value["dia_tallos"];
 					$riesgo = "ALTO";
 
-					if ($indiceLarvas <= 0.06){
+					if ($indiceLarvas <= 0.05){
 						$riesgo = "BAJO";
-					} else if($indiceLarvas >= 0.07 && $indiceLarvas <= 0.19){
+					} else if($indiceLarvas >= 0.06 && $indiceLarvas <= 0.15){
 						$riesgo = "MEDIO";
 					}
 
@@ -371,9 +372,10 @@ function indiceALetra ($indice){
 							);
 
 					$porcentajeParasitismo = indiceALetra($indice++);
-					$parasitosSuma =  $value["dia_crisalidas"] +  $value["dia_larvas_parasitadas"] + $value["dia_billaea_larvas"] + $value["dia_billaea_pupas"];
-					$formulaSumParasitos = 'SUM('.$parasitosSuma.','.$indiceIndiceInfestacion.$filaI.')';
-					$formulaParasitismo = "=IF(".$formulaSumParasitos."=0,0,".$parasitosSuma."/".$formulaSumParasitos." * 100)";
+
+					$numerador =  $value["dia_larvas_parasitadas"] + $value["dia_billaea_larvas"] + $value["dia_billaea_pupas"];
+					$formulaDenominador = 'SUM('.$totalLarvas.$filaI.','.($numerador + $value["dia_crisalidas"]).')';
+					$formulaParasitismo = "=IF(".$formulaDenominador."=0,0,".$numerador."/".$formulaDenominador." * 100)";
 
 					$actualSheet				
 								->setCellValue($porcentajeParasitismo.$filaI, $formulaParasitismo);
