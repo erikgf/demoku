@@ -43,6 +43,11 @@ function indiceALetra ($indice){
 	       	$dataSheetDiatraeaResumen = $dataReporte["diatraea_resumen"];
 			$dataSheetCarbon = $dataReporte["carbon"];
 	       	$dataSheetCarbonResumen = $dataReporte["carbon_resumen"];
+
+
+	       	$dataExtra = $dataReporte["data_extra"];
+	       	$varNumeroParejas =  $dataExtra["numero_parejas"];
+	       	$varIndiceInfestacion =  $dataExtra["indice_infestacion"];
 	       	/*
 	       	$dataSheetElasmopalpus = $dataReporte["data_elasmopalpus"];
 	       	$dataSheetCarbon = $dataReporte["data_carbon"];
@@ -74,6 +79,41 @@ function indiceALetra ($indice){
 				$rango_fecha_desc = Funciones::fechear($fi);
 			} else {
 				$rango_fecha_desc = "Del ".Funciones::fechear($fi)." al ".Funciones::fechear($ff);
+			}
+
+			function obtenerRiesgo($varIndiceInfestacion, $indiceInfestacion){
+				/*TRES NIVELES*/
+				$encontrado = false;
+				$riesgo = "ERROR";
+
+				foreach ($varIndiceInfestacion as $key => $value) {
+					if ($encontrado == true){
+						break;
+					}
+
+					if ($indiceInfestacion >= (float) $value["limite_inferior"] && $indiceInfestacion <= (float) $value["limite_superior"] ){
+						$encontrado = true;
+						$riesgo = $value["riesgo"];
+					}
+				}
+
+				return $riesgo;
+			}
+
+			function obtenerNumeroParejas($varNumeroParejas, $indiceInfestacion){
+				$encontrado = false;
+				$numero_parejas = 0;
+				foreach ($varNumeroParejas as $key => $value) {
+					if ($encontrado == true){
+						break;
+					}
+					if ($indiceInfestacion >= (float) $value["limite_inferior"] && $indiceInfestacion <= (float) $value["limite_superior"] ){
+						$encontrado = true;
+						$numero_parejas = $value["numero_parejas"];
+					}
+				}
+
+				return $numero_parejas;
 			}
 
 			/*	INICIO SHEET 0 - DIATRAEA */
@@ -124,7 +164,8 @@ function indiceALetra ($indice){
 		 		'BILLAEA LARVAS'=>13,
 		 		'BILLAEA PUPAS'=>13,
 		 		'% PARASITISMO'=>13,
-		 		'EVALUADOR'=>33
+		 		'EVALUADOR'=>33,
+		 		'NUMERO PAREJAS'=>16
 			];
 
 			$i = 0;
@@ -141,7 +182,7 @@ function indiceALetra ($indice){
 			$actualSheet->getStyle($rangoColumnas)->applyFromArray($cabeceraEstilo);
 
 
-			$colorRiesgo= ["ALTO"=>["B22222","FFFFFF"], "MEDIO"=>["FFD700","000000"], "BAJO"=>["008000","FFFFFF"]];
+			$colorRiesgo= ["ALTO"=>["B22222","FFFFFF"], "MEDIO"=>["FFD700","000000"], "BAJO"=>["008000","FFFFFF"],"ERROR"=>["FFFFFF","008000"]];
 
 			$filaInit = $filaI + 1;
 
@@ -198,13 +239,8 @@ function indiceALetra ($indice){
 									+  $value["dia_larvas_estadio_4"] +  $value["dia_larvas_estadio_5"] + $value["dia_larvas_estadio_6"];
 
 					$indiceLarvas = $indiceLarvas / $value["dia_tallos"];
-					$riesgo = "ALTO";
 
-					if ($indiceLarvas <= 0.05){
-						$riesgo = "BAJO";
-					} else if($indiceLarvas >= 0.06 && $indiceLarvas <= 0.15){
-						$riesgo = "MEDIO";
-					}
+					$riesgo = obtenerRiesgo($varIndiceInfestacion, $indiceLarvas);
 
 					$objThisColor = $colorRiesgo[$riesgo];
 					
@@ -238,7 +274,8 @@ function indiceALetra ($indice){
 
 					$actualSheet				
 								->setCellValue($porcentajeParasitismo.$filaI, $formulaParasitismo)
-								->setCellValue(indiceALetra($indice++).$filaI, $value["colaborador"]);
+								->setCellValue(indiceALetra($indice++).$filaI, $value["colaborador"])
+								->setCellValue(indiceALetra($indice++).$filaI, obtenerNumeroParejas($varNumeroParejas, $indiceLarvas));
 				}
 
 				$actualSheet->getStyle($porcentajeParasitismo.$filaInit.':'.$porcentajeParasitismo.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
@@ -246,6 +283,7 @@ function indiceALetra ($indice){
 				$actualSheet->getStyle($indiceIndiceInfestacion.$filaInit.':'.$indiceIndiceInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.0000');	
 				$actualSheet->getStyle($porcentajeInfestacion.$filaInit.':'.$porcentajeInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
 			}
+
 			//$actualSheet->getStyle('D'.$filaInit.':F'.$filaI)->applyFromArray($celdaNegativaEstilo);
 			$actualSheet->setTitle('REPORTE DIATRAEA');
 
@@ -303,7 +341,7 @@ function indiceALetra ($indice){
 			$actualSheet->getStyle($rangoColumnas)->applyFromArray($cabeceraEstilo);
 			$actualSheet->getStyle($rangoColumnas)->applyFromArray($cabeceraEstilo);
 
-			$colorRiesgo= ["ALTO"=>["B22222","FFFFFF"], "MEDIO"=>["FFD700","000000"], "BAJO"=>["008000","FFFFFF"]];
+			$colorRiesgo= ["ALTO"=>["B22222","FFFFFF"], "MEDIO"=>["FFD700","000000"], "BAJO"=>["008000","FFFFFF"],"ERROR"=>["FFFFFF","008000"]];
 
 			$filaInit = $filaI + 1;
 
@@ -348,13 +386,8 @@ function indiceALetra ($indice){
 								->setCellValue($indiceIndiceInfestacion.$filaI, '='.$totalLarvas.$filaI.'/'.$indiceTallos.$filaI);
 					
 					$indiceLarvas = $totalLarvasSuma / $value["dia_tallos"];
-					$riesgo = "ALTO";
-
-					if ($indiceLarvas <= 0.05){
-						$riesgo = "BAJO";
-					} else if($indiceLarvas >= 0.06 && $indiceLarvas <= 0.15){
-						$riesgo = "MEDIO";
-					}
+					
+					$riesgo = obtenerRiesgo($varIndiceInfestacion, $indiceLarvas);
 
 					$objThisColor = $colorRiesgo[$riesgo];
 					
