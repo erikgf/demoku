@@ -59,6 +59,17 @@ class ReporteadorFormulario extends Conexion {
 	
             $data["carbon_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
 		
+	    /*VARIABLES EXTRA*/
+            $dataExtra = [];
+
+            $sql = "SELECT distinct(nivel) as nivel, limite_inferior, limite_superior, numero_parejas FROM variable_moscas_liberacion WHERE fecha_fin IS NULL ORDER BY nivel ";
+            $dataExtra["numero_parejas"] = $this->consultarFilas($sql);
+
+            $sql = "SELECT distinct(nivel) as nivel, limite_inferior, limite_superior, descripcion as riesgo FROM variable_indice_infestacion WHERE fecha_fin IS NULL ORDER BY nivel ";
+            $dataExtra["indice_infestacion"] = $this->consultarFilas($sql);
+
+            $data["data_extra"] = $dataExtra;
+		
             return ["rpt"=>true,"data"=>$data];
 
         } catch (Exception $exc) {            
