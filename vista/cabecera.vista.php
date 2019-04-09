@@ -13,6 +13,17 @@
                 <li>
                   <a href="principal.vista.php">Inicio</a>
                 </li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Gestión <span class="caret"></span></a>
+                  <ul class="dropdown-menu dropdown-menu-cayalti">
+                    <li><a href="#">Campos </a></li>
+                    <li><a href="#">Campañas </a></li>
+                    <li><a href="#">Parcela</a></li>
+                  </ul>
+                </li>  
+                <li>
+                  <a href="registros.vista.php">Registros</a>
+                </li>
                 <li>
                   <a href="reporteador.demo.vista.php">Reporteador Demo</a>
                 </li>
