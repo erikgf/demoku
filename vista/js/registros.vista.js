@@ -34,11 +34,19 @@ app.setEventos  = function(){
     app.buscar();
   });
 
+
+  $("#txtfechadesde").on("change", function(e){
+    app.obtenerDataFiltro();
+  });
+
+  $("#txtfechahasta").on("change", function(e){
+    app.obtenerDataFiltro();
+  });
+
   txtBuscar.on("keyup", function(e){
     var v = this.value.toLowerCase();
     $("table tbody tr:not(.tr-null)").each(function() {
         var dis = $(this);
-        console.log(dis);
         if(dis.text().toLowerCase().indexOf(v) > -1){
              dis.show();                        
          }
@@ -177,7 +185,8 @@ app.buscar = function(){
 
   var tpl8ListadoCabecera = this.tpl8.listadoCabecera,
       codCampo = $("#cbocampo").val(),
-      fechaRegistro = $("#txtfecha").val(),
+      fechaDesde = $("#txtfechadesde").val(),
+      fechaHasta = $("#txtfechahasta").val(),
       codEvaluador = $("#cboevaluador").val(),
       tipoEvaluacion = $("#cbotipoevaluacion").val(),
       numeroNivel1 = $("#txtnumeronivel1").val(),
@@ -208,19 +217,21 @@ app.buscar = function(){
     metodo: "obtenerCabeceras",
     data_in: {
       p_codCampo : codCampo,
-      p_fechaRegistro : fechaRegistro,
       p_codEvaluador : codEvaluador,
       p_tipoEvaluacion : tipoEvaluacion,
       p_numeroNivel1: numeroNivel1,
       p_numeroNivel2: numeroNivel2,
       p_numeroNivel3: numeroNivel3
-    }
+    },
+    data_out : [fechaDesde, fechaHasta]
   },fn, fnError);
 };
 
 app.obtenerDataFiltro =function(){
-  var tpl8Combo = this.tpl8.combo;
-  var fn = function (xhr){
+  var tpl8Combo = this.tpl8.combo,
+      txtFechaDesde = $("#txtfechadesde").val(),
+      txtFechaHasta = $("#txtfechahasta").val(),
+      fn = function (xhr){
       if (xhr.rpt) {
         var datos = xhr.data,
             cboCampo = $("#cbocampo"),
@@ -243,7 +254,8 @@ app.obtenerDataFiltro =function(){
 
   new Ajxur.Api({
     modelo: "RegistroEvaluacion",
-    metodo: "obtenerDataFiltro"
+    metodo: "obtenerDataFiltro",
+    data_out: [txtFechaDesde, txtFechaHasta]
   },fn);
 };
 
