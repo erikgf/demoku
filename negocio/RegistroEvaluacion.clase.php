@@ -216,17 +216,26 @@ class RegistroEvaluacion extends Conexion {
         }
     }
 
-    public function obtenerDataFiltro(){
+    public function obtenerDataFiltro($fechaDesde, $fechaHasta){
         try {
 
-            $sql = "SELECT  nombre_campo as descripcion, cod_campo as codigo
-                    FROM campo WHERE estado_mrcb ORDER BY nombre_campo";
+            $sql = "SELECT distinct cp.nombre_campo as descripcion, cp.cod_campo as codigo
+                    FROM registros_cabecera rc
+                    INNER JOIN parcela p ON p.cod_parcela = rc.cod_parcela
+                    INNER JOIN campaña c ON c.cod_campaña = p.cod_campaña
+                    INNER JOIN siembra si ON si.cod_siembra = c.cod_siembra
+                    INNER JOIN campo cp ON cp.cod_campo = si.cod_campo AND cp.estado_mrcb
+                    WHERE fecha_evaluacion BETWEEN '$fechaDesde'::date AND '$fechaHasta'::date
+                    ORDER BY descripcion";
 
             $campos = $this->consultarFilas($sql);
 
-            $sql = "SELECT u.cod_usuario as codigo, CONCAT(co.apellidos,' ',co.nombres) as descripcion
-                    FROM colaborador co 
-                    INNER JOIN usuario u ON u.cod_colaborador = co.cod_colaborador ORDER BY co.apellidos, co.nombres";
+            $sql = "SELECT distinct CONCAT(co.apellidos,' ',co.nombres) as descripcion, u.cod_usuario as codigo
+                    FROM registros_cabecera rc
+                    INNER JOIN usuario u ON u.cod_usuario = rc.cod_evaluador
+                    INNER JOIN colaborador co ON co.cod_colaborador = u.cod_usuario
+                    WHERE fecha_evaluacion BETWEEN '$fechaDesde'::date AND '$fechaHasta'::date
+                    ORDER BY CONCAT(co.apellidos,' ',co.nombres)";
 
             $evaluadores = $this->consultarFilas($sql);
 
@@ -236,7 +245,7 @@ class RegistroEvaluacion extends Conexion {
         }
     }
 
-    public function obtenerCabeceras(){
+    public function obtenerCabeceras($fechaDesde, $fechaHasta){
         try {
 
             $sql = "SELECT rc.cod_registro, 
@@ -266,9 +275,15 @@ class RegistroEvaluacion extends Conexion {
                 $lastParametro++;
             }
 
-            if (strlen($this->getFechaRegistro()) > 0 && $this->getFechaRegistro() != ""){
-                $sql .= " AND fecha_evaluacion = :$lastParametro ";
-                array_push($parametros, $this->getFechaRegistro());
+            if (strlen($fechaDesde) > 0 && $fechaDesde != ""){
+                $sql .= " AND fecha_evaluacion >= :$lastParametro ";
+                array_push($parametros, $fechaDesde);
+                $lastParametro++;
+            }
+
+            if (strlen($fechaHasta) > 0 && $fechaHasta != ""){
+                $sql .= " AND fecha_evaluacion <= :$lastParametro ";
+                array_push($parametros, $fechaHasta);
                 $lastParametro++;
             }
 
