@@ -33,6 +33,18 @@ $fechaHoy = date('Y-m-d');
  <main role="main" class="container">
     <h3>Registros en Sistema</h3>
     <div class="row">
+      <div class="col-xs-6 col-md-2">
+          <div class="control-group">
+            <label class="control-label">Fecha Desde: </label>
+            <input id="txtfechadesde" type="date" value="<?php echo date('Y-m-d'); ?>" class="form-control" />
+          </div>
+      </div>
+      <div class="col-xs-6 col-md-2">
+          <div class="control-group">
+            <label class="control-label">Fecha Hasta: </label>
+            <input id="txtfechahasta" type="date" value="<?php echo date('Y-m-d'); ?>" class="form-control" />
+          </div>
+      </div>
       <div class="col-xs-6 col-md-3">
           <div class="control-group">
             <label class="control-label">Campos: </label>
@@ -41,28 +53,11 @@ $fechaHoy = date('Y-m-d');
             </select>
           </div>
       </div>
-      <div class="col-xs-6 col-md-2">
-          <div class="control-group">
-            <label class="control-label">Fecha: </label>
-            <input id="txtfecha" type="date" value="<?php echo date('Y-m-d'); ?>" class="form-control" />
-          </div>
-      </div>
       <div class="col-xs-6 col-md-3">
           <div class="control-group">
             <label class="control-label">Evaluadores: </label>
             <select id="cboevaluador" class="form-control">
                 <option value="">Todos los evaluadores</option>
-            </select>
-          </div>
-      </div>
-      <div class="col-xs-6 col-md-2">
-          <div class="control-group">
-            <label class="control-label">Tipo Evaluación: </label>
-            <select id="cbotipoevaluacion" class="form-control">
-                <option value="*">TODOS</option>
-                <option value="1">BIOMETRÍA</option>
-                <option value="2">DIATRAEA</option>
-                <option value="4">CARBÓN</option>
             </select>
           </div>
       </div>
@@ -75,22 +70,33 @@ $fechaHoy = date('Y-m-d');
     </div>
     <br>
     <div class="row">
+      <div class="col-xs-6 col-md-2">
+          <div class="control-group">
+            <label class="control-label">Tipo Evaluación: </label>
+            <select id="cbotipoevaluacion" class="form-control">
+                <option value="*">TODOS</option>
+                <option value="1">BIOMETRÍA</option>
+                <option value="2">DIATRAEA</option>
+                <option value="4">CARBÓN</option>
+            </select>
+          </div>
+      </div>
       <div class="col-xs-6 col-sm-2 col-md-1">
         <div class="control-group">
-            <small class="control-label">MÓDULO/JIRÓN: </small>
-            <input id="txtnumeronivel1"  type='text' class="form-control input-sm"/>
+            <label class="control-label">MÓD./JIR.: </label>
+            <input id="txtnumeronivel1"  type='text' class="form-control"/>
         </div>
       </div>
       <div class="col-xs-6 col-sm-2 col-md-1">
         <div class="control-group">
-            <small class="control-label">TURNO: </small>
-            <input  id="txtnumeronivel2" type='text' class="form-control input-sm"/>
+            <label class="control-label">TURNO: </label>
+            <input  id="txtnumeronivel2" type='text' class="form-control"/>
         </div>
       </div>
       <div class="col-xs-6 col-sm-2 col-md-1">
         <div class="control-group">
-            <small class="control-label">VÁLVULA/CUARTEL: </small>
-            <input  id="txtnumeronivel3" type='text' class="form-control input-sm"/>
+            <label class="control-label">VÁLV./CUART.: </label>
+            <input  id="txtnumeronivel3" type='text' class="form-control"/>
         </div>
       </div>
     </div>
