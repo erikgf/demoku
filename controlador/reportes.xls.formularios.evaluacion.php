@@ -280,7 +280,7 @@ function indiceALetra ($indice){
 
 				$actualSheet->getStyle($porcentajeParasitismo.$filaInit.':'.$porcentajeParasitismo.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
 				$actualSheet->getStyle($intensidadDaño.$filaInit.':'.$intensidadDaño.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
-				$actualSheet->getStyle($indiceIndiceInfestacion.$filaInit.':'.$indiceIndiceInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.0000');	
+				$actualSheet->getStyle($indiceIndiceInfestacion.$filaInit.':'.$indiceIndiceInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
 				$actualSheet->getStyle($porcentajeInfestacion.$filaInit.':'.$porcentajeInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
 			}
 
@@ -416,7 +416,7 @@ function indiceALetra ($indice){
 
 				$actualSheet->getStyle($porcentajeParasitismo.$filaInit.':'.$porcentajeParasitismo.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
 				$actualSheet->getStyle($intensidadDaño.$filaInit.':'.$intensidadDaño.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
-				$actualSheet->getStyle($indiceIndiceInfestacion.$filaInit.':'.$indiceIndiceInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.0000');	
+				$actualSheet->getStyle($indiceIndiceInfestacion.$filaInit.':'.$indiceIndiceInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
 				$actualSheet->getStyle($porcentajeInfestacion.$filaInit.':'.$porcentajeInfestacion.$filaI)->getNumberFormat()->setFormatCode('#,##0.00');	
 			}
 			//$actualSheet->getStyle('D'.$filaInit.':F'.$filaI)->applyFromArray($celdaNegativaEstilo);
