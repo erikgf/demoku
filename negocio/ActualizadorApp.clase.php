@@ -206,6 +206,7 @@ class ActualizadorApp extends Conexion {
                 $campos_valores = [
                     "cod_registro"=>$codRegistro,
                     "fecha_registro"=>$value["fecha_registro"],
+                    "fecha_evaluacion"=>$value["fecha_registro"],
                     "cod_evaluador"=>$value["cod_evaluador"],
                     "movil_id"=>$value["movil_id"],
                     "cod_formulario_evaluacion"=>$value["cod_formulario_evaluacion"],
