@@ -357,7 +357,7 @@ class RegistroEvaluacion extends Conexion {
                     (SELECT distinct(numero_nivel_".$NIVEL.") as descripcion
                         FROM parcela p
                         WHERE cod_campaña = :0 ".$sqlW." ) t
-                    ORDER BY t.descripcion::integer";
+                    ORDER BY NULLIF(regexp_replace(t.descripcion, '\D', '', 'g'), '')::integer";
 
         return $this->consultarFilas($sql, $parametros);
     }
