@@ -2,7 +2,8 @@ var app = {},
     vars = {
       TIPO_RIEGO_TEMP : null,
       COD_REGISTRO_TEMP : null,
-      BTN_DETALLE_TEMP : null
+      BTN_DETALLE_TEMP : null,
+      COD_DETALLE_TEMP : null
     };
 
 app.init = function(){
@@ -28,7 +29,10 @@ app.setEventos  = function(){
       txtMdlCampo = $("#txtmdlcampo"),
       txtMdlNN1 = $("#txtmdlnumeronivel1"),
       txtMdlNN2 = $("#txtmdlnumeronivel2"),
-      frmCabecera = $("#frmgrabarcabecera");
+      frmCabecera = $("#frmgrabarcabecera"),
+      frmDetalleDiatraea = $("#frmgrabardiatraea"),
+      mdlCabecera = $("#mdlEditarCabecera"),
+      mdlDetalleDiatraea = $("#mdlEditarDetalleDiatraea");
 
   btnBuscar.on("click", function(e){
     app.buscar();
@@ -73,6 +77,20 @@ app.setEventos  = function(){
     app.grabarCabecera();
   });
 
+  mdlCabecera.on("bs.modal.hidden", function(e){
+    e.preventDefault();
+    vars.COD_REGISTRO_TEMP = null;
+  });
+  
+  mdlDetalleDiatraea.on("bs.modal.hidden", function(e){
+    e.preventDefault();
+    vars.COD_DETALLE_TEMP = null;
+  });
+
+  frmDetalleDiatraea.on("submit", function(e){
+    e.preventDefault();
+    app.grabarDetalleDiatraea();
+  });
 
   btnBuscar = null;
   txtBuscar = null;
@@ -80,6 +98,9 @@ app.setEventos  = function(){
   txtMdlNN1 = null;
   txtMdlNN2 = null;
   frmCabecera =null;
+  frmDetalleDiatraea = null;
+  mdlCabecera = null;
+  mdlDetalleDiatraea = null;
 };
 
 app.cargarNivelUno =function(){
@@ -439,6 +460,147 @@ app.renderDetalle = function(arregloDetalle,cod_formulario_evaluacion){
   };
 
   return html;
+};
+
+app.cargarDetalle = function(cod_tipo_evaluacion, cod_registro_detalle){
+
+  /*SOLO DIATREAEA*/
+  if (cod_tipo_evaluacion != 2){
+    return;
+  }
+
+  var fn = function (xhr){
+        if (xhr.rpt) {
+          var datos = xhr.data,
+              $modal = $("#mdlEditarDetalleDiatraea");
+          //1.- open moda,
+          //2.- load data
+          $modal.find(".modal-header h3").html("Editar Registro "+datos.rotulo_parcela+" - ITEM: "+datos.item);
+          $("#txtdia_entrenudos").val(datos.dia_entrenudos);
+          $("#txtdia_entrenudosinfestados").val(datos.dia_entrenudos_infestados);
+          $("#txtdia_tallos").val(datos.dia_tallos);
+          $("#txtdia_tallosinfestados").val(datos.dia_tallos_infestados);
+          $("#txtdia_larvas1").val(datos.dia_larvas_estadio_1);
+          $("#txtdia_larvas2").val(datos.dia_larvas_estadio_2);
+          $("#txtdia_larvas3").val(datos.dia_larvas_estadio_3);
+          $("#txtdia_larvas4").val(datos.dia_larvas_estadio_4);
+          $("#txtdia_larvas5").val(datos.dia_larvas_estadio_5);
+          $("#txtdia_larvas6").val(datos.dia_larvas_estadio_6);
+          $("#txtdia_crisalidas").val(datos.dia_crisalidas);
+          $("#txtdia_parasitadas").val(datos.dia_larvas_parasitadas);
+          $("#txtdia_billaealarvas").val(datos.dia_billaea_larvas);
+          $("#txtdia_billaeapupas").val(datos.dia_billaea_pupas);
+          vars.COD_DETALLE_TEMP = cod_registro_detalle;
+
+          $modal.modal("show");
+        } else {
+          console.error(xhr.msj);
+        }
+      };
+
+  //1.- load, 2.- modal, 3.- set, 4.- listen event frmdetallediatraea
+  new Ajxur.Api({
+    modelo: "RegistroEvaluacionDetalle",
+    metodo: "leerEditarDetalle",
+    data_in : {
+      p_tipoEvaluacion : cod_tipo_evaluacion,
+      p_codRegistroDetalle : cod_registro_detalle
+    }
+  },fn);
+};
+
+app.grabarDetalleDiatraea = function(){
+  var self = this,
+      fn = function (xhr){
+          if (xhr.rpt) {
+            var datos = xhr.data;
+            $("#mdlEditarDetalleDiatraea").modal("hide");
+            alert("Registro guardado.");
+            vars.COD_DETALLE_TEMP = null;
+          }else{
+            console.error(xhr.msj);
+          }
+      };
+
+  /*Are you sure 'bout this?*/
+  if (!confirm("Los cambios realizados son permanentes. ¿Confirmar?")){
+    return;
+  }
+
+  if (vars.COD_DETALLE_TEMP == null){
+    alert("No se ha guardado el código de registro, vuelva abrir la ventana de edición.");
+    return;
+  }
+
+  /*Get da data*/
+  var entrenudos = $("#txtdia_entrenudos").val(),
+      entrenudosInfestados = $("#txtdia_entrenudosinfestados").val(),
+      tallos = $("#txtdia_tallos").val(),
+      tallosInfestados = $("#txtdia_tallosinfestados").val(),
+      larvasEstadio1 = $("#txtdia_larvas1").val(),
+      larvasEstadio2 = $("#txtdia_larvas2").val(),
+      larvasEstadio3 = $("#txtdia_larvas3").val(),
+      larvasEstadio4 = $("#txtdia_larvas4").val(),
+      larvasEstadio5 = $("#txtdia_larvas5").val(),
+      larvasEstadio6 = $("#txtdia_larvas6").val(),
+      crisalidas = $("#txtdia_crisalidas").val(),
+      larvasParasitadas = $("#txtdia_parasitadas").val(),
+      billaeaLarvas = $("#txtdia_billaealarvas").val(),
+      billaeaPupas = $("#txtdia_billaeapupas").val();
+
+  new Ajxur.Api({
+    modelo: "RegistroEvaluacionDetalle",
+    metodo: "editarDetalle",
+    data_in : {
+      p_tipoEvaluacion : 2,
+      p_codRegistroDetalle : vars.COD_DETALLE_TEMP,
+      p_diaEntrenudos : entrenudos,
+      p_diaEntrenudosInfestados : entrenudosInfestados,
+      p_diaTallos : tallos,
+      p_diaTallosInfestados : tallosInfestados,
+      p_diaLarvasEstadio1 : larvasEstadio1,
+      p_diaLarvasEstadio2 : larvasEstadio2,
+      p_diaLarvasEstadio3 : larvasEstadio3,
+      p_diaLarvasEstadio4 : larvasEstadio4,
+      p_diaLarvasEstadio5 : larvasEstadio5,
+      p_diaLarvasEstadio6 : larvasEstadio6,
+      p_diaCrisalidas : crisalidas,
+      p_diaLarvasParasitadas : larvasParasitadas,
+      p_diaBillaeaLarvas : billaeaLarvas,
+      p_diaBillaeaPupas : billaeaPupas
+    }
+  },fn);    
+};
+
+app.eliminarRegistroDetalle = function(){
+    var self = this,
+      fn = function (xhr){
+          if (xhr.rpt) {
+            var datos = xhr.data;
+            $(".modal").modal("hide");
+            alert("Registro eliminado.");
+            vars.COD_DETALLE_TEMP = null;
+          }else{
+            console.error(xhr.msj);
+          }
+      };
+
+  if (!confirm("Los cambios realizados son permanentes. ¿Confirmar?")){
+    return;
+  }
+
+  if (vars.COD_DETALLE_TEMP == null){
+    alert("No se ha guardado el código de registro, vuelva abrir la ventana de edición.");
+    return;
+  }
+
+  new Ajxur.Api({
+    modelo: "RegistroEvaluacionDetalle",
+    metodo: "eliminarDetalle",
+    data_in : {
+      p_codRegistroDetalle : vars.COD_DETALLE_TEMP
+    }
+  },fn);
 };
 
 $(document).ready(function(){
