@@ -207,7 +207,147 @@ $fechaHoy = date('Y-m-d');
                       </div>                          
 
                       <div class="modal-footer">
-                        <button class="btn btn-sm btn-danger pull-right" data-dismiss="modal">
+                        <button class="btn btn-sm btn-default pull-right" data-dismiss="modal">
+                          <i class="ace-icon fa fa-times"></i>
+                          Cancelar
+                        </button>
+                        <button type="submit"  class="btn btn-sm btn-success pull-right">
+                          <i class="ace-icon fa fa-save"></i>
+                          Guardar
+                        </button>
+                      </div>
+                    </div><!-- /.modal-content -->
+              </form>
+            </div>
+    </div> 
+
+
+    <div id="mdlEditarDetalleDiatraea" class="modal fade" tabindex="-1" style="display: none;">
+            <div class="modal-dialog modal-lg">
+              <form id="frmgrabardiatraea">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="smaller lighter blue no-margin">Editar Diatraea</h3>
+                      </div>
+
+                      <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <div class="control-group">
+                                <label class="control-label">ENTRENUDOS: </label>
+                                <input type="number" name="txtdia_entrenudos" id="txtdia_entrenudos" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <div class="control-group">
+                                <label class="control-label">ENTRENUDOS INFESTADOS: </label>
+                                <input type="number" name="txtdia_entrenudosinfestados" id="txtdia_entrenudosinfestados" class="form-control" required>
+                              </div>
+                            </div>                      
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <div class="control-group">
+                                <label class="control-label">TALLOS: </label>
+                                <input type="number" name="txtdia_tallos" id="txtdia_tallos" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <div class="control-group">
+                                <label class="control-label">TALLOS INFESTADOS: </label>
+                                <input type="number" name="txtdia_tallosinfestados" id="txtdia_tallosinfestados" class="form-control" required>
+                              </div>
+                            </div>                      
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-4">
+                              <div class="control-group">
+                                <label class="control-label">LARVAS EST. 1: </label>
+                                <input type="number" name="txtdia_larvas1" id="txtdia_larvas1" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-4">
+                              <div class="control-group">
+                                <label class="control-label">LARVAS EST. 2: </label>
+                                <input type="number" name="txtdia_larvas2" id="txtdia_larvas2" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-4">
+                              <div class="control-group">
+                                <label class="control-label">LARVAS EST. 3: </label>
+                                <input type="number" name="txtdia_larvas3" id="txtdia_larvas3" class="form-control" required>
+                              </div>
+                            </div>                     
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-4">
+                              <div class="control-group">
+                                <label class="control-label">LARVAS EST. 4: </label>
+                                <input type="number" name="txtdia_larvas4" id="txtdia_larvas4" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-4">
+                              <div class="control-group">
+                                <label class="control-label">LARVAS EST. 5: </label>
+                                <input type="number" name="txtdia_larvas5" id="txtdia_larvas5" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-4">
+                              <div class="control-group">
+                                <label class="control-label">LARVAS EST. 6: </label>
+                                <input type="number" name="txtdia_larvas6" id="txtdia_larvas6" class="form-control" required>
+                              </div>
+                            </div>                     
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <div class="control-group">
+                                <label class="control-label">CRISÁLIDAS: </label>
+                                <input type="number" name="txtdia_crisalidas" id="txtdia_crisalidas" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col- md-3">
+                              <div class="control-group">
+                                <label class="control-label">ENTRENUDOS INFESTADOS: </label>
+                                <input type="number" name="txtdia_parasitadas" id="txtdia_parasitadas" class="form-control" required>
+                              </div>
+                            </div>                      
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <div class="control-group">
+                                <label class="control-label">BILLAEA LARVAS: </label>
+                                <input type="number" name="txtdia_billaealarvas" id="txtdia_billaealarvas" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <div class="control-group">
+                                <label class="control-label">BILLAEA PUPAS: </label>
+                                <input type="number" name="txtdia_billaeapupas" id="txtdia_billaeapupas" class="form-control" required>
+                              </div>
+                            </div>                      
+                        </div>
+                        <br>
+                          <div class="row">
+                            <div class="col-xs-12 col-md-4">
+                              <div class="control-group">
+                                <button class="btn btn-lg btn-danger" onclick="app.eliminarRegistroDetalle()">
+                                  <i class="glyphicon glyphicon-trash"></i>
+                                  ELIMINAR REGISTRO
+                                </button>
+                              </div>
+                            </div>
+                          </div>  
+                      </div>       
+
+                      <div class="modal-footer">
+                        <button class="btn btn-sm btn-default pull-right" data-dismiss="modal">
                           <i class="ace-icon fa fa-times"></i>
                           Cancelar
                         </button>
@@ -277,6 +417,8 @@ $fechaHoy = date('Y-m-d');
         <option value='{{descripcion}}'>{{descripcion}}</option>
       {{/opciones}}
   </script> 
+
+
 
 <?php include 'pie.vista.php'; ?>
 
