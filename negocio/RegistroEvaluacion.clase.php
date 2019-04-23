@@ -472,6 +472,29 @@ class RegistroEvaluacion extends Conexion {
             return array("rpt"=>false,"msj"=>$exc);
         }
     }
+    
+      public function obtenerDataBase(){
+        try {
+
+            $sql = "SELECT distinct cp.nombre_campo as descripcion, cp.cod_campo as codigo
+                    FROM campo cp 
+                    WHERE estado_mrcb
+                    ORDER BY descripcion";
+
+            $campos = $this->consultarFilas($sql);
+
+             $sql = "SELECT distinct CONCAT(co.apellidos,' ',co.nombres) as descripcion, u.cod_usuario as codigo
+                    FROM usuario u 
+                    INNER JOIN colaborador co ON co.cod_colaborador = u.cod_usuario
+                    ORDER BY CONCAT(co.apellidos,' ',co.nombres)";
+
+            $evaluadores = $this->consultarFilas($sql);
+
+            return array("rpt"=>true,"data"=>["campos"=>$campos, "evaluadores"=>$evaluadores]);
+        } catch (Exception $exc) {
+            return array("rpt"=>false,"msj"=>$exc);
+        }
+    }
 
 
 }
