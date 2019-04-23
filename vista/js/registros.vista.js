@@ -11,6 +11,7 @@ app.init = function(){
   //this.setEventos();
   this.setTemplates();
   this.setEventos();
+  this.obtenerDataBase();
   this.obtenerDataFiltro();
 };
 
@@ -256,15 +257,10 @@ app.obtenerDataFiltro =function(){
       if (xhr.rpt) {
         var datos = xhr.data,
             cboCampo = $("#cbocampo"),
-            cboCampoEditar = $("#txtmdlcampo"),
-            cboEvaluador = $("#cboevaluador"),
-            cboEvaluadorEditar = $("#txtmdlevaluador");
+            cboEvaluador = $("#cboevaluador");
 
         cboCampo.html(tpl8Combo({opciones: datos.campos, rotulo: "Todos los campos"}));
         cboEvaluador.html(tpl8Combo({opciones: datos.evaluadores, rotulo: "Todos los evaluadores"}));
-
-        cboCampoEditar.html(tpl8Combo({opciones: datos.campos, rotulo: "Seleccionar campo"}));
-        cboEvaluadorEditar.html(tpl8Combo({opciones: datos.evaluadores, rotulo: "Seleccionar evaluador"}));
 
         cboEvaluadores = null;
         cboCampos = null;
@@ -277,6 +273,30 @@ app.obtenerDataFiltro =function(){
     modelo: "RegistroEvaluacion",
     metodo: "obtenerDataFiltro",
     data_out: [txtFechaDesde, txtFechaHasta]
+  },fn);
+};
+
+app.obtenerDataBase =function(){
+  var tpl8Combo = this.tpl8.combo,
+      fn = function (xhr){
+      if (xhr.rpt) {
+        var datos = xhr.data,
+            cboCampoEditar = $("#txtmdlcampo"),
+            cboEvaluadorEditar = $("#txtmdlevaluador");
+
+        cboCampoEditar.html(tpl8Combo({opciones: datos.campos, rotulo: "Seleccionar campo"}));
+        cboEvaluadorEditar.html(tpl8Combo({opciones: datos.evaluadores, rotulo: "Seleccionar evaluador"}));
+
+        cboEvaluadorEditar = null;
+        cboCampoEditar = null;
+      }else{
+        console.error(xhr.msj);
+      }
+  };
+
+  new Ajxur.Api({
+    modelo: "RegistroEvaluacion",
+    metodo: "obtenerDataBase"
   },fn);
 };
 
