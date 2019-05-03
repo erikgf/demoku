@@ -14,8 +14,8 @@
  define("MODELO_FUNCIONES",MODELO_UTIL."/Funciones.php");
 
  //SESION
- ini_set('session.save_path', 'sessions');
-ini_set('session.gc_maxlifetime', 28800);
+ ini_set('session.save_path', '../sessions');
+ ini_set('session.gc_maxlifetime', 28800);
 
  define("SW_NOMBRE","AgriCayaltí");
  define("SW_NOMBRE_COMPLETO","Sistema de Biometría y Sanidad CAYALTI");
