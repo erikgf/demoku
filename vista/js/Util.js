@@ -66,18 +66,17 @@ var Util = {
 		if (!confirm("¿Desea cerrar sesión?")){
 			return ;
 		}
-
 		var fn = function(xhr){
-			var datos = xhr.datos;
-			if (xhr.estado == 200){
-				if (datos.rpt == true){
-					alert(datos.msj);
-					location.href = '../';
-				}
+			if (xhr.rpt == true){
+				alert(xhr.msj);
+				window.location.href = '../';
 			}
 		};
 
-		new Ajxur.Api({metodo: "cerrarSesion", modelo:"Sesion"}, fn);
+		new Ajxur.Api({
+		    modelo: "Sesion",
+		    metodo: "cerrarSesion"
+		  },fn);
 	},
 	 soloNumeros: function (evento) {
         var tecla = (evento.which) ? evento.which : evento.keyCode;

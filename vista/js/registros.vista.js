@@ -31,14 +31,15 @@ app.setEventos  = function(){
       txtMdlNN1 = $("#txtmdlnumeronivel1"),
       txtMdlNN2 = $("#txtmdlnumeronivel2"),
       frmCabecera = $("#frmgrabarcabecera"),
-      frmDetalleDiatraea = $("#frmgrabardiatraea"),
       mdlCabecera = $("#mdlEditarCabecera"),
-      mdlDetalleDiatraea = $("#mdlEditarDetalleDiatraea");
+      frmDetalleDiatraea = $("#frmgrabardiatraea"),
+      mdlDetalleDiatraea = $("#mdlEditarDetalleDiatraea"),
+      frmDetalleCarbon = $("#frmgrabarcarbon"),
+      mdlDetalleCarbon = $("#mdlEditarDetalleCarbon");
 
   btnBuscar.on("click", function(e){
     app.buscar();
   });
-
 
   $("#txtfechadesde").on("change", function(e){
     app.obtenerDataFiltro();
@@ -93,15 +94,27 @@ app.setEventos  = function(){
     app.grabarDetalleDiatraea();
   });
 
+  mdlDetalleCarbon.on("bs.modal.hidden", function(e){
+    e.preventDefault();
+    vars.COD_DETALLE_TEMP = null;
+  });
+
+  frmDetalleCarbon.on("submit", function(e){
+    e.preventDefault();
+    app.grabarDetalleCarbon();
+  });
+
   btnBuscar = null;
   txtBuscar = null;
   txtMdlCampo = null;
   txtMdlNN1 = null;
   txtMdlNN2 = null;
   frmCabecera =null;
-  frmDetalleDiatraea = null;
   mdlCabecera = null;
+  frmDetalleDiatraea = null;
   mdlDetalleDiatraea = null;
+  frmDetalleCarbon = null;
+  mdlDetalleCarbon = null;
 };
 
 app.cargarNivelUno =function(){
@@ -485,34 +498,27 @@ app.renderDetalle = function(arregloDetalle,cod_formulario_evaluacion){
 app.cargarDetalle = function(cod_tipo_evaluacion, cod_registro_detalle){
 
   /*SOLO DIATREAEA*/
-  if (cod_tipo_evaluacion != 2){
+  if (cod_tipo_evaluacion != 2 && cod_tipo_evaluacion != 4){
     return;
   }
 
-  var fn = function (xhr){
+  var self = this,
+      fn = function (xhr){
         if (xhr.rpt) {
-          var datos = xhr.data,
-              $modal = $("#mdlEditarDetalleDiatraea");
+          var datos = xhr.data;
           //1.- open moda,
           //2.- load data
-          $modal.find(".modal-header h3").html("Editar Registro "+datos.rotulo_parcela+" - ITEM: "+datos.item);
-          $("#txtdia_entrenudos").val(datos.dia_entrenudos);
-          $("#txtdia_entrenudosinfestados").val(datos.dia_entrenudos_infestados);
-          $("#txtdia_tallos").val(datos.dia_tallos);
-          $("#txtdia_tallosinfestados").val(datos.dia_tallos_infestados);
-          $("#txtdia_larvas1").val(datos.dia_larvas_estadio_1);
-          $("#txtdia_larvas2").val(datos.dia_larvas_estadio_2);
-          $("#txtdia_larvas3").val(datos.dia_larvas_estadio_3);
-          $("#txtdia_larvas4").val(datos.dia_larvas_estadio_4);
-          $("#txtdia_larvas5").val(datos.dia_larvas_estadio_5);
-          $("#txtdia_larvas6").val(datos.dia_larvas_estadio_6);
-          $("#txtdia_crisalidas").val(datos.dia_crisalidas);
-          $("#txtdia_parasitadas").val(datos.dia_larvas_parasitadas);
-          $("#txtdia_billaealarvas").val(datos.dia_billaea_larvas);
-          $("#txtdia_billaeapupas").val(datos.dia_billaea_pupas);
-          vars.COD_DETALLE_TEMP = cod_registro_detalle;
+          switch(cod_tipo_evaluacion){
+            case 2:
+            self.cargarDetalleDiatraea(datos);
+            break;
 
-          $modal.modal("show");
+            case 4:
+            self.cargarDetalleCarbon(datos);
+            break;
+          }
+
+          vars.COD_DETALLE_TEMP = cod_registro_detalle;
         } else {
           console.error(xhr.msj);
         }
@@ -527,6 +533,39 @@ app.cargarDetalle = function(cod_tipo_evaluacion, cod_registro_detalle){
       p_codRegistroDetalle : cod_registro_detalle
     }
   },fn);
+};
+
+app.cargarDetalleDiatraea = function(datos){
+  var $modal = $("#mdlEditarDetalleDiatraea");
+      $modal.find(".modal-header h3").html("Editar Registro "+datos.rotulo_parcela+" - ITEM: "+datos.item);
+
+      $("#txtdia_entrenudos").val(datos.dia_entrenudos);
+      $("#txtdia_entrenudosinfestados").val(datos.dia_entrenudos_infestados);
+      $("#txtdia_tallos").val(datos.dia_tallos);
+      $("#txtdia_tallosinfestados").val(datos.dia_tallos_infestados);
+      $("#txtdia_larvas1").val(datos.dia_larvas_estadio_1);
+      $("#txtdia_larvas2").val(datos.dia_larvas_estadio_2);
+      $("#txtdia_larvas3").val(datos.dia_larvas_estadio_3);
+      $("#txtdia_larvas4").val(datos.dia_larvas_estadio_4);
+      $("#txtdia_larvas5").val(datos.dia_larvas_estadio_5);
+      $("#txtdia_larvas6").val(datos.dia_larvas_estadio_6);
+      $("#txtdia_crisalidas").val(datos.dia_crisalidas);
+      $("#txtdia_parasitadas").val(datos.dia_larvas_parasitadas);
+      $("#txtdia_billaealarvas").val(datos.dia_billaea_larvas);
+      $("#txtdia_billaeapupas").val(datos.dia_billaea_pupas);
+
+      $modal.modal("show");
+};
+
+
+app.cargarDetalleCarbon = function(datos){
+  var $modal = $("#mdlEditarDetalleCarbon");
+      $modal.find(".modal-header h3").html("Editar Registro "+datos.rotulo_parcela+" - ITEM: "+datos.item);
+
+      $("#txtcar_tallos").val(datos.car_tallos);
+      $("#txtcar_talloslatigo").val(datos.car_tallos_latigo);
+
+      $modal.modal("show");
 };
 
 app.grabarDetalleDiatraea = function(){
@@ -588,6 +627,45 @@ app.grabarDetalleDiatraea = function(){
       p_diaLarvasParasitadas : larvasParasitadas,
       p_diaBillaeaLarvas : billaeaLarvas,
       p_diaBillaeaPupas : billaeaPupas
+    }
+  },fn);    
+};
+
+app.grabarDetalleCarbon = function(){
+  var self = this,
+      fn = function (xhr){
+          if (xhr.rpt) {
+            var datos = xhr.data;
+            $("#mdlEditarDetalleCarbon").modal("hide");
+            alert("Registro guardado.");
+            vars.COD_DETALLE_TEMP = null;
+          }else{
+            console.error(xhr.msj);
+          }
+      };
+
+  /*Are you sure 'bout this?*/
+  if (!confirm("Los cambios realizados son permanentes. ¿Confirmar?")){
+    return;
+  }
+
+  if (vars.COD_DETALLE_TEMP == null){
+    alert("No se ha guardado el código de registro, vuelva abrir la ventana de edición.");
+    return;
+  }
+
+  /*Get da data*/
+  var tallos = $("#txtcar_tallos").val(),
+      tallosLatigo = $("#txtcar_talloslatigo").val();
+
+  new Ajxur.Api({
+    modelo: "RegistroEvaluacionDetalle",
+    metodo: "editarDetalle",
+    data_in : {
+      p_tipoEvaluacion : 4,
+      p_codRegistroDetalle : vars.COD_DETALLE_TEMP,
+      p_carTallos : tallos,
+      p_carTallosLatigo : tallosLatigo
     }
   },fn);    
 };

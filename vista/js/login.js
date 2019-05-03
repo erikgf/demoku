@@ -8,10 +8,9 @@ app.init = function(){
 app.setDOM = function(){
   var DOM = {};
 
-  DOM.frmIniciar = $("#frminiciar");
-  DOM.txtDni = $("#txtdni");
+  DOM.frmIniciar = $("form");
+  DOM.txtUsuario = $("#txtusuario");
   DOM.txtClave = $("#txtclave");
-  DOM.blkAlert = $("#blkalert");
   DOM.chkRecordar = $("#chkrecordar");
 
   this.DOM = DOM;
@@ -33,21 +32,17 @@ app.limpiar = function(){
 app.iniciarSesion = function(){
   var DOM = this.DOM,
       fn = function(xhr){
-        console.log(xhr);
-        var datos = xhr.datos;
-        if (datos.rpt){
-          Util.alert(DOM.blkAlert, {tipo: "s", "mensaje": datos.msj});
+        if (xhr.rpt == true){
           window.location.href = "principal.vista.php";
-        } else {
-          Util.alert(DOM.blkAlert, {tipo: "e", "mensaje": datos.msj});
-        }
+        } 
+        alert(xhr.msj);
       };
 
   new Ajxur.Api({
     modelo: "Sesion",
     metodo: "iniciarSesion",
     data_in :  {
-      p_dni : DOM.txtDni.val(),
+      p_usuario : DOM.txtUsuario.val(),
       p_clave : DOM.txtClave.val(),
       p_recordar : DOM.chkRecordar[0].checked
     }
