@@ -11,7 +11,8 @@ var NuevoTalloComponente = function(i, FrmPadre) {
         self = this;
         _valores = {
             largo: "",
-            diametro: ""              
+            diametro: "",
+            entrenudos : ""          
           };
       };
 

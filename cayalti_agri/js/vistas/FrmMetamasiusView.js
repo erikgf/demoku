@@ -2,6 +2,7 @@ var FrmMetamasiusView = function (servicio_frm, params) {
 	var self = this,
         $content,
         MUESTRA_ACTUAL,
+        MUESTRAS_RECOMENDADAS,
         TALLOS_EVALUADOS,
         ENTRENUDOS_EVALUADOS,
         $resumen,
@@ -125,15 +126,17 @@ var FrmMetamasiusView = function (servicio_frm, params) {
     };
 
     var UIDone = function (res) {
-           var uiRow = res.UI.rows.item(0);        
+           var uiRow = res.UI.rows.item(0),
+                muestras_recomendadas = uiRow.muestras_recomendadas;     
 
-                if (uiRow.muestras_recomendadas <= 0){
+                if (muestras_recomendadas <= 0){
                     uiRow.muestras_recomendadas = 1;
-                }
+                    muestras_recomendadas = 1;
+                }            
 
-                MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
-
-                if ((uiRow.muestras_recomendadas >= MUESTRA_ACTUAL) && (uiRow.muestras_finalizadas == 0)) {
+                if ((muestras_recomendadas >= uiRow.numero_muestra_actual) && (uiRow.muestras_finalizadas == 0)) {
+                    MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
+                    MUESTRAS_RECOMENDADAS = muestras_recomendadas;
                     uiRow.puedo_registrar = true;
                     self.$el.html(self.template(uiRow)); 
                     $content = self.$el.find(".content");
@@ -195,47 +198,50 @@ var FrmMetamasiusView = function (servicio_frm, params) {
    };
 
     this.guardarMuestra = function(){
-        agregarMuestra(false);
-    };  
+        var rpt = false;
+        if (MUESTRAS_RECOMENDADAS == MUESTRA_ACTUAL){
+            rpt = true;
+        }
+        agregarMuestra(rpt);
+    };
 
     this.finalizarEvaluacion = function(){
         agregarMuestra(true);
     };
 
-
     var agregarMuestra = function(esFinalizar){
         if (validarMuestra()){
-            if (!confirm("¿Desea "+(esFinalizar ? "finalizar esta parcela" : "guardar esta muestra")+"?")){
-                return;
-            }
+            var fnConfirm = function(){
+                var DOM = $DOM, 
+                    objMuestra = {
+                        item : MUESTRA_ACTUAL,
+                        cod_parcela : params.cod_parcela,
+                        met_tallos_evaluados: parseInt(DOM.tallos_evaluados.val()),
+                        met_tallos_danados: parseInt(DOM.tallos_dañados.val()),
+                        met_entrenudos_evaluados: parseInt(DOM.entrenudos_evaluados.val()),
+                        met_entrenudos_danados : parseInt(DOM.entrenudos_dañados.val()),
+                        met_larvas : parseInt(DOM.larvas.val()),
+                        finalizacion : esFinalizar,
+                        usuario_registro: DATA_NAV.usuario.cod_usuario
+                    };
+                
+                $.when( servicio_frm.agregarMuestraMetamasius(objMuestra)
+                        .done(function(r){
+                            if (esFinalizar){
+                                history.back();
+                                alert("Muestra FINALIZADA.");
+                            } else {
+                                reiniciarFormulario();
+                                alert("Muestra GUARDADA.");
+                            }
+                        })
+                        .fail(function(e){
+                            console.error(e);
+                        })
+                    );
+            };
 
-            var DOM = $DOM, 
-                objMuestra = {
-                    item : MUESTRA_ACTUAL,
-                    cod_parcela : params.cod_parcela,
-                    met_tallos_evaluados: parseInt(DOM.tallos_evaluados.val()),
-                    met_tallos_danados: parseInt(DOM.tallos_dañados.val()),
-                    met_entrenudos_evaluados: parseInt(DOM.entrenudos_evaluados.val()),
-                    met_entrenudos_danados : parseInt(DOM.entrenudos_dañados.val()),
-                    met_larvas : parseInt(DOM.larvas.val()),
-                    finalizacion : esFinalizar,
-                    usuario_registro: DATA_NAV.usuario.cod_usuario
-                };
-            
-            $.when( servicio_frm.agregarMuestraMetamasius(objMuestra)
-                    .done(function(r){
-                        if (esFinalizar){
-                            history.back();
-                            alert("Muestra FINALIZADA.");
-                        } else {
-                            reiniciarFormulario();
-                            alert("Muestra GUARDADA.");
-                        }
-                    })
-                    .fail(function(e){
-                        console.error(e);
-                    })
-                );
+            confirmar("¿Desea "+(esFinalizar ? "finalizar esta parcela" : "guardar esta muestra")+"?",fnConfirm);
         }
     };
 
@@ -268,6 +274,7 @@ var FrmMetamasiusView = function (servicio_frm, params) {
 
     this.destroy = function(){
         destroyBase();
+        MUESTRAS_RECOMENDADAS = null;
         $content = null;
         rs2Array = null ;
         this.$el = null;        

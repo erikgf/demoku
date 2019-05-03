@@ -1,5 +1,5 @@
 var FrmBiometriaView = function (servicio_frm, params) {
-	var self,
+    var self,
         MUESTRA_ACTUAL,
         DESTRUCTIVO = false,
         NUMERO_METROS,
@@ -9,11 +9,11 @@ var FrmBiometriaView = function (servicio_frm, params) {
         LARGO_PROMEDIO = 0.00,
         TASA_CRECIMIENTO_PROMEDIO = 0.00,
         $content,
-		rs2Array = resultSetToArray,
+        rs2Array = resultSetToArray,
         arregloEntrenudosComponente = [],
         $DOM;
 
-	this.initialize = function () {
+    this.initialize = function () {
         this.$el = $('<div/>');
         if (ACTUAL_PAGE != null && (typeof ACTUAL_PAGE.destroy == "function")){
             ACTUAL_PAGE.destroy();
@@ -24,8 +24,8 @@ var FrmBiometriaView = function (servicio_frm, params) {
 
     this.render = function() {
         this.consultarDatosInterfaz();
-	    return this;
-	};
+        return this;
+    };
 
     this.getArreglo = function(){
         console.log(arregloEntrenudosComponente);
@@ -89,9 +89,7 @@ var FrmBiometriaView = function (servicio_frm, params) {
             setDestructivo(this);
         },
         __cierre = function(e){
-            if (confirm("¿Desea CERRAR evaluación en este CUARTEL/VÁLVULA?")){
-                forzarCierre();
-            }
+            confirmar("¿Desea CERRAR evaluación en este CUARTEL/VÁLVULA?", forzarCierre);
         };
 
     this.setEventos = function(){
@@ -178,6 +176,8 @@ var FrmBiometriaView = function (servicio_frm, params) {
     this.recalcular = function(indexEntrenudoBorrado){
         var sumatoriaVolumen = 0,
             sumatoriaLargo = 0,
+            sumatoriaDiametro = 0,
+            sumatoriaEntrenudos = 0,
             sumatoriaCrecimiento = 0,
             promedioLargo,
             fnCalcularVolumen = function(largo, diametro){
@@ -203,6 +203,8 @@ var FrmBiometriaView = function (servicio_frm, params) {
                 }
                 sumatoriaVolumen += fnCalcularVolumen(objEntrenudo.largo == "" ? 0: objEntrenudo.largo, objEntrenudo.diametro == "" ? 0: objEntrenudo.diametro);
                 sumatoriaLargo += parseInt(objEntrenudo.largo);        
+                sumatoriaDiametro += parseFloat(objEntrenudo.diametro); 
+                sumatoriaEntrenudos += parseInt(objEntrenudo.entrenudos); 
                 contador++;
             }
         };
@@ -213,15 +215,21 @@ var FrmBiometriaView = function (servicio_frm, params) {
             $crecimiento_promedio.html("n/a");
             VOLUMEN_PROMEDIO = 0.00;
             LARGO_PROMEDIO = 0.00;
+            DIAMETRO_PROMEDIO = 0.00;
+            ENTRENUDOS_PROMEDIO = 0.00;
             TASA_CRECIMIENTO_PROMEDIO = 0.00;
             return;
         }
 
         promedioLargo = sumatoriaLargo / contador;
+        promedioDiametro = sumatoriaDiametro / contador;
+        promedioEntrenudos = sumatoriaEntrenudos / contador;
 
 
         VOLUMEN_PROMEDIO = parseFloat(sumatoriaVolumen / contador).toFixed(2);
         LARGO_PROMEDIO = parseFloat(promedioLargo).toFixed(2);
+        DIAMETRO_PROMEDIO = parseFloat(promedioDiametro).toFixed(2);
+        ENTRENUDOS_PROMEDIO = parseFloat(promedioEntrenudos).toFixed(2);
         TASA_CRECIMIENTO_PROMEDIO = parseFloat(promedioLargo - TASA_CRECIMIENTO).toFixed(2);
 
         $volumen_promedio.html(VOLUMEN_PROMEDIO+ " cm<sup>3</sup>");
@@ -243,14 +251,24 @@ var FrmBiometriaView = function (servicio_frm, params) {
 
     var UIDone = function (res) {
             var uiRow = res.UI.rows.item(0);
-            MUESTRA_ACTUAL = uiRow.numero_muestra_actual;
-            NUMERO_METROS = uiRow.numero_metros;
-            FACTOR = uiRow.factor;
-            TASA_CRECIMIENTO = uiRow.tasa_crecimiento;
-            self.$el.html(self.template(uiRow)); 
 
-            self.setDOM();
-            self.setEventos();
+            if (uiRow.muestras_finalizadas == 0){
+                uiRow.puedo_registrar = true;
+                MUESTRA_ACTUAL = uiRow.numero_muestra_actual;
+                NUMERO_METROS = uiRow.numero_metros;
+                FACTOR = uiRow.factor;
+                TASA_CRECIMIENTO = uiRow.tasa_crecimiento;
+                uiRow.no_cerrable = uiRow.numero_muestra_actual <= 1;
+                self.$el.html(self.template(uiRow)); 
+
+                self.setDOM();
+                self.setEventos();  
+            } else {
+                uiRow.puedo_registrar = false;
+                uiRow.numero_muestra_realizadas = uiRow.numero_muestra_actual - 1;
+                self.$el.html(self.template(uiRow)); 
+            }
+            
         },
         UIFail = function (firstFail, name) {
             console.log('Fail for: ' + name);
@@ -259,64 +277,66 @@ var FrmBiometriaView = function (servicio_frm, params) {
 
     var agregarMuestra = function(){        
         if (validarMuestra()){
-            if (!confirm("¿Desea guardar esta muestra?")){
-                return;
-            }
+            var fnConfirm = function(){
+                 var DOM = $DOM,                
+                    fnObtenerCadenaEntrenudos = function(){
+                        var cadenaEntrenudos = "[",
+                            len = arregloEntrenudosComponente.length,
+                            contador = 0;
 
-            var DOM = $DOM,                
-                fnObtenerCadenaEntrenudos = function(){
-                    var cadenaEntrenudos = "[",
-                        len = arregloEntrenudosComponente.length,
-                        contador = 0;
+                        for (var i = 0; i < len; i++) {
+                            objEntrenudo = arregloEntrenudosComponente[i];
+                            if (objEntrenudo != null){
+                                objEntrenudo = objEntrenudo.getValores();
+                                if (objEntrenudo.largo == "" && objEntrenudo.diametro == ""){
+                                    continue;
+                                }
 
-                    for (var i = 0; i < len; i++) {
-                        objEntrenudo = arregloEntrenudosComponente[i];
-                        if (objEntrenudo != null){
-                            objEntrenudo = objEntrenudo.getValores();
-                            if (objEntrenudo.largo == "" && objEntrenudo.diametro == ""){
-                                continue;
+                                cadenaEntrenudos += '{"largo":"'+objEntrenudo.largo+'","diametro":"'+objEntrenudo.diametro+'","entrenudos":"'+(objEntrenudo.entrenudos == undefined ? "" : objEntrenudo.entrenudos)+'"}';
+                                contador++;
+                                if (i < (len - 1)){
+                                    cadenaEntrenudos += ",";
+                                }
                             }
+                        };
 
-                            cadenaEntrenudos += '{"largo":"'+objEntrenudo.largo+'","diametro":"'+objEntrenudo.diametro+'","entrenudos":"'+(objEntrenudo.entrenudos == undefined ? "" : objEntrenudo.entrenudos)+'"}';
-                            contador++;
-                            if (len - i < 0){
-                                cadenaEntrenudos += ",";
-                            }
-                        }
+                        cadenaEntrenudos += "]";
+                        return cadenaEntrenudos;
+                    },
+
+                    objMuestra = {
+                        item: MUESTRA_ACTUAL,
+                        cod_parcela : params.cod_parcela,
+                        bio_etapa_fenologica: DOM.etapa_fenologica.val(),
+                        bio_data_entrenudos: fnObtenerCadenaEntrenudos(),
+                        bio_volumen_promedio: VOLUMEN_PROMEDIO,
+                        bio_largo_promedio: LARGO_PROMEDIO,
+                        bio_crecimiento_promedio: TASA_CRECIMIENTO_PROMEDIO,
+                        bio_diametro_promedio: DIAMETRO_PROMEDIO,
+                        bio_entrenudos_promedio: ENTRENUDOS_PROMEDIO,
+                        bio_ml_metros: DOM.ml_metros.val(),
+                        bio_ml_tallos: DOM.ml_tallos.val() == "" ? null : DOM.ml_tallos.val(),
+                        bio_ml_tallos_metros: DOM.ml_tallos_metro.html(),
+                        bio_pt_pesos: DOM.pt_pesos.val(),
+                        bio_pt_tallos: DOM.pt_tallos.val() == "" ? null : DOM.pt_tallos.val(),
+                        bio_pt_peso_tallos: DOM.pt_promedio_peso.html(),
+                        bio_pt_toneladas: DOM.pt_toneladas.html(),
+                        finalizacion : false,
+                        usuario_registro: DATA_NAV.usuario.cod_usuario
                     };
 
-                    cadenaEntrenudos += "]";
-                    return cadenaEntrenudos;
-                },
-                objMuestra = {
-                    item: MUESTRA_ACTUAL,
-                    cod_parcela : params.cod_parcela,
-                    bio_etapa_fenologica: DOM.etapa_fenologica.val(),
-                    bio_data_entrenudos: fnObtenerCadenaEntrenudos(),
-                    bio_volumen_promedio: VOLUMEN_PROMEDIO,
-                    bio_largo_promedio: LARGO_PROMEDIO,
-                    bio_crecimiento_promedio: TASA_CRECIMIENTO_PROMEDIO,
-                    bio_ml_metros: DOM.ml_metros.val(),
-                    bio_ml_tallos: DOM.ml_tallos.val() == "" ? null : DOM.ml_tallos.val(),
-                    bio_ml_tallos_metros: DOM.ml_tallos_metro.html(),
-                    bio_pt_pesos: DOM.pt_pesos.val(),
-                    bio_pt_tallos: DOM.pt_tallos.val() == "" ? null : DOM.pt_tallos.val(),
-                    bio_pt_peso_tallos: DOM.pt_promedio_peso.html(),
-                    bio_pt_toneladas: DOM.pt_toneladas.html(),
-                    finalizacion : false,
-                    usuario_registro: DATA_NAV.usuario.cod_usuario
-                };
+                $.when( servicio_frm.agregarMuestraBiometria(objMuestra)
+                        .done(function(r){
+                            history.back();
+                            alert("Muestra guardada");
+                        })
+                        .fail(function(e){
+                            console.error(e);
+                        })
+                    );   
+            };
 
-            $.when( servicio_frm.agregarMuestraBiometria(objMuestra)
-                    .done(function(r){
-                        history.back();
-                        alert("Muestra guardada");
-                        //reiniciarFormulario();
-                    })
-                    .fail(function(e){
-                        console.error(e);
-                    })
-                );
+            confirmar("¿Desea guardar esta muestra?", fnConfirm);
         }
     };
 
@@ -377,12 +397,12 @@ var FrmBiometriaView = function (servicio_frm, params) {
        TASA_CRECIMIENTO = null;
        
        if ($content){
-        $content.off("click","li",__cambiarInput);
-        $content.off("change","input",__agregarEntrenudo); 
-        $content.off("click", "#btn-guardar", agregarMuestra);
-        $content.off("change", "._destructivo", __setDestructivo);
-        $content.off("click", "#btn-cierre", __cierre);
-        $content = null;
+            $content.off("click","li",__cambiarInput);
+            $content.off("change","input",__agregarEntrenudo); 
+            $content.off("click", "#btn-guardar", agregarMuestra);
+            $content.off("change", "._destructivo", __setDestructivo);
+            $content.off("click", "#btn-cierre", __cierre);
+            $content = null;
        }
     
        $DOM = null; 

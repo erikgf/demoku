@@ -3,6 +3,7 @@ var FrmDiatraeaView = function (servicio_frm, params) {
 	    $content,
         TALLOS_MUESTREADOS,
         MUESTRA_ACTUAL,
+        MUESTRAS_RECOMENDADAS,
         $resumen,
 		rs2Array = resultSetToArray,
         frmDiatraeaResumenView,
@@ -99,7 +100,7 @@ var FrmDiatraeaView = function (servicio_frm, params) {
             }
         },
         __guardarMuestra = function(e){
-            self.guardaMuestra();
+            self.guardarMuestra();
         },
         __finalizarMuestra = function(e){
             self.finalizarEvaluacion();
@@ -256,15 +257,19 @@ var FrmDiatraeaView = function (servicio_frm, params) {
     };
 
     var UIDone = function (res) {
-            var uiRow = res.UI.rows.item(0);
-            TALLOS_MUESTREADOS = uiRow.tallos_muestreados; 
+            var uiRow = res.UI.rows.item(0),
+                muestras_recomendadas = uiRow.muestras_recomendadas;
 
-            if (uiRow.muestras_recomendadas <= 0){
+            if (muestras_recomendadas < 1){
                 uiRow.muestras_recomendadas = 1;
+                muestras_recomendadas = 1;
             }
             
-            MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
-            if ((uiRow.muestras_recomendadas >=  MUESTRA_ACTUAL) && (uiRow.muestras_finalizadas == 0)) {
+            TALLOS_MUESTREADOS = uiRow.tallos_muestreados; 
+
+            if ((muestras_recomendadas >=  uiRow.numero_muestra_actual) && (uiRow.muestras_finalizadas == 0)) {
+                MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
+                MUESTRAS_RECOMENDADAS = muestras_recomendadas;
                 uiRow.puedo_registrar = true;
                 self.$el.html(self.template(uiRow)); 
                 $content = self.$el.find(".content");
@@ -369,9 +374,7 @@ var FrmDiatraeaView = function (servicio_frm, params) {
         }
 
         if (entrenudos == 0){
-            if (confirm("¿Desea FORZAR CIERRE de este CUARTEL/VÁLVULA?")){
-                forzarCierre();
-            }
+            confirmar("¿Desea FORZAR CIERRE de este CUARTEL/VÁLVULA?", forzarCierre);            
             return false;
         }
 
@@ -381,47 +384,47 @@ var FrmDiatraeaView = function (servicio_frm, params) {
 
     var agregarMuestra = function(esFinalizar){        
         if (validarMuestra()){
-            if (!confirm("¿Desea "+(esFinalizar ? "finalizar esta parcela" : "guardar esta muestra")+"?")){
-                return;
-            }
+            var fnConfirm = function(){
+                var DOM = $DOM, 
+                    objMuestra = {
+                        item: MUESTRA_ACTUAL,
+                        cod_parcela : params.cod_parcela,
+                        dia_entrenudos: parseInt(DOM.entrenudos.val()),
+                        dia_entrenudos_infestados: parseInt(DOM.entrenudos_infestados.val()),
+                        dia_tallos: parseInt(TALLOS_MUESTREADOS),
+                        dia_tallos_infestados: parseInt(DOM.tallos_infestados.val()) ,
+                        dia_larvas_estadio_1: parseInt(DOM.estadio_1.val()),
+                        dia_larvas_estadio_2: parseInt(DOM.estadio_2.val()),
+                        dia_larvas_estadio_3: parseInt(DOM.estadio_3.val()),
+                        dia_larvas_estadio_4: parseInt(DOM.estadio_4.val()),
+                        dia_larvas_estadio_5: parseInt(DOM.estadio_5.val()),
+                        dia_larvas_estadio_6: parseInt(DOM.estadio_6.val()),
+                        dia_larvas_indice: parseFloat(DOM.larvas_indice.html()).toFixed(2),
+                        dia_crisalidas: parseInt(DOM.crisalidas.val()),
+                        dia_larvas_parasitadas: parseInt(DOM.larvas_parasitadas.val()),
+                        dia_billaea_larvas: parseInt(DOM.billaea_larvas.val()),
+                        dia_billaea_pupas: parseInt(DOM.billaea_pupas.val()) ,
+                        finalizacion : esFinalizar,
+                        usuario_registro: DATA_NAV.usuario.cod_usuario
+                    };
 
-            var DOM = $DOM, 
-                objMuestra = {
-                    item: MUESTRA_ACTUAL,
-                    cod_parcela : params.cod_parcela,
-                    dia_entrenudos: parseInt(DOM.entrenudos.val()),
-                    dia_entrenudos_infestados: parseInt(DOM.entrenudos_infestados.val()),
-                    dia_tallos: parseInt(TALLOS_MUESTREADOS),
-                    dia_tallos_infestados: parseInt(DOM.tallos_infestados.val()) ,
-                    dia_larvas_estadio_1: parseInt(DOM.estadio_1.val()),
-                    dia_larvas_estadio_2: parseInt(DOM.estadio_2.val()),
-                    dia_larvas_estadio_3: parseInt(DOM.estadio_3.val()),
-                    dia_larvas_estadio_4: parseInt(DOM.estadio_4.val()),
-                    dia_larvas_estadio_5: parseInt(DOM.estadio_5.val()),
-                    dia_larvas_estadio_6: parseInt(DOM.estadio_6.val()),
-                    dia_larvas_indice: parseFloat(DOM.larvas_indice.html()).toFixed(2),
-                    dia_crisalidas: parseInt(DOM.crisalidas.val()),
-                    dia_larvas_parasitadas: parseInt(DOM.larvas_parasitadas.val()),
-                    dia_billaea_larvas: parseInt(DOM.billaea_larvas.val()),
-                    dia_billaea_pupas: parseInt(DOM.billaea_pupas.val()) ,
-                    finalizacion : esFinalizar,
-                    usuario_registro: DATA_NAV.usuario.cod_usuario
-                };
+                $.when( servicio_frm.agregarMuestraDiatraea(objMuestra)
+                        .done(function(r){
+                            if (esFinalizar){
+                                history.back();
+                                alert("Muestra FINALIZADA.");
+                            } else {
+                                reiniciarFormulario();
+                                alert("Muestra GUARDADA.");
+                            }
+                        })
+                        .fail(function(e){
+                            console.error(e);
+                        })
+                    );  
+            };
 
-            $.when( servicio_frm.agregarMuestraDiatraea(objMuestra)
-                    .done(function(r){
-                        if (esFinalizar){
-                            history.back();
-                            alert("Muestra FINALIZADA.");
-                        } else {
-                            reiniciarFormulario();
-                            alert("Muestra GUARDADA.");
-                        }
-                    })
-                    .fail(function(e){
-                        console.error(e);
-                    })
-                );
+            confirmar("¿Desea "+(esFinalizar ? "finalizar esta parcela" : "guardar esta muestra")+"?", fnConfirm);
         }
     };
 
@@ -453,8 +456,12 @@ var FrmDiatraeaView = function (servicio_frm, params) {
 
     };
 
-    this.guardaMuestra = function(){
-        agregarMuestra(false);
+    this.guardarMuestra = function(){
+        var rpt = false;
+        if (MUESTRAS_RECOMENDADAS == MUESTRA_ACTUAL){
+            rpt = true;
+        }
+        agregarMuestra(rpt);
     };  
 
     this.finalizarEvaluacion = function(){
@@ -479,6 +486,7 @@ var FrmDiatraeaView = function (servicio_frm, params) {
 
     this.destroy = function(){
         destroyBase();
+        MUESTRAS_RECOMENDADAS = null;
         $content = null;
         rs2Array = null ;
         this.$el = null; 

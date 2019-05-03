@@ -100,3 +100,60 @@ $.whenAll = function (deferreds) {
 
     return d;
 };
+
+function setFX(esMovil){
+    var NOMBRE_APP = "Cayaltí Agri";
+
+    if (esMovil){
+        /*Alert*/
+        alert = function(txtMensaje, fnCallBack){
+            navigator.notification.alert(txtMensaje, (typeof fnCallBack == 'function') ? fnCallBack : null, NOMBRE_APP, "LISTO");
+        };
+        /*Confirm*/
+        confirmar = function(txtMensaje, onConfirm){
+           var fnOK = function(index){
+                if (typeof onConfirm == 'function'){
+                    if (index == 1){
+                        onConfirm();
+                    } 
+                } else {
+                    console.error("Función de confirmación inválida");
+                }
+            };
+           navigator.notification.confirm(txtMensaje, fnOK, NOMBRE_APP, ["ACEPTAR", "CANCELAR"]);
+        };
+
+        getDevice = function(){
+            return device.serial+'-'+device.uuid;
+        };
+        /*Geoposition*/
+        return;
+    } else {
+        /*Alert*/
+        confirmar = function(txtMensaje, onConfirm){
+            var rpta = confirm(txtMensaje);
+            if (rpta){
+                if ((typeof onConfirm == 'function')){
+                    onConfirm();
+                }else {
+                    console.error("Función de confirmación inválida.");
+                }
+            }
+        };
+
+        getDevice = function(){
+            return navigator.userAgent.substr(0,30);
+        };
+    }
+};
+
+
+/*
+navigator.permissions && navigator.permissions.query({name: 'geolocation'}).then(function(PermissionStatus) {
+    if(PermissionStatus.state == 'granted'){
+         console.log("allowd");
+    }else{
+         console.log("denined");
+    }
+})console.log("allowd");
+*/

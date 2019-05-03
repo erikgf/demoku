@@ -20,6 +20,11 @@
 		  			<div>Días desde campaña: </div>
 		  			<div>{{dias_campana}}</div>
 		  		</li>
+		  	{{#if puedo_registrar}}
+		  		<li class="table-view-row frm-detalle2">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
 		  		<li class="titulo-separador frm-pre-subtitulo">
 		  			<div>Biometría</div>
 		  		</li>      
@@ -43,11 +48,7 @@
 		  			<div>
 		  				<input type="checkbox" class="_destructivo" style="margin:auto;transform: scale(1.85);"/>
 		  			</div>
-		  		</li>      
-		  		<li class="table-view-row frm-detalle2">
-		  			<div>Número de muestra: </div>
-		  			<div>{{numero_muestra_actual}}</div>
-		  		</li>
+		  		</li>      		  		
 		  		<div>
 		  			<li class="table-view-row frm-subtitulo row-trio">
 		  				<div>
@@ -127,10 +128,19 @@
 		  			<button id="btn-texto" class="btn btn-block btn-block-normal" disabled>Notas de Texto</button>
 		  			<button id="btn-foto" class="btn btn-block btn-block-normal" disabled>Capturar Foto</button>
 			  		<button id="btn-guardar" class="btn btn-block btn-block-normal">Guardar</button>
-			  		<button id="btn-cierre" class="btn btn-block btn-block-normal">Cerrar Evaluación</button>
-			  	</div>		  	
+			  		<button id="btn-cierre" class="btn btn-block btn-block-normal" {{#if no_cerrable}} style="display:none;" {{/if}}>Cerrar Evaluación</button>
+			  	</div>		
+			  	{{else}}
+			  	<li class="table-view-row frm-detalle2">
+		  			<div>Muestras realizadas: </div>
+		  			<div>{{numero_muestra_realizadas}}</div>
+		  		</li>
+		  		<li>
+		  			<div class="frm-pre-subtitulo text-center" style="padding:10px">Evaluación Finalizada</div>
+		  		</li>
+			  	{{/if}}  	
 			</ul>
-	  	<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
+	  	<!-- <ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul> -->
 	 </div>
 
 </script> <script id='FrmCarbonView-hbs' type='text/template'>	  <header class="bar bar-nav">
@@ -155,39 +165,42 @@
 		  			<div>Área: </div>
 		  			<div>{{area}} ha</div>
 		  		</li>   
-		  		<li class="table-view-row">
-		  			<div>Muestras registradas: </div>
-		  			<div class="_muestras-registradas">{{numero_muestras}}</div>
-		  		</li>   
 	  			<li class="titulo-separador frm-pre-subtitulo">
 		  			<div>Muestras de Carbón</div>
 		  		</li>
-	  			<div>
-		  			<li class="table-view-row frm-subtitulo row-duo">
+
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row">
+		  				<div>Número de Cepas: </div>
 		  				<div>
-		  					N° Tallos
-		  				</div>
-		  				<div>
-		  					N° Látigos:
-		  				</div>
+			  				<input type="number" value="0" class="holo _numero-cepas"/>
+			  			</div>
 		  			</li>
-		  			<div class="_bloque-carbon">
-		  			</div>
-	  				
-		  			<li class="_agregar-nuevo-carbon zona-registro-multiple" {{^if puedo_registrar}}style="display:none"{{/if}}>
-		  				<div> <span class="icon icon-plus"></span> Agregar nueva muestra</div>
+		  			<li class="table-view-row">
+		  				<div>Número de látigos: </div>
+		  				<div>
+			  				<input type="number" value="0" class="holo _numero-latigos"/>
+			  			</div>
 		  			</li>
 		  		</div>
 		  		<div>
 		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
-		  				<div>Infestación promedio</div>
-		  				<div class="_infestacion-promedio text-right" style="display:block">0.00%</div>
+		  				<div>Látigos por Cepa</div>
+		  				<div class="_latigos-cepa text-right" style="display:block">0.00</div>
+		  			</li>
+		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
+		  				<div>Látigos por 1 Ha</div>
+		  				<div class="_latigos-area text-right" style="display:block">0.00</div>
 		  			</li>
 		  		</div>
 		  		{{#if puedo_registrar}}
 		  		<div style="padding:10px 24px 0px 24px">
 			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Finalizar evaluación</button>
 			  	</div>
+			  	{{else}}
+			  		<li class="table-view-row row-full" >
+						<div class="frm-resumen text-center">Evaluación finalizada.</div>
+					</li>
 			  	{{/if}}
 
 		</ul>
@@ -712,10 +725,6 @@
 			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Guardar Muestra</button>
 			  		<button id="btn-finalizar" class="btn btn-block btn-block-normal">Finalizar evaluación de cuartel o válvula (Última evaluación)</button>
 			  	</div>
-		{{else}}	  	
-			<li class="table-view-row row-full frm-resumen text-center" style="margin-top: 32px;">
-		  		<div>Muestra registrada</div>
-		  	</li>
 	  	{{/if}}
 		</ul>
 		<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
@@ -1069,18 +1078,7 @@
     <div class="cargando">
     	<img src="assets/img/cargando.gif" style="height: 35px;">
     </div>
-</div></script> <script id='NuevoCarbonComponente-hbs' type='text/template'><div class="table-view-row row-duo">
-	<div>
-		<input type="number" class="holo _tallos"/>
-	</div>
-	<div>
-		<input type="number" class="holo _tallos-latigos"/>
-	</div>
-</div>
-<li class="table-view-row frm-resumen">
-	<div>Porcentaje dañados: </div>
-	<div class="text-right" style="display:block"><span class="_porcentaje-dañados"></span>%  <a class="_quitar-carbon"><span class="icon icon-close"></span></a></div>	
-</li></script> <script id='NuevoTalloComponente-hbs' type='text/template'><div class="table-view-row row-trio">
+</div></script> <script id='NuevoTalloComponente-hbs' type='text/template'><div class="table-view-row row-trio">
 	<div>
 		<input type="number" class="holo _largo"/>
 	</div>

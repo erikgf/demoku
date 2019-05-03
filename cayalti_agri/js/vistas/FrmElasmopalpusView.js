@@ -2,6 +2,7 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
 	var self = this,
         $content,
         MUESTRA_ACTUAL,
+        MUESTRAS_RECOMENDADAS,
         TALLOS_MUESTREADOS,
         $resumen,
 		rs2Array = resultSetToArray,
@@ -174,14 +175,17 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
     };
 
     var UIDone = function (res) {
-            var uiRow = res.UI.rows.item(0);
-            MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
+            var uiRow = res.UI.rows.item(0),
+                muestras_recomendadas = uiRow.muestras_recomendadas;
 
-            if (uiRow.muestras_recomendadas <= 0){
+            if (muestras_recomendadas <= 0){
                 uiRow.muestras_recomendadas = 1;
+                muestras_recomendadas = 1;
             }
 
-            if ((uiRow.muestras_recomendadas >=  MUESTRA_ACTUAL) && (uiRow.muestras_finalizadas == 0)) {
+            if ((muestras_recomendadas >=  uiRow.numero_muestra_actual) && (uiRow.muestras_finalizadas == 0)) {
+                MUESTRA_ACTUAL = parseInt(uiRow.numero_muestra_actual);
+                MUESTRAS_RECOMENDADAS = muestras_recomendadas;
                 uiRow.puedo_registrar = true;
                 self.$el.html(self.template(uiRow)); 
                 $content = self.$el.find(".content");
@@ -242,7 +246,11 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
     };
 
     this.guardarMuestra = function(){
-        agregarMuestra(false);
+        var rpt = false;
+        if (MUESTRAS_RECOMENDADAS == MUESTRA_ACTUAL){
+            rpt = true;
+        }
+        agregarMuestra(rpt);
     };  
 
     this.finalizarEvaluacion = function(){
@@ -251,38 +259,38 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
 
     var agregarMuestra = function(esFinalizar){
         if (validarMuestra()){
-            if (!confirm("¿Desea "+(esFinalizar ? "finalizar esta parcela" : "guardar esta muestra")+"?")){
-                return;
-            }
+            var fnConfirm = function(){
+                var DOM = $DOM, 
+                    objMuestra = {
+                        item: MUESTRA_ACTUAL,
+                        cod_parcela : params.cod_parcela,
+                        ela_tallos_metro: parseInt(DOM.tallos_metro.val()),
+                        ela_tallos_infectados: parseInt(DOM.tallos_infectados.val()),
+                        ela_area_muestreada: parseFloat(DOM.area_muestreada.val()).toFixed(2),
+                        ela_larvas : parseInt(DOM.larvas.val()),
+                        ela_pupas : parseInt(DOM.pupas.val()),
+                        ela_larvas_muertas : parseInt(DOM.larvas_muertas.val()),
+                        finalizacion : esFinalizar,
+                        usuario_registro: DATA_NAV.usuario.cod_usuario
+                    };
+                
+                $.when( servicio_frm.agregarMuestraElasmopalpus(objMuestra)
+                        .done(function(r){
+                           if (esFinalizar){
+                                history.back();
+                                alert("Muestra FINALIZADA.");
+                            } else {
+                                reiniciarFormulario();
+                                alert("Muestra GUARDADA.");
+                            }
+                        })
+                        .fail(function(e){
+                            console.error(e);
+                        })
+                    );
+            };
 
-            var DOM = $DOM, 
-                objMuestra = {
-                    item: MUESTRA_ACTUAL,
-                    cod_parcela : params.cod_parcela,
-                    ela_tallos_metro: parseInt(DOM.tallos_metro.val()),
-                    ela_tallos_infectados: parseInt(DOM.tallos_infectados.val()),
-                    ela_area_muestreada: parseFloat(DOM.area_muestreada.val()).toFixed(2),
-                    ela_larvas : parseInt(DOM.larvas.val()),
-                    ela_pupas : parseInt(DOM.pupas.val()),
-                    ela_larvas_muertas : parseInt(DOM.larvas_muertas.val()),
-                    finalizacion : esFinalizar,
-                    usuario_registro: DATA_NAV.usuario.cod_usuario
-                };
-            
-            $.when( servicio_frm.agregarMuestraElasmopalpus(objMuestra)
-                    .done(function(r){
-                       if (esFinalizar){
-                            history.back();
-                            alert("Muestra FINALIZADA.");
-                        } else {
-                            reiniciarFormulario();
-                            alert("Muestra GUARDADA.");
-                        }
-                    })
-                    .fail(function(e){
-                        console.error(e);
-                    })
-                );
+            confirmar("¿Desea "+(esFinalizar ? "finalizar esta parcela" : "guardar esta muestra")+"?",fnConfirm);
         }
     };  
 
@@ -343,6 +351,7 @@ var FrmElasmopalpusView = function (servicio_frm, params) {
 
     this.destroy = function(){
         destroyBase();
+        MUESTRAS_RECOMENDADAS = null;
         $content = null;
         $resumen = null;
         rs2Array = null ;

@@ -18,6 +18,7 @@ var AgriServicioFrm = function() {
                     " 'ETAPA DE BROTACIÓN' as ultima_etapa, "+
                     " 1 as cod_ultima_etapa," +
                     " (SELECT valor FROM _variables_ WHERE nombre_variable = 'biometria_numero_metros') as numero_metros, "+
+                    " (SELECT COUNT(id) FROM frm WHERE cod_parcela = p.cod_parcela AND finalizacion = 'true' AND cod_formulario = 1) as muestras_finalizadas,"+
                     " (SELECT COUNT(id) + 1 FROM frm WHERE cod_parcela = p.cod_parcela AND cod_formulario = 1) as numero_muestra_actual"+
                     " FROM campo c, parcela p WHERE c.cod_campana = p.cod_campana"+
                     " AND p.cod_parcela = ?",
@@ -36,9 +37,10 @@ var AgriServicioFrm = function() {
     this.agregarMuestraBiometria = function(objMuestra){
         objMuestra.cod_formulario = 1;
         return _db.insertarDatos("frm",  
-                                    ["item","cod_parcela", "bio_volumen_promedio","bio_largo_promedio","bio_crecimiento_promedio",
+                                    ["item","cod_parcela", 
                                         "bio_etapa_fenologica","bio_data_entrenudos",
                                         "bio_volumen_promedio","bio_largo_promedio","bio_crecimiento_promedio",
+                                        "bio_diametro_promedio","bio_entrenudos_promedio",
                                         "bio_ml_metros","bio_ml_tallos","bio_ml_tallos_metros",
                                         "bio_pt_pesos","bio_pt_tallos","bio_pt_peso_tallos","bio_pt_toneladas",
                                         "usuario_registro","finalizacion","cod_formulario"],
@@ -111,7 +113,6 @@ var AgriServicioFrm = function() {
     this.obtenerUICarbon = function(codParcela) {
         return _db.selectData("SELECT (CASE c.tipo_riego WHEN '1' THEN 'M'||p.numero_nivel_1||'-T'||p.numero_nivel_2||'-V'||p.numero_nivel_3||' - '||c.nombre_campo  ELSE 'J'||p.numero_nivel_1||'-C'||p.numero_nivel_3||' - '||c.nombre_campo END) as rotulo_parcela, "+
                     " p.area, p.variedad as cultivo, "+
-                    " (SELECT COUNT(id)  FROM frm WHERE cod_parcela = p.cod_parcela AND cod_formulario = 4) as numero_muestras,"+
                     " (SELECT COUNT(id) FROM frm WHERE cod_parcela = p.cod_parcela AND finalizacion = 'true' AND cod_formulario = 4) as muestras_finalizadas"+
                     " FROM campo c, parcela p WHERE c.cod_campana = p.cod_campana"+
                     " AND p.cod_parcela = ?",
@@ -119,49 +120,14 @@ var AgriServicioFrm = function() {
     };
 
     this.obtenerRegistrosCarbon = function(codParcela){
-        return _db.selectData("SELECT item, car_tallos, car_tallos_latigo FROM frm WHERE cod_formulario = 4 AND cod_parcela = ?",[codParcela]);
-    };
-
-    this.agregarMuestraCarbon = function(objMuestra, insertUpdate){
-        objMuestra.cod_formulario = 4;
-
-        if (insertUpdate == "+"){
-            return _db.insertarDatos("frm",
-                                    ["item","cod_parcela", "car_tallos","car_tallos_latigo","finalizacion","usuario_registro","cod_formulario"],
-                                        [objMuestra]);    
-        } else {
-
-          
-            return _db.actualizarDatos("frm",
-                                    ["car_tallos","car_tallos_latigo"],
-                                    [objMuestra.car_tallos, objMuestra.car_tallos_latigo],
-                                    ["cod_parcela","item","cod_formulario"],
-                                    [parseInt(objMuestra.cod_parcela), objMuestra.item, objMuestra.cod_formulario]);    
-        }
-        
-    };
-
-    this.obtenerLastIndexCarbon = function(codParcela){
-       var cod_formulario = 4;
-       return _db.selectData("SELECT MAX(item) as last_index FROM frm WHERE cod_parcela = ? AND cod_formulario = ?",
-                    [codParcela, cod_formulario]);
+        return _db.selectData("SELECT item, car_tallos as numero_cepas, car_tallos_latigo  as numero_latigos FROM frm WHERE cod_formulario = 4 AND cod_parcela = ?",[codParcela]);
     };
 
     this.finalizarCarbon = function(objMuestra){
         objMuestra.cod_formulario = 4;
-        return _db.actualizarDatos("frm",
-                                    ["finalizacion"],
-                                    [true],
-                                    ["cod_parcela","item","cod_formulario"],
-                                    [parseInt(objMuestra.cod_parcela), objMuestra.item, objMuestra.cod_formulario]);
-        
-    };
-    
-    this.quitarMuestraCarbon = function(index, codParcela){
-        var cod_formulario = 4;
-        return _db.eliminarDatos("frm",  
-                                    ["cod_parcela","item","cod_formulario"],
-                                    [codParcela, index, cod_formulario]);
+        return _db.insertarDatos("frm",
+                                    ["item","cod_parcela", "car_tallos","car_tallos_latigo","finalizacion","usuario_registro","cod_formulario"],
+                                        [objMuestra]);    
     };
 
     this.obtenerUIMetamasius = function(codParcela) {
@@ -208,6 +174,22 @@ var AgriServicioFrm = function() {
         objMuestra.cod_formulario = 6;
         return _db.insertarDatos("frm",
                                     ["item","cod_parcela", "roy_hojas","roy_hojas_afectadas","roy_porcentaje_afectadas","finalizacion","usuario_registro","cod_formulario"],
+                                        [objMuestra]);
+    };
+
+    this.obtenerUILiberacion  = function(codParcela) {
+        return _db.selectData("SELECT (CASE c.tipo_riego WHEN '1' THEN 'M'||p.numero_nivel_1||'-T'||p.numero_nivel_2||'-V'||p.numero_nivel_3||' - '||c.nombre_campo  ELSE 'J'||p.numero_nivel_1||'-C'||p.numero_nivel_3||' - '||c.nombre_campo END) as rotulo_parcela, "+
+                    " p.area, p.variedad as cultivo, "+
+                    " (SELECT valor FROM _variables_ WHERE nombre_variable = 'liberacion_diatraea_totales') as liberaciones_total, "+
+                    " (SELECT COUNT(id) FROM frm WHERE cod_parcela = p.cod_parcela AND finalizacion = 'true' AND cod_formulario = 7) as liberaciones_realizadas"+
+                    " FROM campo c, parcela p WHERE c.cod_campana = p.cod_campana"+
+                    " AND p.cod_parcela = ?",
+                    [codParcela]);
+    };
+    this.agregarLiberacionPunto = function(objMuestra){
+        objMuestra.cod_formulario = 7;
+        return _db.insertarDatos("frm",
+                                    ["item","cod_parcela", "finalizacion","usuario_registro","cod_formulario"],
                                         [objMuestra]);
     };
 

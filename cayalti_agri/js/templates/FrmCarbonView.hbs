@@ -20,39 +20,42 @@
 		  			<div>Área: </div>
 		  			<div>{{area}} ha</div>
 		  		</li>   
-		  		<li class="table-view-row">
-		  			<div>Muestras registradas: </div>
-		  			<div class="_muestras-registradas">{{numero_muestras}}</div>
-		  		</li>   
 	  			<li class="titulo-separador frm-pre-subtitulo">
 		  			<div>Muestras de Carbón</div>
 		  		</li>
-	  			<div>
-		  			<li class="table-view-row frm-subtitulo row-duo">
+
+		  		<div class="bloque-separador">
+		  			<li class="table-view-row">
+		  				<div>Número de Cepas: </div>
 		  				<div>
-		  					N° Tallos
-		  				</div>
-		  				<div>
-		  					N° Látigos:
-		  				</div>
+			  				<input type="number" value="0" class="holo _numero-cepas"/>
+			  			</div>
 		  			</li>
-		  			<div class="_bloque-carbon">
-		  			</div>
-	  				
-		  			<li class="_agregar-nuevo-carbon zona-registro-multiple" {{^if puedo_registrar}}style="display:none"{{/if}}>
-		  				<div> <span class="icon icon-plus"></span> Agregar nueva muestra</div>
+		  			<li class="table-view-row">
+		  				<div>Número de látigos: </div>
+		  				<div>
+			  				<input type="number" value="0" class="holo _numero-latigos"/>
+			  			</div>
 		  			</li>
 		  		</div>
 		  		<div>
 		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
-		  				<div>Infestación promedio</div>
-		  				<div class="_infestacion-promedio text-right" style="display:block">0.00%</div>
+		  				<div>Látigos por Cepa</div>
+		  				<div class="_latigos-cepa text-right" style="display:block">0.00</div>
+		  			</li>
+		  			<li class="table-view-row frm-subtitulo" style="grid-template-columns: 50% auto;">
+		  				<div>Látigos por 1 Ha</div>
+		  				<div class="_latigos-area text-right" style="display:block">0.00</div>
 		  			</li>
 		  		</div>
 		  		{{#if puedo_registrar}}
 		  		<div style="padding:10px 24px 0px 24px">
 			  		<button id="btn-guardar-muestra" class="btn btn-block btn-block-normal">Finalizar evaluación</button>
 			  	</div>
+			  	{{else}}
+			  		<li class="table-view-row row-full" >
+						<div class="frm-resumen text-center">Evaluación finalizada.</div>
+					</li>
 			  	{{/if}}
 
 		</ul>

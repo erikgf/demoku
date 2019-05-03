@@ -2,6 +2,7 @@ var FrmRoyaView = function (servicio_frm, params) {
 	var self = this,
         $content,
         MUESTRA_ACTUAL,
+        MUESTRAS_RECOMENDADAS,
         HOJAS_MUESTREADAS,
         $resumen,
 		rs2Array = resultSetToArray,
@@ -37,7 +38,7 @@ var FrmRoyaView = function (servicio_frm, params) {
             }
         },
         __guardarMuestra = function(e){
-            self.guardaMuestra();
+            self.guardarMuestra();
         },
         __finalizarEvaluacion = function(e){
             self.finalizarEvaluacion();
@@ -89,14 +90,17 @@ var FrmRoyaView = function (servicio_frm, params) {
     };
 
     var UIDone = function (res) {
-            var uiRow = res.UI.rows.item(0);
-            if (uiRow.muestras_recomendadas <= 0){
+            var uiRow = res.UI.rows.item(0),
+                muestras_recomendadas = uiRow.muestras_recomendadas;     
+
+            if (muestras_recomendadas <= 0){
                 uiRow.muestras_recomendadas = 1;
+                muestras_recomendadas = 1;
             }
 
-
-            if ((uiRow.muestras_recomendadas >= parseInt(uiRow.numero_muestra_actual)) && (uiRow.muestras_finalizadas == 0)) {
+            if ((muestras_recomendadas >= parseInt(uiRow.numero_muestra_actual)) && (uiRow.muestras_finalizadas == 0)) {
                 MUESTRA_ACTUAL = uiRow.numero_muestra_actual;
+                MUESTRAS_RECOMENDADAS = muestras_recomendadas;
                 HOJAS_MUESTREADAS = uiRow.hojas_muestreadas;
                 uiRow.puedo_registrar = true;
                 self.$el.html(self.template(uiRow)); 
@@ -148,41 +152,46 @@ var FrmRoyaView = function (servicio_frm, params) {
    };
 
     var agregarMuestra = function(esFinalizar){   
+            var fnConfirm = function(){
+                var DOM = $DOM, 
+                    objMuestra = {
+                        item : MUESTRA_ACTUAL,
+                        cod_parcela : params.cod_parcela,
+                        roy_hojas: HOJAS_MUESTREADAS,
+                        roy_hojas_afectadas: parseInt(DOM.hojas_afectadas.val()),
+                        roy_porcentaje_afectadas: parseFloat(DOM.porcentaje_afectadas.html()).toFixed(2),
+                        finalizacion : esFinalizar,
+                        usuario_registro: DATA_NAV.usuario.cod_usuario
+                    };
 
-            if (!confirm("¿Desea "+(esFinalizar ? "finalizar esta parcela" : "guardar esta muestra")+"?")){
-                return;
-            }
+                $.when( servicio_frm.agregarMuestraRoya(objMuestra)
+                        .done(function(r){
+                            if (esFinalizar){
+                                history.back();
+                                alert("Muestra FINALIZADA.");
+                            } else {
+                                reiniciarFormulario();
+                                alert("Muestra GUARDADA.");
+                            }
+                        })
+                        .fail(function(e){
+                            console.error(e);
+                        })
+                    );
+            };
 
-            var DOM = $DOM, 
-                objMuestra = {
-                    item : MUESTRA_ACTUAL,
-                    cod_parcela : params.cod_parcela,
-                    roy_hojas: HOJAS_MUESTREADAS,
-                    roy_hojas_afectadas: parseInt(DOM.hojas_afectadas.val()),
-                    roy_porcentaje_afectadas: parseFloat(DOM.porcentaje_afectadas.html()).toFixed(2),
-                    finalizacion : esFinalizar,
-                    usuario_registro: DATA_NAV.usuario.cod_usuario
-                };
+            confirmar("¿Desea "+(esFinalizar ? "finalizar esta parcela" : "guardar esta muestra")+"?", fnConfirm);
 
-            $.when( servicio_frm.agregarMuestraRoya(objMuestra)
-                    .done(function(r){
-                        if (esFinalizar){
-                            history.back();
-                            alert("Muestra FINALIZADA.");
-                        } else {
-                            reiniciarFormulario();
-                            alert("Muestra GUARDADA.");
-                        }
-                    })
-                    .fail(function(e){
-                        console.error(e);
-                    })
-                );
+            
     };
 
-    this.guardaMuestra = function(){
-        agregarMuestra(false);
-    };  
+    this.guardarMuestra = function(){
+        var rpt = false;
+        if (MUESTRAS_RECOMENDADAS == MUESTRA_ACTUAL){
+            rpt = true;
+        }
+        agregarMuestra(rpt);
+    };
 
     this.finalizarEvaluacion = function(){
         agregarMuestra(true);
@@ -217,6 +226,7 @@ var FrmRoyaView = function (servicio_frm, params) {
 
     this.destroy = function(){
         destroyBase();
+        MUESTRAS_RECOMENDADAS = null;
         $content = null;
         HOJAS_MUESTREADAS = null;
         self = null;

@@ -1,0 +1,45 @@
+	  <header class="bar bar-nav">
+	  	<a class="btn-bar btn-nav pull-left btn-back-img"  href="javascript:;" onclick="history.back();">
+	  		<span class="icon icon-left-nav pull-left"></span>
+	  		<img class="vertical-center" src="assets/img/logo-mini.png"/>
+	  	</a>
+	  	<h1 class="title">Liberaciones</h1>
+	  </header>
+
+	  <div class="content">
+		  	<ul class="table-view">
+		  		<li class="table-view-row">
+		  			<div>Parcela: </div>
+		  			<div>{{rotulo_parcela}}</div>
+		  		</li>   
+		  		<li class="table-view-row">
+		  			<div>Cultivo: </div>
+		  			<div>{{cultivo}}</div>
+		  		</li>  
+		  		<li class="table-view-row">
+		  			<div>Área: </div>
+		  			<div>{{area}} ha</div>
+		  		</li> 
+		  		<div class="bloque-separador">
+			  		<li class="table-view-row frm-pre-subtitulo">
+			  			<div>Puntos TOTALES A LIBERAR: </div>
+			  			<div>{{liberaciones_total}}</div>
+			  		</li>    
+			  		<li class="table-view-row frm-resumen">
+			  			<div>Puntos LIBERADOS: </div>
+			  			<div class="_puntos-liberados">{{liberaciones_realizadas}}</div>
+			  		</li> 
+			  		<li class="table-view-row frm-detalle">
+			  			<div>Puntos PENDIENTES: </div>
+			  			<div class="_puntos-pendientes">{{liberaciones_pendientes}}</div>
+			  		</li> 
+			  	</div>
+	  	{{#if puedo_registrar}}
+		  		<div style="padding:10px 24px 0px 24px">
+			  		<button id="btn-liberar" class="btn btn-block btn-block-normal">Liberar</button>
+			  		<button id="btn-liberar-finalizar" class="btn btn-block btn-block-normal">Liberar y Finalizar</button>
+			  	</div>
+	  	{{/if}}
+		</ul>
+	 </div>
+

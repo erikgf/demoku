@@ -70,6 +70,8 @@ var DBHandlerClase = function(version) {
                             { nombre: "bio_data_entrenudos", tipo: "TEXT"},
                             { nombre: "bio_volumen_promedio", tipo: "NUMERIC"},
                             { nombre: "bio_largo_promedio", tipo: "NUMERIC"},
+                            { nombre: "bio_diametro_promedio", tipo: "NUMERIC"},
+                            { nombre: "bio_entrenudos_promedio", tipo: "NUMERIC"},
                             { nombre: "bio_crecimiento_promedio", tipo: "NUMERIC"},
                             { nombre: "bio_pt_pesos", tipo: "NUMERIC"},
                             { nombre: "bio_pt_tallos", tipo: "INTEGER"},
@@ -121,7 +123,15 @@ var DBHandlerClase = function(version) {
                             { nombre: "usuario_registro", tipo: "INTEGER"},
                             { nombre: "fecha_hora_registro", default: "(datetime('now','localtime'))", tipo: "TIMESTAMP"},
                             { nombre: "cod_formulario", default: "1", tipo: "INTEGER"}
-                        ]}
+                        ]},
+                  {  nombre: "liberaciones_pendientes",
+                        campos: [
+                            { nombre: "id", tipo: "INTEGER",pk : true},
+                            { nombre: "cod_campana", tipo: "INTEGER"},
+                            { nombre: "cantidad_moscas", tipo: "INTEGER"},
+                            { nombre: "cod_parcela", tipo: "INTEGER"},
+                            { nombre: "cod_usuario", tipo: "INTEGER"}
+                        ]},
             ];        
 
     this.initialize = function(_version) {
@@ -296,50 +306,6 @@ var DBHandlerClase = function(version) {
            var _mydb = this.mydb;
            return $.Deferred(function (d) {
               _mydb.transaction(function (tx) {
-                /*  multiple rows using (),()
-                var fn = function(){
-                    var len_campos = campos_insercion.length - 1,
-                        sql = " INSERT INTO "+nombre_tabla+" ( ",
-                        sqlQMark = "(",
-                        len = data_usuarios.length - 1,
-                        paramArray = [], 
-                        tmpObj;
-
-                    for (var i = len_campos; i >= 0; i--) {
-                        sql += campos_insercion[i];
-                        sqlQMark += "?";
-                        if (i > 0){
-                          sql += ", ";
-                          sqlQMark += ", ";
-                        }
-                    };
-                    sqlQMark += ") ";
-
-                    sql += ") VALUES ";
-
-                    for (var i = len; i >= 0; i--) {
-                      sql += sqlQMark;
-                      if (i > 0 ){
-                        sql += ', ';
-                      }
-                    };
-
-                    for (var i = len; i >= 0; i--) {
-                      tmpObj = data_usuarios[i];
-                      for (var j = len_campos; j >= 0; j--) {
-                        paramArray.push( tmpObj[campos_insercion[j]] );
-                      };
-                    };
-
-                    sql +=";";
-
-                    tx.executeSql(sql,
-                      paramArray,
-                      function(tx, data){ d.resolve(data);},                        
-                      function(tx, error){ d.reject(error);}
-                    );   
-                  };
-                  */
                 var fn = function(){
                     var len_campos = campos_insercion.length - 1,
                         sql = " INSERT INTO "+nombre_tabla+" ( ",
@@ -347,6 +313,15 @@ var DBHandlerClase = function(version) {
                         len = data_usuarios.length - 1,
                         paramArray = [], 
                         tmpObj;
+
+                    if (data_usuarios.length <= 0){
+                      tx.executeSql("SELECT 1",
+                        paramArray,
+                        function(tx, data){ d.resolve(data);},                        
+                        function(tx, error){ d.reject(error);}
+                      );
+                      return;
+                    }
 
                     for (var i = len_campos; i >= 0; i--) {
                         sql += campos_insercion[i];

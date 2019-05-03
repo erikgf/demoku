@@ -9,8 +9,8 @@ var AgriServicio = function() {
     };
 
     this.compilar = function(){
-       //return $.get("template.compiler.php");
-       return $.get("template.master.hbs");
+      return $.get("template.compiler.php");
+      // return $.get("template.master.hbs");
     };
 
     this.iniciarSesion = function(_login, _clave){
@@ -85,6 +85,14 @@ var AgriServicio = function() {
         return _db.insertarDatos("etapa_fenologica",  
                                     ["cod_etapa", "nombre"],
                                         etapas, 
+                                            true);
+
+    };
+
+    this.insertarLiberaciones = function(liberaciones_pendientes){
+        return _db.insertarDatos("liberaciones_pendientes",  
+                                    ["cod_campana", "cod_parcela","cantidad_moscas", "cod_usuario"],
+                                        liberaciones_pendientes, 
                                             true);
 
     };
@@ -177,7 +185,7 @@ var AgriServicio = function() {
                     "SELECT f.cod_formulario, f.descripcion, f.nombre_interfaz,"+
                     "(SELECT COUNT(id) FROM frm WHERE cod_formulario = f.cod_formulario AND cod_parcela = ?) as registros_hechos,"+
                     "(SELECT COUNT(id) FROM frm WHERE cod_formulario = f.cod_formulario AND cod_parcela = ? AND finalizacion = 'true') as finalizado"+
-                    " FROM formulario f ORDER BY f.descripcion",
+                    " FROM formulario f WHERE cod_formulario < 7 ORDER BY f.descripcion ",
                     [cod_parcela, cod_parcela]);
     };
 

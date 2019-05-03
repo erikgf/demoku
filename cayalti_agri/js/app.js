@@ -41,7 +41,6 @@ var onDeviceReady = function () {
     servicio_frm.initialize(db);
     servicio.initialize(db).then(function (htmlScriptTemplates) {
       try{
-
         procesarTemplates(htmlScriptTemplates);
 
         router.addRoute('', function() {
@@ -108,6 +107,12 @@ var onDeviceReady = function () {
             }
           });
 
+          router.addRoute('frm-liberacion-d/:id', function(id) {
+            if (DATA_NAV.acceso){
+                slider.slidePage(new FrmLiberacionDiatraeaView(servicio_frm, {cod_parcela: id}).render().$el);
+            }
+          });
+
 
         if (DATA_NAV.acceso){
           router.load("inicio");
@@ -126,11 +131,13 @@ var onDeviceReady = function () {
     function procesarTemplates(htmlScriptTemplates){
         $("body").prepend(htmlScriptTemplates);
 
+
         var scripts = document.getElementsByTagName('script');
 
         for(var i = 0; i < scripts.length; i++) {
             var $el = scripts[i], id = $el.id;
             if ($el.type.toLowerCase() == "text/template"){
+              console.log(id.slice(0,-4));
                 window[id.slice(0,-4)].prototype.template = Handlebars.compile(document.getElementById(id).innerHTML);
             }
         }
@@ -142,12 +149,11 @@ var onDeviceReady = function () {
 (function(){
     var app = document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
     if ( app ) {
-      console.log("APP");
       document.addEventListener("deviceready", onDeviceReady, false);
     } else {
-      console.log("WEB");
       onDeviceReady();  // Web page
     } 
+    setFX(app);
 }());
 
     /*

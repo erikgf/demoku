@@ -19,7 +19,7 @@ class Compilador{
 			$fileContentPagesScript = "";
 		    foreach($files as $key => $value){
 		        $path = realpath($this->_root."/".$value);
-		        if(!is_dir($path)) {
+		        if(!is_dir($path) && substr($value, -3) == "hbs"){ 
 		            $results[] = $path;
 		            $fileContentPagesScript .= " <script id='".str_replace(".", "-", $value)."' type='text/template'>".file_get_contents($path, true)."</script>";		            
 		        }

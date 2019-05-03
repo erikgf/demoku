@@ -34,32 +34,34 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 
 	this.actualizarDatos = function(){
 		/*Conectando....*/
-
-		if (TOTAL_REGISTROS_PENDIENTES > 0){
-			if (!confirm("Hay "+TOTAL_REGISTROS_PENDIENTES+" registros pendientes NO RESINCRONIZADOS en el móvil, ¿deseas actualizar de todas maneras?")){
-				return;
+      	var fnConfirm = function(){
+      		if (progressBar){
+				progressBar.destroy();
 			}
-		}
-		
-		if (progressBar){
-			progressBar.destroy();
-		}
-		progressBar = new ProgressBarComponente().initRender({titulo: "Descargando información", texto_informacion: "Conectando...",valor :"0"});
-		progressBar.mostrar();
+			progressBar = new ProgressBarComponente().initRender({titulo: "Descargando información", texto_informacion: "Conectando...",valor :"0"});
+			progressBar.mostrar();
 
-     	$.when( servicio_web.actualizarDatos()
-	     		.done( function(r){	     			
-	     			if (r.rpt){	     	
-	     				progressBar.setTotalRegistros(r.data.contador_registros);
-	     				self.insertarActualizarDatos(r.data);
-						//servicio_web.insertarActualizarDatos(r.data);		     				
-	     			}
-	      		})
-	      		.fail(function(error){
-	      			alert(error);
-	      			console.error(error);
-	      		})
-      	); //EndWhen
+	     	$.when( servicio_web.actualizarDatos()
+		     		.done( function(r){	     			
+		     			if (r.rpt){	     	
+		     				progressBar.setTotalRegistros(r.data.contador_registros);
+		     				self.insertarActualizarDatos(r.data);
+							//servicio_web.insertarActualizarDatos(r.data);		     				
+		     			}
+		      		})
+		      		.fail(function(error){
+		      			alert(error);
+		      			console.error(error);
+		      		})
+	      	); 
+      	};
+
+      	console.log("");
+		if (TOTAL_REGISTROS_PENDIENTES > 0){
+			confirmar("Hay "+TOTAL_REGISTROS_PENDIENTES+" registros pendientes NO RESINCRONIZADOS en el móvil, ¿deseas actualizar de todas maneras?", fnConfirm);
+		} else {
+			fnConfirm();	
+		}
 	};
 	/*
 	Inserción:  usuarios, campos, parcelas, coordenadas, formularios
@@ -104,11 +106,18 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 			 								.done(function(res){
 			 									total_registros_afectados += res.rowsAffected;
 			 									progressBar.actualizarPorcentaje("Actualizando variables", total_registros_afectados);
-			 									$.when ( servicio.insertarEtapas(datos.etapas)
+			 									$.when ( servicio.insertarLiberaciones(datos.liberaciones)
 			 										.done(function(res){
 														total_registros_afectados += res.rowsAffected;
-			 											progressBar.actualizarPorcentaje("Actualizando información", total_registros_afectados);
-			 											self.fin(total_registros_afectados);
+			 											progressBar.actualizarPorcentaje("Actualizando  liberaciones", total_registros_afectados);
+			 											$.when ( servicio.insertarEtapas(datos.etapas)
+			 												.done(function(res){
+			 													total_registros_afectados += res.rowsAffected;
+			 													progressBar.actualizarPorcentaje("Actualizando  etapas", total_registros_afectados);
+			 													self.fin(total_registros_afectados);
+			 												})
+			 												.fail(fnError)
+			 											);
 			 										})
 			 										.fail(fnError)
 			 									);
@@ -166,7 +175,7 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
             	"metamasius" : procesarData(res.metamasius.rows),
             	"cabecera": {
             		cod_evaluador: DATA_NAV.usuario.cod_usuario,
-            		cod_movil: "ANDROID_DEMO"
+            		cod_movil: getDevice()
             	}
             };
             try{
@@ -229,8 +238,8 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
      				numRegistrosPropios = 0;
 
      			if (rows.length > 0){
-     			  numRegistros = rows[0].totales;
-     			  numRegistrosPropios = rows[0].propios;
+     			  numRegistros = rows.item(0).totales;
+     			  numRegistrosPropios = rows.item(0).propios;
      			  renderLblEnviar(numRegistros, numRegistrosPropios);    
      			}
       		})
@@ -251,6 +260,8 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 					bio_volumen_promedio:  objDetalle.bio_volumen_promedio,
 					bio_largo_promedio:  objDetalle.bio_largo_promedio,
 					bio_crecimiento_promedio:  objDetalle.bio_crecimiento_promedio,
+					bio_entrenudos_promedio:  objDetalle.bio_entrenudos_promedio,
+					bio_diametro_promedio:  objDetalle.bio_diametro_promedio,
 					bio_ml_metros:  objDetalle.bio_ml_metros,
 					bio_ml_tallos: objDetalle.bio_ml_tallos,
 					bio_ml_tallos_metros:  objDetalle.bio_ml_tallos_metros,
@@ -387,8 +398,8 @@ var InicioView = function (data_usuario, servicio_web, servicio) {
 			 	}
 		 	}
 
-		 	// Si no es el primero o si siguen siendo igual los cod_parcela es decir detalles
-		 	//, solo se registrarán si es un cod_parcela_valido.
+		 	//Si no es el primero o si siguen siendo igual los cod_parcela es decir detalles
+		 	//solo se registrarán si es un cod_parcela_valido.
 
 		 	if (objParcela){
 		 		arDetalles.push(setDetalle(objArreglo, objArreglo.cod_formulario));

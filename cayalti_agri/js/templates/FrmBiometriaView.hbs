@@ -20,6 +20,11 @@
 		  			<div>Días desde campaña: </div>
 		  			<div>{{dias_campana}}</div>
 		  		</li>
+		  	{{#if puedo_registrar}}
+		  		<li class="table-view-row frm-detalle2">
+		  			<div>Número de muestra: </div>
+		  			<div>{{numero_muestra_actual}}</div>
+		  		</li>
 		  		<li class="titulo-separador frm-pre-subtitulo">
 		  			<div>Biometría</div>
 		  		</li>      
@@ -43,11 +48,7 @@
 		  			<div>
 		  				<input type="checkbox" class="_destructivo" style="margin:auto;transform: scale(1.85);"/>
 		  			</div>
-		  		</li>      
-		  		<li class="table-view-row frm-detalle2">
-		  			<div>Número de muestra: </div>
-		  			<div>{{numero_muestra_actual}}</div>
-		  		</li>
+		  		</li>      		  		
 		  		<div>
 		  			<li class="table-view-row frm-subtitulo row-trio">
 		  				<div>
@@ -127,9 +128,18 @@
 		  			<button id="btn-texto" class="btn btn-block btn-block-normal" disabled>Notas de Texto</button>
 		  			<button id="btn-foto" class="btn btn-block btn-block-normal" disabled>Capturar Foto</button>
 			  		<button id="btn-guardar" class="btn btn-block btn-block-normal">Guardar</button>
-			  		<button id="btn-cierre" class="btn btn-block btn-block-normal">Cerrar Evaluación</button>
-			  	</div>		  	
+			  		<button id="btn-cierre" class="btn btn-block btn-block-normal" {{#if no_cerrable}} style="display:none;" {{/if}}>Cerrar Evaluación</button>
+			  	</div>		
+			  	{{else}}
+			  	<li class="table-view-row frm-detalle2">
+		  			<div>Muestras realizadas: </div>
+		  			<div>{{numero_muestra_realizadas}}</div>
+		  		</li>
+		  		<li>
+		  			<div class="frm-pre-subtitulo text-center" style="padding:10px">Evaluación Finalizada</div>
+		  		</li>
+			  	{{/if}}  	
 			</ul>
-	  	<ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul>
+	  	<!-- <ul class="table-view" id="frm-resumen" style="padding-top: 32px;"></ul> -->
 	 </div>
 
