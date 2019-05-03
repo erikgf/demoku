@@ -15,7 +15,7 @@
 
  define("SW_NOMBRE","AgriCayaltí");
  define("SW_NOMBRE_COMPLETO","Sistema de Biometría y Sanidad CAYALTI");
- define("SW_VERSION","2.2.0 BETA");
+ define("SW_VERSION","2.5.0 BETA");
 
  define("MODO_PRODUCCION", 1);
 
