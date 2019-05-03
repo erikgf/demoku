@@ -168,3 +168,34 @@ table.tabla-nueva.row-border tbody th, table.tabla-nueva.row-border tbody td, ta
 .table-bordered, .table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th, .table-bordered>tfoot>tr>td, .table-bordered>tfoot>tr>th, .table-bordered>thead>tr>td, .table-bordered>thead>tr>th {
     border: 1px solid #ddd;
 }
+
+.tabla-campos tbody tr{
+        cursor: pointer;
+      }
+      .tabla-campos  tbody .tr-seleccionado {
+        background: #d9edf7;
+      }
+      .tabla-campos  tbody tr:hover{
+        background: #ececec;
+      }
+      .tabla-campos  tbody .tr-seleccionado:hover{
+        background: #c6d7d8;
+      }
+      .bloque-detalle{
+      }
+      .bloque-detalle p{
+        display: inline;
+      }
+
+      .btn-black{
+        color: white;
+        background: #565454;
+      }
+
+      .badge-success{
+        background-color: #5cb85c;
+      }
+
+      .badge-danger{
+        background-color: #d9534f;
+      }
