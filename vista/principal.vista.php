@@ -46,7 +46,7 @@ $TITULO_PAGINA = "Página Principal";
   include '_js/bootstrap.js.php'; 
 ?>
   <script src="../util/Ajxur.js" type="text/javascript"></script>
-  <script src="../js/Util.js" type="text/javascript"></script>
+  <script src="js/Util.js" type="text/javascript"></script>
 </body>
 
 </html>
