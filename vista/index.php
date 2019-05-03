@@ -1,47 +1,32 @@
 <?php
 
     include '../datos/local_config_web.php';
-    /*
     if( isset($_SESSION["usuario"])){
         header("location:principal.vista.php");
     }   
 
-    $dniUsuario = "";
+    $usuario = "";
     $recordar = false;
 
-    if (isset($_COOKIE["dniusuario"])){
-        $dniUsuario = $_COOKIE["dniusuario"];
+    if (isset($_COOKIE["usuario"])){
+        $usuario = $_COOKIE["usuario"];
         $recordar = true;
     }
-    */
-
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <meta charset="utf-8" />
-        <title>Login - Gestión Incidencias</title>
+        <title>Iniciar Sesión</title>
 
         <meta name="description" content="User login page" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
         <!-- bootstrap & fontawesome -->
-        <link rel="stylesheet" href="../assets/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="../assets/font-awesome/4.5.0/css/font-awesome.min.css" />
-
-        <!-- text fonts -->
-        <link rel="stylesheet" href="../assets/css/fonts.googleapis.com.css" />
-
-        <!-- ace styles -->
-        <link rel="stylesheet" href="../assets/css/ace.min.css" />
-
-        <!--[if lte IE 9]>
-            <link rel="stylesheet" href="../assets/css/ace-part2.min.css" />
-        <![endif]-->
-        <link rel="stylesheet" href="../assets/css/ace-rtl.min.css" />
-
+        <?php 
+          include '_css/bootstrap.css.php';
+        ?>
         <!--[if lte IE 9]>
           <link rel="stylesheet" href="../assets/css/ace-ie.min.css" />
         <![endif]-->
@@ -55,151 +40,111 @@
         <link rel="stylesheet" href="css/estilos.css" />
     </head>
 
+    <style type="text/css">
 
-    <body class="login-layout light-login">
-        <div class="loader"> <div>   <i class="ace-icon fa fa-spinner fa-spin bigger-225"></i> </div> </div>
-        <div class="main-container">
-            <div class="main-content">
-                <div class="row">
-                    <div class="col-sm-10 col-sm-offset-1">
-                        <div class="login-container">
-                            <div class="center">
-                                <h1>
-                                    <i class="ace-icon fa fa-leaf"></i>
-                                    Gestión Incidencias
-                                </h1>
-                                <h4 class="blue" id="id-company-text">&copy; Cayaltí S.A.A.</h4>
-                            </div>
+    body{
+        background: #f1f1f1;
+    }
 
-                            <div class="space-6"></div>
+    header{
+         background: white;
+    }
 
-                            <div class="position-relative">
-                                <div id="login-box" class="login-box visible widget-box no-border">
-                                    <div class="widget-body">
-                                        <div class="widget-main">
-                                            <h4 class="header blue lighter bigger">
-                                                <i class="ace-icon fa fa-coffee blue"></i>
-                                                Ingreses sus credenciales
-                                            </h4>
+    .login-container{
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .login-form{
+        background: #b4ddb4; /* Old browsers */
+        background: -moz-linear-gradient(top, #b4ddb4 0%, #83c783 17%, #52b152 33%, #008a00 67%, #005700 83%, #002400 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#005700 83%,#002400 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#005700 83%,#002400 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b4ddb4', endColorstr='#002400',GradientType=0 ); /* IE6-9 */
+        box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+        background-image: url(../imagenes/Header.jpg);
+        background-repeat: no-repeat;
+        background-position: left bottom;
+    }
+    .login-form h3{
+        text-align: center;
+        color: #26ad28;
+    }
+    .login-container form{
+        padding: 10%;
+    }
+    .btnSubmit
+    {
+        width: 50%;
+        border-radius: 1rem;
+        padding: 1.5%;
+        border: none;
+        cursor: pointer;
+    }
+    .login-form .btnSubmit{
+        font-weight: 600;
+        width: 100%;
+        border: solid 2px #26ad28;
+        font-weight: bold;
+        text-align: center;
+        color: #fff;
+        background-color: #26ad28;
+        padding: 10px 20px;
+        text-transform: uppercase;
+    }
+    .login-form .ForgetPwd{
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .color-white{
+        color: white;
+    }
 
-                                            <div class="space-6"></div>
+</style>
 
-                                            <form id="frminiciar">
-                                                <fieldset>
-                                                    <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="text" class="form-control"  name="txtdni" id="txtdni"  value="<?php echo $dniUsuario; ?>" placeholder="Usuario" />
-                                                            <i class="ace-icon fa fa-user"></i>
-                                                        </span>
-                                                    </label>
-
-                                                    <label class="block clearfix">
-                                                        <span class="block input-icon input-icon-right">
-                                                            <input type="password" class="form-control" name="txtclave" id="txtclave" placeholder="Clave" />
-                                                            <i class="ace-icon fa fa-lock"></i>
-                                                        </span>
-                                                    </label>
-
-                                                    <div class="space"></div>
-
-                                                    <div class="clearfix">
-                                                        <label style="display:none;">
-                                                            <input type="checkbox" id="chkrecordar" <?php echo $recordar ? "checked" : "" ?> class="ace" />
-                                                            <span class="lbl"> Recordar</span>
-                                                        </label>
-
-                                                        <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
-                                                            <i class="ace-icon fa fa-key"></i>
-                                                            <span class="bigger-110">Acceder</span>
-                                                        </button>
-                                                    </div>
-
-                                                    <div class="space-4"></div>
-                                                </fieldset>
-                                                <div id="blkalert"></div>
-                                            </form>
-                                        </div><!-- /.widget-main -->
-                                    </div><!-- /.widget-body -->
-                                </div><!-- /.login-box -->
-
-                            </div><!-- /.position-relative -->
-                            <!--
-                            <div class="navbar-fixed-top align-right">
-                                <br />
-                                &nbsp;
-                                <a id="btn-login-dark" href="#">Dark</a>
-                                &nbsp;
-                                <span class="blue">/</span>
-                                &nbsp;
-                                <a id="btn-login-blur" href="#">Blur</a>
-                                &nbsp;
-                                <span class="blue">/</span>
-                                &nbsp;
-                                <a id="btn-login-light" href="#">Light</a>
-                                &nbsp; &nbsp; &nbsp;
-                            </div>
-                            -->
+    <body>
+        <header>
+            <div class="row navbar-0">
+              <div class="col-sm-6">
+                <img src="../imagenes/cayalti-izq.jpg" class="img-logo-izq">
+              </div>
+            </div>
+           <div id="navbar" class="navbar-collapse collapse navbar-1">
+             <ul class="nav navbar-nav">
+                <li><a>&nbsp;</a></li>
+            </ul>
+           </div>
+        </header>
+        <main role="main" class="container login-container">
+            <div class="row">
+                <div class="col-xs-12 col-md-offset-4 col-md-4 login-form">
+                    <h3>Logo AgriCayaltí</h3>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" id="txtusuario" name="txtusuario" class="form-control" placeholder="Usuario" value="<?php echo $usuario; ?>" />
                         </div>
-                    </div><!-- /.col -->
-                </div><!-- /.row -->
-            </div><!-- /.main-content -->
-        </div><!-- /.main-container -->
-
-        <!-- basic scripts -->
-
-        <!--[if !IE]> -->
-        <script src="../assets/js/jquery-2.1.4.min.js"></script>
-
-        <!-- <![endif]-->
-
-        <!--[if IE]>
-<script src="assets/js/jquery-1.11.3.min.js"></script>
-<![endif]-->
-        <script type="text/javascript">
-            if('ontouchstart' in document.documentElement) document.write("<script src='../assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
-        </script>
-
-        <!-- inline scripts related to this page -->
-        <script type="text/javascript">
-            jQuery(function($) {
-             $(document).on('click', '.toolbar a[data-target]', function(e) {
-                e.preventDefault();
-                var target = $(this).data('target');
-                $('.widget-box.visible').removeClass('visible');//hide others
-                $(target).addClass('visible');//show target
-             });
-            });
-            
-            //you don't need this, just used for changing background
-            /*
-            jQuery(function($) {
-             $('#btn-login-dark').on('click', function(e) {
-                $('body').attr('class', 'login-layout');
-                $('#id-text2').attr('class', 'white');
-                $('#id-company-text').attr('class', 'blue');
-                
-                e.preventDefault();
-             });
-             $('#btn-login-light').on('click', function(e) {
-                $('body').attr('class', 'login-layout light-login');
-                $('#id-text2').attr('class', 'grey');
-                $('#id-company-text').attr('class', 'blue');
-                
-                e.preventDefault();
-             });
-             $('#btn-login-blur').on('click', function(e) {
-                $('body').attr('class', 'login-layout blur-login');
-                $('#id-text2').attr('class', 'white');
-                $('#id-company-text').attr('class', 'light-blue');
-                
-                e.preventDefault();
-             });
-            });
-            */
-        </script>
-
-        <script src="js/Util.js"></script>
-        <script src="../assets/Ajxur.js"></script>  
+                        <div class="form-group">
+                            <input type="password" id="txtclave" name="txtclave" class="form-control" placeholder="Contraseña" value="" />
+                        </div>
+                        <div class="form-group">
+                            <div >
+                                <input type="checkbox" id="chkrecordar"  <?php echo $recordar ? "checked" : "" ?>>
+                                <label class="color-white" for="chkrecordar">Recordar</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btnSubmit" value="ACCEDER" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+          <?php include 'pie.vista.php'; ?>
+        <?php 
+          include '_js/jquery.js.php'; 
+          include '_js/bootstrap.js.php'; 
+        ?>
+        <script src="../util/Ajxur.js" type="text/javascript"></script>
         <script src="js/login.js" type="text/javascript"></script>
     </body>
 </html>

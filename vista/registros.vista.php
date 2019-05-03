@@ -18,6 +18,7 @@ $fechaHoy = date('Y-m-d');
     <?php 
       include '_css/bootstrap.css.php';
     ?>
+    <link rel="stylesheet" type="text/css" href="../plugin/bootstrap-selectpicker/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="css/estilos.css">
 
     <style type="text/css">
@@ -221,7 +222,6 @@ $fechaHoy = date('Y-m-d');
             </div>
     </div> 
 
-
     <div id="mdlEditarDetalleDiatraea" class="modal fade" tabindex="-1" style="display: none;">
             <div class="modal-dialog modal-lg">
               <form id="frmgrabardiatraea">
@@ -359,6 +359,58 @@ $fechaHoy = date('Y-m-d');
                     </div><!-- /.modal-content -->
               </form>
             </div>
+    </div>
+
+    <div id="mdlEditarDetalleCarbon" class="modal fade" tabindex="-1" style="display: none;">
+            <div class="modal-dialog modal-lg">
+              <form id="frmgrabarcarbon">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="smaller lighter blue no-margin">Editar Carbón</h3>
+                      </div>
+
+                      <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <div class="control-group">
+                                <label class="control-label">N° TALLOS: </label>
+                                <input type="number" name="txtcar_tallos" id="txtcar_tallos" class="form-control" required>
+                              </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-3">
+                              <div class="control-group">
+                                <label class="control-label">N° LÁTIGOS: </label>
+                                <input type="number" name="txtcar_talloslatigo" id="txtcar_talloslatigo" class="form-control" required>
+                              </div>
+                            </div>                      
+                        </div>
+                        <br>
+                          <div class="row">
+                            <div class="col-xs-12 col-md-4">
+                              <div class="control-group">
+                                <button class="btn btn-lg btn-danger" onclick="app.eliminarRegistroDetalle();">
+                                  <i class="glyphicon glyphicon-trash"></i>
+                                  ELIMINAR REGISTRO
+                                </button>
+                              </div>
+                            </div>
+                          </div>  
+                      </div>       
+
+                      <div class="modal-footer">
+                        <button class="btn btn-sm btn-default pull-right" data-dismiss="modal">
+                          <i class="ace-icon fa fa-times"></i>
+                          Cancelar
+                        </button>
+                        <button type="submit"  class="btn btn-sm btn-success pull-right">
+                          <i class="ace-icon fa fa-save"></i>
+                          Guardar
+                        </button>
+                      </div>
+                    </div><!-- /.modal-content -->
+              </form>
+            </div>
     </div> 
 
    <script id="tpl8ListadoCabecera" type="handlebars-x">
@@ -427,7 +479,9 @@ $fechaHoy = date('Y-m-d');
   include '_js/bootstrap.js.php'; 
 ?>
   <script src="../plugin/handlebars/handlebars.min.js" type="text/javascript"></script>
+  <script src="../plugin/bootstrap-selectpicker/js/bootstrap-select.min.js" type="text/javascript"></script>
   <script src="../util/Ajxur.js" type="text/javascript"></script>
+  <script src="js/Util.js" type="text/javascript"></script>
   <script src="js/registros.vista.js" type="text/javascript"></script>
 </body>
 
