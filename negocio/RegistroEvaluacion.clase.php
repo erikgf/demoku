@@ -17,7 +17,6 @@ class RegistroEvaluacion extends Conexion {
         return $this->cod_registro;
     }
     
-    
     public function setCodRegistro($cod_registro)
     {
         $this->cod_registro = $cod_registro;
@@ -230,10 +229,9 @@ class RegistroEvaluacion extends Conexion {
 
             $campos = $this->consultarFilas($sql);
 
-            $sql = "SELECT distinct CONCAT(co.apellidos,' ',co.nombres) as descripcion, u.cod_usuario as codigo
+            $sql = "SELECT distinct CONCAT(co.apellidos,' ',co.nombres) as descripcion, rc.cod_evaluador as codigo
                     FROM registros_cabecera rc
-                    INNER JOIN usuario u ON u.cod_usuario = rc.cod_evaluador
-                    INNER JOIN colaborador co ON co.cod_colaborador = u.cod_usuario
+                    INNER JOIN colaborador co ON co.cod_colaborador = rc.cod_evaluador
                     WHERE fecha_evaluacion BETWEEN '$fechaDesde'::date AND '$fechaHasta'::date
                     ORDER BY CONCAT(co.apellidos,' ',co.nombres)";
 
@@ -245,13 +243,15 @@ class RegistroEvaluacion extends Conexion {
         }
     }
 
+   
+
     public function obtenerCabeceras($fechaDesde, $fechaHasta){
         try {
 
             $sql = "SELECT rc.cod_registro, 
                     ca.nombre_campo,
                     p.numero_nivel_1, p.numero_nivel_2, p.numero_nivel_3,
-                    (CASE p.tipo_riego WHEN '1' THEN 'M'||p.numero_nivel_1||'-T'||p.numero_nivel_2||'-V'||p.numero_nivel_3 ELSE 'J'||p.numero_nivel_1||'-C'||p.numero_nivel_3 END) as rotulo_parcela,
+                    rotulo_parcela,
                     to_char(fecha_evaluacion,'DD-MM-YYYY') as fecha_evaluacion, 
                     f.descripcion as tipo_evaluacion,
                     CONCAT(col.apellidos,' ',col.nombres) as evaluador,
@@ -262,8 +262,7 @@ class RegistroEvaluacion extends Conexion {
                     INNER JOIN campaña cp ON cp.cod_campaña = p.cod_campaña
                     INNER JOIN siembra si ON si.cod_siembra = cp.cod_siembra
                     INNER JOIN campo ca ON ca.cod_campo = si.cod_campo
-                    INNER JOIN usuario u ON u.cod_usuario = rc.cod_evaluador
-                    INNER JOIN colaborador col ON col.cod_colaborador = u.cod_usuario 
+                    INNER JOIN colaborador col ON col.cod_colaborador = rc.cod_evaluador
                     WHERE true ";
 
             $parametros = [];
@@ -472,8 +471,8 @@ class RegistroEvaluacion extends Conexion {
             return array("rpt"=>false,"msj"=>$exc);
         }
     }
-    
-      public function obtenerDataBase(){
+
+    public function obtenerDataBase(){
         try {
 
             $sql = "SELECT distinct cp.nombre_campo as descripcion, cp.cod_campo as codigo
@@ -483,9 +482,8 @@ class RegistroEvaluacion extends Conexion {
 
             $campos = $this->consultarFilas($sql);
 
-             $sql = "SELECT distinct CONCAT(co.apellidos,' ',co.nombres) as descripcion, u.cod_usuario as codigo
-                    FROM usuario u 
-                    INNER JOIN colaborador co ON co.cod_colaborador = u.cod_usuario
+             $sql = "SELECT distinct CONCAT(co.apellidos,' ',co.nombres) as descripcion, co.cod_colaborador as codigo
+                    FROM colaborador co 
                     ORDER BY CONCAT(co.apellidos,' ',co.nombres)";
 
             $evaluadores = $this->consultarFilas($sql);
@@ -495,6 +493,4 @@ class RegistroEvaluacion extends Conexion {
             return array("rpt"=>false,"msj"=>$exc);
         }
     }
-
-
 }

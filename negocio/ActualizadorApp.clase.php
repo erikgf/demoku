@@ -13,14 +13,13 @@ class ActualizadorApp extends Conexion {
             $contador_registros  = 0;
 
             $sql = "SELECT 
-                    u.cod_usuario,
+                    c.cod_colaborador as cod_usuario,
                     CONCAT(c.nombres,' ',c.apellidos) as nombres_apellidos,
-                    1 as cod_rol,
-                    u.usuario,
-                    u.clave
-                    FROM usuario u
-                    INNER JOIN colaborador c ON c.cod_colaborador = u.cod_colaborador
-                    WHERE u.estado_mrcb = 1 AND u.estado = 'A' AND c.estado_baja = 'A'";
+                    cod_perfil as cod_rol,
+                    c.usuario,
+                    c.clave
+                    FROM colaborador c
+                    WHERE c.estado_mrcb AND c.estado_baja = 'A'";
             $usuarios =  $this->consultarFilas($sql);
             $contador_registros += count($usuarios);
 
@@ -32,8 +31,8 @@ class ActualizadorApp extends Conexion {
                         --v.nombre as variedad,
                         cp.numero_campaña as numero_campana
                     FROM campo ca
-                    INNER JOIN siembra si ON ca.cod_campo = si.cod_campo AND si.estado_activo
-                    INNER JOIN campaña cp ON cp.cod_siembra = si.cod_siembra AND cp.estado_activo";
+                    INNER JOIN siembra si ON ca.cod_campo = si.cod_campo AND si.estado_activo AND si.estado_mrcb
+                    INNER JOIN campaña cp ON cp.cod_siembra = si.cod_siembra AND cp.estado_activo AND cp.estado_mrcb";
                     /*-- INNER JOIN variedad v ON v.cod_variedad = si.cod_variedad
                     -- INNER JOIN cultivo cu ON cu.cod_cultivo = v.cod_cultivo
                     -- WHERE cu.cod_cultivo = 1"; CAÑA
@@ -44,7 +43,7 @@ class ActualizadorApp extends Conexion {
             $sql = "SELECT 
                         cod_parcela, numero_nivel_1, COALESCE(numero_nivel_2,'0') as numero_nivel_2, numero_nivel_3, 
                         area, cod_campaña as cod_campana, p.tipo_riego,
-                        v.nombre as variedad,  fecha_inicio_campaña as fecha_inicio
+                        v.nombre as variedad, fecha_inicio_campaña as fecha_inicio
                     FROM parcela p
                     INNER JOIN variedad v ON v.cod_variedad = p.cod_variedad AND v.estado_mrcb = 1 AND v.cod_cultivo = 1";
             $parcelas =  $this->consultarFilas($sql);

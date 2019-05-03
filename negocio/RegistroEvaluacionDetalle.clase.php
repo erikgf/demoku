@@ -22,6 +22,9 @@ class RegistroEvaluacionDetalle extends Conexion {
     private $dia_billaea_larvas;
     private $dia_billaea_pupas;
 
+    private $car_tallos;
+    private $car_tallos_latigo;
+
     public function getCodRegistro()
     {
         return $this->cod_registro;
@@ -225,6 +228,30 @@ class RegistroEvaluacionDetalle extends Conexion {
         return $this;
     }
 
+    public function getCarTallos()
+    {
+     return $this->car_tallos;
+    }
+
+
+     public function setCarTallos($car_tallos)
+     {
+         $this->car_tallos = $car_tallos;
+         return $this;
+     }
+
+    public function getCarTallosLatigo()
+    {
+        return $this->car_tallos_latigo;
+    }
+    
+    
+    public function setCarTallosLatigo($car_tallos_latigo)
+    {
+        $this->car_tallos_latigo = $car_tallos_latigo;
+        return $this;
+    }
+
     public function editar($JSONData) {
         $this->beginTransaction();
         try {            
@@ -259,7 +286,7 @@ class RegistroEvaluacionDetalle extends Conexion {
         switch ($this->getTipoEvaluacion()) {
             case '2':
                 $sql = " SELECT 
-                            (CASE p.tipo_riego WHEN '1' THEN 'M'||p.numero_nivel_1||'-T'||p.numero_nivel_2||'-V'||p.numero_nivel_3 ELSE 'J'||p.numero_nivel_1||'-C'||p.numero_nivel_3 END) as rotulo_parcela,
+                            rotulo_parcela,
                             item,
                             dia_entrenudos,
                             dia_entrenudos_infestados,
@@ -275,6 +302,17 @@ class RegistroEvaluacionDetalle extends Conexion {
                             dia_larvas_parasitadas,
                             dia_billaea_larvas,
                             dia_billaea_pupas
+                            FROM registros_detalle rd
+                            INNER JOIN registros_cabecera rc ON rc.cod_registro = rd.cod_registro
+                            INNER JOIN parcela p  ON p.cod_parcela  = rc.cod_parcela
+                            WHERE rd.cod_registro_detalle = :0";
+                break;
+            case '4':
+            $sql = " SELECT 
+                            rotulo_parcela,
+                            item,
+                            car_tallos,
+                            car_tallos_latigo
                             FROM registros_detalle rd
                             INNER JOIN registros_cabecera rc ON rc.cod_registro = rd.cod_registro
                             INNER JOIN parcela p  ON p.cod_parcela  = rc.cod_parcela
@@ -307,6 +345,8 @@ class RegistroEvaluacionDetalle extends Conexion {
         switch ($this->getTipoEvaluacion()) {
             case '2':
                 return $this->editarDetalleDiatraea();
+            case '4':
+                return $this->editarDetalleCarbon();
             default:
                 return array("rpt"=>false,"msj"=>"Tipo evaluación no válido o no disponible.");
         }
@@ -338,6 +378,27 @@ class RegistroEvaluacionDetalle extends Conexion {
                 "dia_larvas_parasitadas"=>$this->getDiaLarvasParasitadas(),
                 "dia_billaea_larvas"=>$this->getDiaBillaeaLarvas(),
                 "dia_billaea_pupas"=>$this->getDiaBillaeaPupas()
+            ];
+
+            $campos_valores_where = [
+                "cod_registro_detalle"=>$this->getCodRegistroDetalle()
+            ];
+
+            $this->update("registros_detalle",$campos_valores, $campos_valores_where);
+
+            return array("rpt"=>true,"msj"=>"Registro guardado correctamente");
+        } catch (Exception $exc) {
+            return array("rpt"=>false,"msj"=>$exc);
+            throw $exc;            
+        }
+    }
+
+    public function editarDetalleCarbon(){
+        try {
+
+            $campos_valores = [
+                "car_tallos"=>$this->getCarTallos(),
+                "car_tallos_latigo"=>$this->getCarTallosLatigo()
             ];
 
             $campos_valores_where = [
