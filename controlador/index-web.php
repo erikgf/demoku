@@ -33,7 +33,7 @@ if (! isset($_GET["modelo"]) ){
 }
 
 $modelo  = $_GET["modelo"];
-require_once MODELO . "/".utf8_decode($modelo).".clase.php";
+require_once MODELO . "/".$modelo.".clase.php";
 $obj = new $modelo;
 $metodo = $_GET["metodo"];
 $data_in = isset($_GET["data_in"]) ? $_GET["data_in"] : null; //parametros que son parte de la clase.
