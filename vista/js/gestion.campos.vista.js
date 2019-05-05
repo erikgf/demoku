@@ -196,7 +196,7 @@ app.cargaDatosParcelas = function(codCampaña){
 	 }
 
 	new Ajxur.Api({
-	    modelo: "campaña",
+	    modelo: "Campaña",
 	    metodo: "obtenerParcelas",
 	    data_in: {
 	    	p_codCampaña : codCampaña
