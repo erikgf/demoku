@@ -20,8 +20,9 @@
  define("SW_VERSION","2.5.0 BETA");
 
  define("MODO_PRODUCCION", 1);
+ define("_SESION_","_sanidad_cayalti_web_");
 
-ini_set('session.save_handler', 'memcached');
+ini_set('session.save_handler', _SESION_);
 ini_set('session.save_path', getenv('MEMCACHIER_SERVERS'));
 if(version_compare(phpversion('memcached'), '3', '>=')) {
     ini_set('memcached.sess_persistent', 1);
@@ -34,7 +35,6 @@ ini_set('memcached.sess_sasl_username', getenv('MEMCACHIER_USERNAME'));
 ini_set('memcached.sess_sasl_password', getenv('MEMCACHIER_PASSWORD'));
 
  //SESION
- define("_SESION_","_sanidad_cayalti_web_");
  session_name(_SESION_);
  session_start();
 
