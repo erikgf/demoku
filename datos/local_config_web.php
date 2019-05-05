@@ -38,4 +38,3 @@ ini_set('memcached.sess_sasl_password', getenv('MEMCACHIER_PASSWORD'));
  session_name(_SESION_);
  session_start();
 
-var_dump($_SESSION);
