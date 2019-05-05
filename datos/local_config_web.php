@@ -22,13 +22,13 @@
  define("MODO_PRODUCCION", 1);
  define("_SESION_","_sanidad_cayalti_web_");
 
-ini_set('session.save_handler', _SESION_);
+ini_set('session.save_handler', 'memcached');
 ini_set('session.save_path', getenv('MEMCACHIER_SERVERS'));
 if(version_compare(phpversion('memcached'), '3', '>=')) {
     ini_set('memcached.sess_persistent', 1);
     ini_set('memcached.sess_binary_protocol', 1);
 } else {
-    ini_set('session.save_path', 'PERSISTENT=myapp_session ' . ini_get('session.save_path'));
+    ini_set('session.save_path', 'PERSISTENT= '._SESION_. ini_get('session.save_path'));
     ini_set('memcached.sess_binary', 1);
 }
 ini_set('memcached.sess_sasl_username', getenv('MEMCACHIER_USERNAME'));
