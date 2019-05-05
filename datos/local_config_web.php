@@ -37,3 +37,5 @@ ini_set('memcached.sess_sasl_password', getenv('MEMCACHIER_PASSWORD'));
  define("_SESION_","_sanidad_cayalti_web_");
  session_name(_SESION_);
  session_start();
+
+var_dump($_SESSION);
