@@ -16,7 +16,7 @@ class ReporteadorFormulario extends Conexion {
                     numero_nivel_2,
                     NULLIF(regexp_replace(numero_nivel_3, '\D', '', 'g'), '')::integer" ;
             $data["diatraea"] = $this->consultarFilas($sql, [$fi, $ff]);
-
+/*
             $sql = "SELECT *, 
                      to_char(raw_fecha_evaluacion, 'DD-MM-YYYY'::text) as fecha_evaluacion
                      FROM 
@@ -59,6 +59,7 @@ class ReporteadorFormulario extends Conexion {
                      WHERE fecha_evaluacion::date  BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
             $data["carbon_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
+            */
 
             /*VARIABLES EXTRA*/
             $dataExtra = [];
