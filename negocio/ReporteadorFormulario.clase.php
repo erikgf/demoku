@@ -17,6 +17,9 @@ class ReporteadorFormulario extends Conexion {
                     numero_nivel_2,
                     NULLIF(regexp_replace(numero_nivel_3, '\D', '', 'g'), '')::integer" ;
             $data["diatraea"] = $this->consultarFilas($sql, [$fi, $ff]);
+            
+            var_dump($data["diatraea"]);    
+            exit;
 
             $sql = "SELECT *, 
                      to_char(raw_fecha_evaluacion, 'DD-MM-YYYY'::text) as fecha_evaluacion
