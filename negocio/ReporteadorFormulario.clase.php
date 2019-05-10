@@ -10,9 +10,9 @@ class ReporteadorFormulario extends Conexion {
 
             //la evaluacion debe TENER un fecha_inicio_Evalaucion_temporal y Estado Confirmado.
             $data = [];
-            /*
+          
             $sql = "SELECT * FROM v_registros_resumen_diatraea 
-                    WHERE raw_fecha_evaluacion::date BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo,
+                    WHERE raw_fecha_evaluacion BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo,
                     numero_nivel_1, 
                     numero_nivel_2,
                     NULLIF(regexp_replace(numero_nivel_3, '\D', '', 'g'), '')::integer" ;
@@ -60,8 +60,7 @@ class ReporteadorFormulario extends Conexion {
                      WHERE fecha_evaluacion::date  BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
             $data["carbon_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
-            */
-
+          
             /*VARIABLES EXTRA*/
             $dataExtra = [];
 
