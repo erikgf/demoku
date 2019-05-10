@@ -59,12 +59,12 @@ class ReporteadorFormulario extends Conexion {
 
          
             $sql = " SELECT * FROM v_full_resumen_carbon
-                     WHERE fecha_evaluacion::date  BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
+                     WHERE raw_fecha_evaluacion::date  BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
             $data["carbon_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
           
             
-            var_dump($data);    
+            var_dump($data["carbon_resumen"]);    
             exit;
             
             /*VARIABLES EXTRA*/
