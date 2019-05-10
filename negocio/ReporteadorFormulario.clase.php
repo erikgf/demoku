@@ -17,9 +17,7 @@ class ReporteadorFormulario extends Conexion {
                     numero_nivel_2,
                     NULLIF(regexp_replace(numero_nivel_3, '\D', '', 'g'), '')::integer" ;
             $data["diatraea"] = $this->consultarFilas($sql, [$fi, $ff]);
-            
-            var_dump($data["diatraea"]);    
-            exit;
+           
 
             $sql = "SELECT *, 
                      to_char(raw_fecha_evaluacion, 'DD-MM-YYYY'::text) as fecha_evaluacion
@@ -46,7 +44,11 @@ class ReporteadorFormulario extends Conexion {
                      WHERE  raw_fecha_evaluacion BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
             $data["diatraea_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
-
+        
+             
+            var_dump($data["diatraea_resumen"]);    
+            exit;
+            
             $sql = "SELECT 
                     r.* , p.area
                     FROM v_registros_carbon r
