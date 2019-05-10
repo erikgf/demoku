@@ -45,10 +45,7 @@ class ReporteadorFormulario extends Conexion {
 
             $data["diatraea_resumen"] = $this->consultarFilas($sql, [$fi, $ff]);
         
-             
-            var_dump($data["diatraea_resumen"]);    
-            exit;
-            
+        
             $sql = "SELECT 
                     r.* , p.area
                     FROM v_registros_carbon r
@@ -60,7 +57,10 @@ class ReporteadorFormulario extends Conexion {
                     p.numero_nivel_3" ;
             $data["carbon"] = $this->consultarFilas($sql, [$fi, $ff]);
 
-
+         
+            var_dump($data["carbon"]);    
+            exit;
+            
             $sql = " SELECT * FROM v_full_resumen_carbon
                      WHERE fecha_evaluacion::date  BETWEEN date(:0) AND date(:1) ORDER BY nombre_campo";
 
