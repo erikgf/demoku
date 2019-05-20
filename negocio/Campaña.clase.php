@@ -418,7 +418,9 @@ class Campaña extends Conexion {
         if ($fechaSiembraDentro == false){
                   return ["r"=>false, "msj"=>"La fecha de inicio de CAMPAÑA debe ser MAYOR que la fecha de SIEMBRA."];
         }
-
+    
+        
+        /*
         if ($this->getFechaCampañaFin() != NULL){
             $sql = "SELECT DATE(fecha_fin_siembra) >= :0 FROM siembra WHERE cod_siembra = :1";
             $fechaSiembraDentro = $this->consultarValor($sql, [$this->getFechaCampañaFin(), $this->getCodSiembra()]);
@@ -431,7 +433,7 @@ class Campaña extends Conexion {
                   return ["r"=>false, "msj"=>"La fecha final debe ser MENOR que la fecha inicio."];
             }
         }
-
+    */
         return ["r"=>true, "msj"=>""];
     }
 
