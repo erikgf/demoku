@@ -82,10 +82,10 @@ class Conexion{
     }*/
 
     private function reformatEne($key){
-        $r = $key;
+        $r = str_replace("ñ","n",$key);
         return $r;
     }
-
+    
     protected function insert($p_nombre_tabla, $p_campos_valores)
     {
         $p_campos = array_keys($p_campos_valores);
