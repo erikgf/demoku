@@ -186,7 +186,7 @@ $fechaHoy = date('Y-m-d');
                             <div class="col-xs-12 col-sm-6 col-md-4">
                               <div class="control-group">
                                 <label class="control-label">Área: </label>
-                                <input type="number" name="txtsiembraarea" id="txtsiembraarea" class="form-control" required>
+                                <input type="number" step="0.001" name="txtsiembraarea" id="txtsiembraarea" class="form-control" required>
                               </div>
                             </div>    
                         </div>
@@ -293,7 +293,7 @@ $fechaHoy = date('Y-m-d');
                             <div class="col-xs-12 col-sm-6 col-md-4">
                               <div class="control-group">
                                 <label class="control-label">Área: </label>
-                                <input type="number" name="txtcampañaarea" id="txtcampañaarea" class="form-control" required>
+                                <input type="number" name="txtcampañaarea" step="0.001" id="txtcampañaarea" class="form-control" required>
                               </div>
                             </div>     
                             <div class="col-xs-12 col-sm-6 col-md-4">
