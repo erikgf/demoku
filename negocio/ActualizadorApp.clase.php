@@ -248,56 +248,6 @@ class ActualizadorApp extends Conexion {
     }
     
     
-     public function actualizarDatosAsistenciasApp(){
-        try {
-            /*Tbl usuario */
-            $contador_registros  = 0;
-
-            $sql = "SELECT 
-                    u.usuario as nombres_apellidos,
-                    u.usuario,
-                    u.clave
-                    FROM tbl_usuario u
-                    INNER JOIN usuario_aplicacion ua ON ua.usuario = u.usuario AND ua.tipo_aplicacion = 'A'
-                    WHERE u.estado_mrcb = 1 AND u.estado = 'A'";
-            $usuarios =  $this->consultarFilas($sql);
-            $contador_registros += count($usuarios);
-
-
-            $sql = "SELECT 
-                        pg.idcodigogeneral as dni,
-                        CONCAT(a_paterno,' ',a_materno,', ',nombres) as nombres_apellidos,
-                        cp.idcargo as cod_rol,
-                        cp.descripcion as rol,
-                        COALESCE(personal_foto,'') as img_url
-                        FROM tbl_personal_general pg
-                        INNER JOIN tbl_personal p ON p.idempresa = pg.idempresa AND p.idcodigogeneral = pg.idcodigogeneral
-                        LEFT JOIN tbl_cargo_personal cp ON cp.idcargo = p.idcargo
-                        LEFT JOIN tbl_planilla pl ON pl.idplanilla = p.idplanilla
-                        WHERE activado_en_estaplani = '1'
-                        LIMIT 150";
-
-            $personal =  $this->consultarFilas($sql);
-            $contador_registros += count($personal);
-
-            $sql = "SELECT 
-                    idturnotrabajo as cod_turno,
-                    descripcion,
-                    desde as hora_entrada,
-                    hasta as hora_salida
-                    FROM turno_trabajo                    
-                    ORDER BY desde";
-            $turnos =  $this->consultarFilas($sql);
-            $contador_registros += count($turnos);
-
-            return array("rpt"=>true,"data"=>["usuarios"=>$usuarios,
-                                                "turnos"=>$turnos,
-                                                    "personal"=>$personal,
-                                                        "contador_registros"=>$contador_registros]);
-
-        } catch (Exception $exc) {
-            return array("rpt"=>false,"msj"=>$exc);
-        }
-    } 
+     
 
 }
