@@ -2,7 +2,7 @@
 
 include '../datos/local_config_web.php';
 include 'session.vista.php';
-$TITULO_PAGINA = "Reporte Asistencias Fecha";
+$TITULO_PAGINA = "Reporte Asistencias Punto de Acceso";
 $fechaHoy = date('Y-m-d');
 
 ?>
@@ -25,7 +25,7 @@ $fechaHoy = date('Y-m-d');
   <?php include 'cabecera.vista.php' ?>
 
  <main role="main" class="container">
-    <h3>Reporte Asistencia por Fecha</h3>
+    <h3>Reporte Asistencia por Punto de Acceso</h3>
     <div class="row">
       <div class="col-xs-12 col-sm-3 col-md-2">
           <div class="control-group">
@@ -40,6 +40,13 @@ $fechaHoy = date('Y-m-d');
           </div>
       </div>
       <div class="col-xs-12 col-sm-3 col-md-2">
+          <div class="control-group">
+            <label class="control-label">Punto de Acceso: </label>
+            <select class="form-control" name="cbopuntoacceso" id="cbopuntoacceso" >
+            </select>
+          </div>
+      </div>
+      <div class="col-xs-12 col-sm-3 col-md-2">
           <br>
           <button class="btn btn-block btn-success" id="btn-buscar">BUSCAR</button>
       </div>
@@ -51,6 +58,8 @@ $fechaHoy = date('Y-m-d');
           <thead>
             <tr>
               <th width="150px">Fecha</th>
+              <th width="100px">Pto. Asistencia</th>
+              <th width="150px">Descripcion</th>
               <th width="120px">Opc.</th>
             </tr>
           </thead>
@@ -59,18 +68,20 @@ $fechaHoy = date('Y-m-d');
             {{#this}}
               <tr>
                 <td>{{fecha}}</td>
+                <td>{{idpuntoacceso}}</td>
+                <td>{{puntoacceso}}</td>
                 <td>
-                   <button class="btn btn-info"  title="Ver Detalle" onclick="app.verDetalle('{{fecha}}','{{fecha_raw}}')">
+                   <button class="btn btn-info"  title="Ver Detalle" onclick="app.verDetalle('{{fecha}}','{{fecha_raw}}','{{idpuntoacceso}}','{{puntoacceso}}')">
                       <i class="glyphicon glyphicon-file"></i>
                     </button>
-                    <button class="btn btn-success" title="Exportar"  onclick="app.exportar('{{fecha}}','{{fecha_raw}}')">
+                    <button class="btn btn-success" title="Exportar"  onclick="app.exportar('{{fecha}}','{{fecha_raw}}','{{idpuntoacceso}}','{{puntoacceso}}')">
                       <i class="glyphicon glyphicon-download"></i>
                     </button>
                 </td>
               </tr>
             {{else}}
               <tr>
-                <td class="td-null" colspan="2">
+                <td class="td-null" colspan="4">
                    <i>Sin registros para mostrar</i>
                 </td>
               </tr>
@@ -80,31 +91,20 @@ $fechaHoy = date('Y-m-d');
         </table>
       </div>
     </div>
-    <!-- 
-    <div class="row">
-      <h3>Ver Detalle: </h3>
-      <div class="col-xs-6">
-        <div class="group-control">
-          <label>Punto Acceso</label>
-          <p>001 - NOMBRE DEL PUNTO ACCESO</p>
-        </div>
-      </div>
-      <div class="col-xs-3">
-        <div class="group-control">
-          <label>Fecha</label>
-          <p>10/05/2019</p>
-        </div>
-      </div>
-    </div>
-    -->
     <div id="blk-detalle">
         <script id="tpl8Detalle" type="handlebars-x">
           <div class="row">
             <h3>Ver Detalle: </h3>
-            <div class="col-xs-offset-9 col-xs-3">
+            <div class="col-xs-6">
+              <div class="group-control">
+                <label>Punto Acceso</label>
+                <p>{{idpuntoacceso}} - {{puntoacceso}}</p>
+              </div>
+            </div>
+            <div class="col-xs-3">
               <div class="group-control">
                 <label>Fecha</label>
-                <p>{{fecha}}</p>
+                <p>{fecha}}</p>
               </div>
             </div>
           </div>
@@ -118,8 +118,6 @@ $fechaHoy = date('Y-m-d');
                         <th width="100px">Turno</th>
                         <th width="100px">Ingreso</th>
                         <th width="100px">Salida</th>
-                        <th width="75px">ID Pto. Asistencia</th>
-                        <th >Pto. Asistencia</th>
                         <th width="100px">IdResponsable</th>
                         <th>Responsable</th>
                       </tr>
@@ -132,14 +130,12 @@ $fechaHoy = date('Y-m-d');
                         <td>{{turno}}</td>
                         <td>{{ingreso}}</td>
                         <td>{{salida}}</td>
-                        <td>{{idpuntoacceso}}</td>
-                        <td>{{puntoacceso}}</td>
                         <td>{{idresponsable}}</td>
                         <td>{{responsable}}</td>
                       </tr>
                     {{else}}
                       <tr>
-                        <td class="td-null" colspan="9">
+                        <td class="td-null" colspan="7">
                            <i>Sin registros para mostrar</i>
                         </td>
                       </tr>
@@ -150,7 +146,13 @@ $fechaHoy = date('Y-m-d');
           </div>
         </script>
     </div>
-  
+    
+    <script id="tpl8Combo" type="handlebars-x">
+        <option value="*">{{rotulo}}</option>
+        {{#opciones}}
+          <option value='{{codigo}}'>{{descripcion}}</option>
+        {{/opciones}}
+    </script> 
     <hr>
   </main><!-- /.container -->
 
@@ -163,7 +165,7 @@ $fechaHoy = date('Y-m-d');
 ?>
   <script src="../util/Ajxur.js" type="text/javascript"></script>
   <script src="../assets/js/handlebars.min.js"></script>
-  <script src="js/reportes.asistencia.fecha.vista.js" type="text/javascript"></script>
+  <script src="js/reportes.asistencia.puntoacceso.vista.js" type="text/javascript"></script>
 </body>
 
 </html>
