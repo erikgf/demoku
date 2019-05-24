@@ -704,4 +704,3 @@ app.eliminarRegistroDetalle = function(){
 $(document).ready(function(){
   app.init();
 });
-
