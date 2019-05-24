@@ -78,8 +78,8 @@ $fechaHoy = date('Y-m-d');
           <div class="control-group">
             <label class="control-label">Tipo de Riego: </label>
             <select id="cbotiporiego" name="cbotiporiego" class="form-control" required>
-              <option value="0">GOTEO</option>
-              <option value="1">GRAVEDAD</option>
+              <option value="1">GOTEO</option>
+              <option value="0">GRAVEDAD</option>
             </select>
           </div>
         </div>
