@@ -256,7 +256,7 @@ class Campo extends Conexion {
                         to_char(fecha_fin_siembra,'DD/MM/YYYY') as  fin_siembra, 
                         v.nombre as variedad,
                         c.nombre as cultivo,
-                        (CASE tipo_riego WHEN 1 THEN 'GRAVEDAD' ELSE 'GOTEO' END) as tipo_riego,
+                        (CASE tipo_riego WHEN 0 THEN 'GRAVEDAD' ELSE 'GOTEO' END) as tipo_riego,
                         numero_plantas, camas, rayas,
                         (CASE s.estado_activo WHEN true THEN 'ACTIVO' ELSE 'INACTIVO' END) as estado
                         FROM siembra s
