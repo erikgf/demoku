@@ -104,7 +104,7 @@ $fechaHoy = date('Y-m-d');
             <div class="col-xs-3">
               <div class="group-control">
                 <label>Fecha</label>
-                <p>{fecha}}</p>
+                <p>{{fecha}}</p>
               </div>
             </div>
           </div>

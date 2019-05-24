@@ -85,7 +85,7 @@ app.verDetalle = function(fecha, fecha_raw){
         if (DT) { DT.fnDestroy(); DT = null; }
         $blkDetalle.html(self.tpl8.detalle({registros: datos, fecha: fecha}));
         DT = $blkDetalle.find("table").dataTable({
-          "aaSorting": [[0, "asc"]]
+          "aaSorting": [[2, "asc"]]
         });
       }else{
         console.error(datos.msj);
