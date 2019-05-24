@@ -100,7 +100,8 @@ app.verDetalle = function(fecha, fecha_raw, idpuntoacceso, puntoacceso){
         if (DT) { DT.fnDestroy(); DT = null; }
         $blkDetalle.html(self.tpl8.detalle({registros: datos, fecha: fecha, idpuntoacceso: idpuntoacceso, puntoacceso: puntoacceso}));
         DT = $blkDetalle.find("table").dataTable({
-          "aaSorting": [[2, "asc"]]
+          "aaSorting": [[2, "asc"]],
+           "pageLength": 25
         });
       }else{
         console.error(datos.msj);
