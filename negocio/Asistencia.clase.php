@@ -31,14 +31,16 @@ class Asistencia extends Conexion {
                 ac.idpuntoacceso, 
                 pacc.descripcion as puntoacceso, 
                 u.idcodigogeneral as idresponsable,
-                u.apellidos_nombres as responsable
+                u.apellidos_nombres as responsable,
+                tu.idturnotrabajo
                 FROM tbl_asistencia_envio_detalle ad
                 LEFT JOIN tbl_asistencia_envio_cabecera ac ON ad.cod_envio_cabecera = ac.cod_envio_cabecera
                 LEFT JOIN tbl_punto_acceso pacc ON pacc.idcodigo = ac.idpuntoacceso
                 LEFT JOIN tbl_usuario u ON u.usuario = ac.usuario_envio
                 LEFT JOIN turno_trabajo tu ON tu.idturnotrabajo = ac.cod_turno
                 LEFT JOIN tbl_personal_general pgene ON pgene.idcodigogeneral = ad.dni_asistencia
-                WHERE ac.fecha_dia = :0";
+                WHERE ac.fecha_dia = :0
+                ORDER BY tu.idturnotrabajo, puntoacceso, ingreso";
             $lista = $this->consultarFilas($sql, $fecha);
 
             return array("rpt"=>true,"data"=>$lista);
