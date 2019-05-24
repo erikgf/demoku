@@ -32,13 +32,16 @@ class Asistencia extends Conexion {
                 pacc.descripcion as puntoacceso, 
                 u.idcodigogeneral as idresponsable,
                 u.apellidos_nombres as responsable,
-                tu.idturnotrabajo
+                tu.idturnotrabajo,
+                pl.descripcion as planilla
                 FROM tbl_asistencia_envio_detalle ad
                 LEFT JOIN tbl_asistencia_envio_cabecera ac ON ad.cod_envio_cabecera = ac.cod_envio_cabecera
                 LEFT JOIN tbl_punto_acceso pacc ON pacc.idcodigo = ac.idpuntoacceso
                 LEFT JOIN tbl_usuario u ON u.usuario = ac.usuario_envio
                 LEFT JOIN turno_trabajo tu ON tu.idturnotrabajo = ac.cod_turno
                 LEFT JOIN tbl_personal_general pgene ON pgene.idcodigogeneral = ad.dni_asistencia
+                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral
+                LEFT JOIN tbl_planilla pl ON pe.idplanilla = pl.idplanilla
                 WHERE ac.fecha_dia = :0
                 ORDER BY tu.idturnotrabajo, puntoacceso, ingreso";
             $lista = $this->consultarFilas($sql, $fecha);
@@ -96,12 +99,15 @@ class Asistencia extends Conexion {
                 (SELECT to_char(fecha_hora_registro,'HH:MM:SS') FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'S' LIMIT 1) as salida,
                 u.idcodigogeneral as idresponsable,
                 u.apellidos_nombres as responsable,
-                tu.idturnotrabajo
+                tu.idturnotrabajo,
+                pl.descripcion as planilla
                 FROM tbl_asistencia_envio_detalle ad
                 LEFT JOIN tbl_asistencia_envio_cabecera ac ON ad.cod_envio_cabecera = ac.cod_envio_cabecera
                 LEFT JOIN tbl_usuario u ON u.usuario = ac.usuario_envio
                 LEFT JOIN turno_trabajo tu ON tu.idturnotrabajo = ac.cod_turno
                 LEFT JOIN tbl_personal_general pgene ON pgene.idcodigogeneral = ad.dni_asistencia
+                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral
+                LEFT JOIN tbl_planilla pl ON pe.idplanilla = pl.idplanilla
                 WHERE ac.fecha_dia = :0 AND ".$sqlWhere."
                 ORDER BY tu.idturnotrabajo, ingreso";
             $lista = $this->consultarFilas($sql, $sqlParams);

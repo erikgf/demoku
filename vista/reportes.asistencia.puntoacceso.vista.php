@@ -115,6 +115,7 @@ $fechaHoy = date('Y-m-d');
                       <tr>
                         <th width="100px">DNI</th>
                         <th>Apellidos y Nombres</th>
+                        <th width="200px">>Planilla</th>
                         <th width="100px">Turno</th>
                         <th width="100px">Ingreso</th>
                         <th width="100px">Salida</th>
@@ -127,6 +128,7 @@ $fechaHoy = date('Y-m-d');
                       <tr>
                         <td>{{dni_asistencia}}</td>
                         <td>{{apellidos_nombres}}</td>
+                        <td>{{planilla}}</td>
                         <td>{{turno}}</td>
                         <td>{{ingreso}}</td>
                         <td>{{salida}}</td>
