@@ -212,8 +212,8 @@ $fechaHoy = date('Y-m-d');
                                 <label class="control-label">Tipo Riego: </label>
                                 <select id="cbosiembratiporiego" name="cbosiembratiporiego" class="form-control" required>
                                   <option value="">Seleccionar</option>
-                                  <option value="0">GOTEO</option>
-                                  <option value="1">GRAVEDAD</option>
+                                  <option value="1">GOTEO</option>
+                                  <option value="0">GRAVEDAD</option>
                                 </select>
                               </div>
                             </div>
