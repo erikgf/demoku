@@ -24,12 +24,19 @@
                     <li><a href="perfiles.vista.php">Perfiles</a></li>
                   </ul>
                 </li>  
-                 <li class="dropdown">
+                <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Consultas <span class="caret"></span></a>
                   <ul class="dropdown-menu dropdown-menu-cayalti">
                     <li><a href="registros.vista.php">Ver Registros</a></li>
                     <li><a href="reporteador.demo.vista.php">Reporteador</a></li>
                     <li><a href="sql.ejecutor.vista.php">Consultas SQL</a></li>
+                  </ul>
+                </li> 
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Asistencias <span class="caret"></span></a>
+                  <ul class="dropdown-menu dropdown-menu-cayalti">
+                    <li><a href="reportes.asistencia.puntoacceso.vista.php">Reporte por Punto de Acceso</a></li>
+                    <li><a href="reportes.asistencia.fecha.vista.php">Reporte por Fechas</a></li>
                   </ul>
                 </li>  
               </ul>
