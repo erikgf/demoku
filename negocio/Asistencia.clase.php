@@ -40,7 +40,7 @@ class Asistencia extends Conexion {
                 LEFT JOIN tbl_usuario u ON u.usuario = ac.usuario_envio
                 LEFT JOIN turno_trabajo tu ON tu.idturnotrabajo = ac.cod_turno
                 LEFT JOIN tbl_personal_general pgene ON pgene.idcodigogeneral = ad.dni_asistencia
-                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral
+                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral AND pe.activado_en_estaplani = '1'
                 LEFT JOIN tbl_planilla pl ON pe.idplanilla = pl.idplanilla
                 WHERE ac.fecha_dia = :0
                 ORDER BY tu.idturnotrabajo, puntoacceso, ingreso";
@@ -106,7 +106,7 @@ class Asistencia extends Conexion {
                 LEFT JOIN tbl_usuario u ON u.usuario = ac.usuario_envio
                 LEFT JOIN turno_trabajo tu ON tu.idturnotrabajo = ac.cod_turno
                 LEFT JOIN tbl_personal_general pgene ON pgene.idcodigogeneral = ad.dni_asistencia
-                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral
+                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral  AND pe.activado_en_estaplani = '1'
                 LEFT JOIN tbl_planilla pl ON pe.idplanilla = pl.idplanilla
                 WHERE ac.fecha_dia = :0 AND ".$sqlWhere."
                 ORDER BY tu.idturnotrabajo, ingreso";
