@@ -80,7 +80,7 @@ class ActualizadorAppAsistencia extends Conexion {
                     "cod_turno"=>$objCabecera->cod_turno_envio,
                     "usuario_envio"=>$objCabecera->usuario_envio,
                     "movil_id"=>$objCabecera->movil_id,
-                    "idpuntoacceso"=> $objCabecera->idpuntoacceso
+                    "idpuntoacceso"=> (isset($objCabecera->idpuntoacceso) ? $objCabecera->idpuntoacceso : "001")
                 ];
 
             $this->insert("tbl_asistencia_envio_cabecera", $campos_valores);
