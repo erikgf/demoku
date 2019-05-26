@@ -148,8 +148,7 @@ function indiceALetra ($indice){
 								        ),
 								        'font' => array(
 								        	"bold"=>true,
-								        	'color' => array('rgb' => $objThisColor[1])),
-								        'alignment' => array('horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER)
+								        	'color' => array('rgb' => $objThisColor[1]))								        
 								    )
 								);	
 					}
