@@ -26,8 +26,9 @@ class Asistencia extends Conexion {
                 distinct ad.dni_asistencia as dni_asistencia,
                 CONCAT(pgene.a_paterno,' ',pgene.a_materno,', ',pgene.nombres) as apellidos_nombres,
                 tu.descripcion as turno,
-                (SELECT to_char(fecha_hora_registro,'HH:MM:SS am') FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'E' LIMIT 1) as ingreso,
-                (SELECT to_char(fecha_hora_registro,'HH:MM:SS am') FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'S' LIMIT 1) as salida,
+                (SELECT to_char(fecha_hora_registro,'HH:MM:SS') FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'E' LIMIT 1) as ingreso,
+                (SELECT to_char(fecha_hora_registro,'HH:MM:SS') FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'S' LIMIT 1) as salida,
+                (SELECT DATE_PART('hour',cast(fecha_hora_registro as time) - cast(tu.desde as time)) * 60 + DATE_PART('minute',cast(fecha_hora_registro as time) - cast('06:00' as time)) FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'E' LIMIT 1) as nivel_tardanza,
                 ac.idpuntoacceso, 
                 pacc.descripcion as puntoacceso, 
                 u.idcodigogeneral as idresponsable,
@@ -40,7 +41,7 @@ class Asistencia extends Conexion {
                 LEFT JOIN tbl_usuario u ON u.usuario = ac.usuario_envio
                 LEFT JOIN turno_trabajo tu ON tu.idturnotrabajo = ac.cod_turno
                 LEFT JOIN tbl_personal_general pgene ON pgene.idcodigogeneral = ad.dni_asistencia
-                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral AND pe.activado_en_estaplani = '1'
+                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral
                 LEFT JOIN tbl_planilla pl ON pe.idplanilla = pl.idplanilla
                 WHERE ac.fecha_dia = :0
                 ORDER BY tu.idturnotrabajo, puntoacceso, ingreso";
@@ -95,8 +96,9 @@ class Asistencia extends Conexion {
                 distinct ad.dni_asistencia as dni_asistencia,
                 CONCAT(pgene.a_paterno,' ',pgene.a_materno,', ',pgene.nombres) as apellidos_nombres,
                 tu.descripcion as turno,
-                (SELECT to_char(fecha_hora_registro,'HH:MM:SS am') FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'E' LIMIT 1) as ingreso,
-                (SELECT to_char(fecha_hora_registro,'HH:MM:SS am') FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'S' LIMIT 1) as salida,
+                (SELECT to_char(fecha_hora_registro,'HH:MM:SS') FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'E' LIMIT 1) as ingreso,
+                (SELECT to_char(fecha_hora_registro,'HH:MM:SS') FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'S' LIMIT 1) as salida,
+                (SELECT DATE_PART('hour',cast(fecha_hora_registro as time) - cast(tu.desde as time)) * 60 + DATE_PART('minute',cast(fecha_hora_registro as time) - cast('06:00' as time)) FROM tbl_asistencia_envio_detalle WHERE cod_envio_cabecera = ac.cod_envio_cabecera AND dni_asistencia = ad.dni_asistencia AND tipo_registro = 'E' LIMIT 1) as nivel_tardanza,
                 u.idcodigogeneral as idresponsable,
                 u.apellidos_nombres as responsable,
                 tu.idturnotrabajo,
@@ -106,7 +108,7 @@ class Asistencia extends Conexion {
                 LEFT JOIN tbl_usuario u ON u.usuario = ac.usuario_envio
                 LEFT JOIN turno_trabajo tu ON tu.idturnotrabajo = ac.cod_turno
                 LEFT JOIN tbl_personal_general pgene ON pgene.idcodigogeneral = ad.dni_asistencia
-                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral  AND pe.activado_en_estaplani = '1'
+                LEFT JOIN tbl_personal pe ON pe.idcodigogeneral = pgene.idcodigogeneral
                 LEFT JOIN tbl_planilla pl ON pe.idplanilla = pl.idplanilla
                 WHERE ac.fecha_dia = :0 AND ".$sqlWhere."
                 ORDER BY tu.idturnotrabajo, ingreso";

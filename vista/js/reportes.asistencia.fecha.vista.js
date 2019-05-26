@@ -36,26 +36,15 @@ app.setTemplates = function(){
 };
 
 
-app.generarExcel = function(){
-  var $fi = $("#txtfechainicio").val(),
-      $ff = $("#txtfechafin").val(),
-      strUrl;
+app.exportar = function(fecha, fecha_raw){
+  var strUrl;
 
-
-    if ($fi == ""){
-      alert("Fecha de desde no válida.");
+    if (fecha_raw == ""){
+      alert("Fecha no válida.");
       return;
-    }  
+    }
 
-    if ($ff == ""){
-      alert("Fecha de desde no válida.");
-      return;
-    }     
-
-    strUrl = "../controlador/reportes.xls.formularios.evaluacion.php?"+
-                    "p_fi="+$fi+"&"+
-                    "p_ff="+$ff; 
-
+    strUrl = "../controlador/reportes.xls.asistencia.fechas.php?p_f="+fecha_raw; 
     window.open(strUrl,'_blank'); 
 };
 
@@ -86,7 +75,7 @@ app.verDetalle = function(fecha, fecha_raw){
         $blkDetalle.html(self.tpl8.detalle({registros: datos, fecha: fecha}));
         DT = $blkDetalle.find("table").dataTable({
           "aaSorting": [[2, "asc"]],
-           "pageLength": 25
+          "pageLength": 25
         });
       }else{
         console.error(datos.msj);

@@ -54,25 +54,21 @@ app.obtenerDataBase =function(){
   },fn);
 };
 
-app.generarExcel = function(){
-  var $fi = $("#txtfechainicio").val(),
-      $ff = $("#txtfechafin").val(),
-      strUrl;
 
-    if ($fi == ""){
-      alert("Fecha de desde no válida.");
+app.exportar = function(fecha, fecha_raw, idpuntoacceso, puntoacceso){
+  var strUrl;
+
+    if (fecha_raw == ""){
+      alert("Fecha no válida.");
       return;
-    }  
+    }
 
-    if ($ff == ""){
-      alert("Fecha de desde no válida.");
+    if (idpuntoacceso == ""){
+      alert("Punto de acceso no válido.");
       return;
-    }     
+    }
 
-    strUrl = "../controlador/reportes.xls.formularios.evaluacion.php?"+
-                    "p_fi="+$fi+"&"+
-                    "p_ff="+$ff; 
-
+    strUrl = "../controlador/reportes.xls.asistencia.puntoacceso.php?p_f="+fecha_raw+"&p_ipa="+idpuntoacceso+"&p_pa="+puntoacceso; 
     window.open(strUrl,'_blank'); 
 };
 
@@ -100,8 +96,7 @@ app.verDetalle = function(fecha, fecha_raw, idpuntoacceso, puntoacceso){
         if (DT) { DT.fnDestroy(); DT = null; }
         $blkDetalle.html(self.tpl8.detalle({registros: datos, fecha: fecha, idpuntoacceso: idpuntoacceso, puntoacceso: puntoacceso}));
         DT = $blkDetalle.find("table").dataTable({
-          "aaSorting": [[2, "asc"]],
-           "pageLength": 25
+          "aaSorting": [[0, "asc"]]
         });
       }else{
         console.error(datos.msj);
