@@ -9,8 +9,9 @@ class ActualizadorAppAsistencia extends Conexion {
             /*Tbl usuario */
             $contador_registros  = 0;
 
-            $sql = "SELECT 
-                    u.usuario as nombres_apellidos,
+             $sql = "SELECT 
+                    u.idcodigogeneral as dni,
+                    COALESCE(u.apellidos_nombres, u.usuario) as nombres_apellidos,
                     u.usuario,
                     u.clave
                     FROM tbl_usuario u
