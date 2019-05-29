@@ -94,7 +94,8 @@ class ActualizadorAppAsistencia extends Conexion {
                     "dni_asistencia" => $detalle->dni_asistencia,
                     "numero_asistencia" => $detalle->numero_asistencia,
                     "tipo_registro" => $detalle->tipo_registro,
-                    "fecha_hora_registro" => $detalle->hora_registro
+                    "fecha_hora_registro" => $detalle->hora_registro,
+                    "dni_usuario_envio" => (isset($detalle->dni_usuario_envio) ? $detalle->dni_usuario_envio : NULL )
                 ];
 
                 $this->insert("tbl_asistencia_envio_detalle", $campos_valores_detalle);
