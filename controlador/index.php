@@ -3,6 +3,8 @@ header('Access-Control-Allow-Origin: *');
 require_once '../datos/local_config.php';
 require_once MODELO_FUNCIONES;
 
+date_default_timezone_set('America/Lima');
+
 /* Este controlador funciona dinamicamente a peticiones xhr desde el cliente
 espera: 
 	- metodo ; string. El nombre de la accipón asociada a la clase (método).
