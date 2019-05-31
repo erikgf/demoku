@@ -1,6 +1,7 @@
 <?php
 
 require_once '../datos/Conexion.clase.php';
+date_default_timezone_set('America/Lima');
 
 class ActualizadorAppAsistencia extends Conexion {
 
